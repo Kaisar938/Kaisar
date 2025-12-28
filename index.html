@@ -144,18 +144,12 @@
     grid-template-columns:1fr 1fr;
     gap:22px;
   }
-  @media(max-width:600px){
-  .paket-grid{
-    grid-template-columns: repeat(2, 1fr); /* 2 paket per baris di HP */
-    gap:12px;
-  }
-}
+  /* Biar grid paket Robux responsive di HP */
 
-@media(max-width:400px){
-  .paket-grid{
-    grid-template-columns: 1fr; /* 1 paket per baris kalau layar sangat kecil */
-  }
-}
+
+/* Sesuaikan ukuran font & padding biar muat di HP */
+
+
 
   /* CONFIRM */
   .confirm{
@@ -211,9 +205,7 @@
     color:#888;
     border-top:1px solid rgba(255,255,255,.06);
   }
-  @media(max-width:900px){
-    .footer-wrap{grid-template-columns:1fr}
-  }
+  
   .logo-wrap{
     display:flex;
     align-items:center;
@@ -288,7 +280,6 @@ body, html {
 
 .container {
   min-height: 100vh;
-  overflow-y: auto;
   padding-bottom: 80px; /* space bawah buat tombol */
 }
 
@@ -312,30 +303,37 @@ input, select {
 }
 
 /* Tambahin di bagian bawah style lo */
-@media(max-width:500px){
-  .paket-grid{
-    grid-template-columns: 1fr; /* Semua paket full width di HP */
-    gap: 12px;
-  }
 
- .paket{
-  padding:16px; /* lebih kecil biar muat di HP */
+.nav-inner{
+  max-width:1100px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
 }
-.emoji{ font-size:28px; }
-.robux{ font-size:22px; }
-.harga{ font-size:14px; }
-
-
-  .emoji{
-    font-size:28px;
+@media(max-width:600px){
+  .paket-grid{
+    grid-template-columns:1fr;
   }
 
-  .robux{
-    font-size:22px;
+  .paket{
+    padding:16px;
   }
 
-  .harga{
-    font-size:14px;
+  .robux{font-size:22px}
+  .harga{font-size:14px}
+}
+
+.confirm{
+  animation: confirmFlash .4s ease;
+}
+
+@keyframes confirmFlash{
+  from{
+    box-shadow: 0 0 0 rgba(124,108,255,0);
+  }
+  to{
+    box-shadow: 0 0 30px rgba(124,108,255,.6);
   }
 }
 
@@ -346,11 +344,13 @@ input, select {
   <body>
 
   <!-- NAVBAR -->
-  <div class="navbar">
-  <div class="logo-wrap">
-    <img src="kucing.jpg" alt="KaisarStore Logo">
-    <span>KaisarStore</span>
-  </div>
+ <div class="navbar">
+  <div class="nav-inner">
+
+    <div class="logo-wrap">
+      <img src="kucing.jpg">
+      <span>KaisarStore</span>
+    </div>
 
     <div class="menu">
       <a href="#">Beranda</a>
@@ -358,8 +358,12 @@ input, select {
       <a href="#tools">Kalkulator</a>
       <a href="https://wa.me/6285182456497">Hubungi</a>
     </div>
+
     <div class="nav-btn" onclick="showConfirm()">Top Up</div>
+
   </div>
+</div>
+
 
   <div class="container">
 
@@ -570,11 +574,16 @@ inputs.forEach(inp => {
       cfAfter.innerText = `After Tax: ${Math.ceil(val/0.7)} Robux`;
     }
 
-    function showConfirm(){
-      confirmBox.style.display="block";
-      updateConfirm();
-      window.scrollTo({top:0,behavior:"smooth"});
-    }
+   function showConfirm(){
+  updateConfirm();
+  confirmBox.style.display = "block";
+
+  setTimeout(() => {
+    const y = confirmBox.getBoundingClientRect().top + window.pageYOffset - 90;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  }, 50);
+}
+
 
     /* ===== WA ===== */
     function toWA(){
@@ -601,18 +610,29 @@ inputs.forEach(inp => {
 
     /* ===== CUSTOM INPUT LIVE ===== */
     customInput.addEventListener("input", () => {
-      const val = parseAngka(customInput.value);
+  const val = parseAngka(customInput.value);
 
-      if(val && val > 0){
-        btnTopup.style.display = "block";
-        document.querySelectorAll(".paket").forEach(p => p.classList.remove("active"));
-        selectedRobux = 0;
-      } else {
-        btnTopup.style.display = selectedRobux ? "block" : "none";
-      }
+  if(val && val > 0){
+    const harga = val * RATE;
 
-      if(confirmBox.style.display === "block") updateConfirm();
-    });
+    customHarga.innerHTML = `
+      Harga: <b>Rp ${harga.toLocaleString()}</b><br>
+      Before Tax: ${Math.floor(val * 0.7)} Robux<br>
+      After Tax: ${Math.ceil(val / 0.7)} Robux
+    `;
+
+    btnTopup.style.display = "block";
+    document.querySelectorAll(".paket").forEach(p => p.classList.remove("active"));
+    selectedRobux = 0;
+
+  } else {
+    customHarga.innerText = "Harga: -";
+    btnTopup.style.display = selectedRobux ? "block" : "none";
+  }
+
+  if(confirmBox.style.display === "block") updateConfirm();
+});
+
   </script>
 
 
