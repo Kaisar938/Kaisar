@@ -408,10 +408,10 @@ footer {
   <button class="dots-btn" onclick="toggleMenu()">⋮</button>
 
   <div class="mobile-dropdown" id="mobileMenu">
-    <a href="#beranda">Beranda</a>
-    <a href="#paket">Paket</a>
-    <a href="#kalkulator">Kalkulator</a>
-    <a href="#hubungi">Hubungi</a>
+    <a href="#beranda" onclick="closeMenu()">Beranda</a>
+    <a href="#paket" onclick="closeMenu()">Paket</a>
+    <a href="#kalkulator" onclick="closeMenu()">Kalkulator</a>
+    <a href="#hubungi" onclick="closeMenu()">Hubungi</a>
   </div>
 </div>
 
@@ -687,16 +687,16 @@ function resetConfirm() {
     }
 
     /* ===== CUSTOM INPUT LIVE ===== */
-    customInput.addEventListener("input", () => {
+  customInput.addEventListener("input", () => {
   const val = parseAngka(customInput.value);
 
   if(val && val > 0){
     const harga = val * RATE;
+    const setGamepass = Math.ceil(val * 1.43); // +43%
 
     customHarga.innerHTML = `
-      Harga: <b>Rp ${harga.toLocaleString()}</b><br>
-      Before Tax: ${Math.floor(val * 0.7)} Robux<br>
-      After Tax: ${Math.ceil(val / 0.7)} Robux
+      Set Gamepass: <b>${setGamepass} Robux</b><br>
+      Harga: <b>Rp ${harga.toLocaleString()}</b>
     `;
 
     btnTopup.style.display = "block";
@@ -710,6 +710,7 @@ function resetConfirm() {
 
   if(confirmBox.style.display === "block") updateConfirm();
 });
+
 function toggleMenu() {
   const menu = document.getElementById('mobileMenu');
   menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
