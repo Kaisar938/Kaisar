@@ -327,6 +327,59 @@ footer {
     display: none;
   }
 }
+/* ================= MOBILE DROPDOWN NAV ================= */
+
+.mobile-menu {
+  display: none;
+  position: relative;
+}
+
+.dots-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 26px;
+  cursor: pointer;
+  padding: 6px 10px;
+}
+
+.mobile-dropdown {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  background: linear-gradient(145deg,#0f0d25,#1a1740);
+  border-radius: 14px;
+  padding: 8px;
+  width: 170px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.4);
+  display: none;
+  z-index: 2000;
+}
+
+.mobile-dropdown a {
+  display: block;
+  padding: 10px 12px;
+  color: #ddd;
+  text-decoration: none;
+  font-size: 14px;
+  border-radius: 10px;
+}
+
+.mobile-dropdown a:hover {
+  background: rgba(124,108,255,.15);
+  color: #fff;
+}
+
+/* MOBILE ONLY */
+@media (max-width: 768px) {
+  .menu {
+    display: none;
+  }
+
+  .mobile-menu {
+    display: block;
+  }
+}
 
   </style>
   </head>
@@ -350,6 +403,18 @@ footer {
     </div>
 
     <div class="nav-btn" onclick="showConfirm()">Top Up</div>
+    <!-- MOBILE MENU BUTTON -->
+<div class="mobile-menu">
+  <button class="dots-btn" onclick="toggleMenu()">⋮</button>
+
+  <div class="mobile-dropdown" id="mobileMenu">
+    <a href="#beranda">Beranda</a>
+    <a href="#paket">Paket</a>
+    <a href="#kalkulator">Kalkulator</a>
+    <a href="#hubungi">Hubungi</a>
+  </div>
+</div>
+
 
   </div>
 </div>
@@ -612,7 +677,19 @@ footer {
 
   if(confirmBox.style.display === "block") updateConfirm();
 });
+function toggleMenu() {
+  const menu = document.getElementById('mobileMenu');
+  menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+}
 
+/* klik luar = nutup */
+document.addEventListener('click', function(e) {
+  const menu = document.getElementById('mobileMenu');
+  const btn = document.querySelector('.dots-btn');
+  if (!btn.contains(e.target) && !menu.contains(e.target)) {
+    menu.style.display = 'none';
+  }
+});
   </script>
 
 
