@@ -565,24 +565,27 @@ footer {
         <div class="robux">${r}</div>
         <div class="harga">Rp ${(r * RATE).toLocaleString()}</div>
       `;
+div.onclick = () => {
+  const isActive = div.classList.contains("active");
 
-      div.onclick = () => {
-        const isActive = div.classList.contains("active");
-        document.querySelectorAll(".paket").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".paket")
+    .forEach(p => p.classList.remove("active"));
 
-        if(!isActive){
-          div.classList.add("active");
-          selectedRobux = r;
-          robux.value = r;
-          btnTopup.style.display = "block";
-        } else {
-          selectedRobux = 0;
-          robux.value = "";
-          btnTopup.style.display = customInput.value ? "block" : "none";
-        }
+  if (!isActive) {
+    div.classList.add("active");
+    selectedRobux = r;
+    robux.value = r;
+    btnTopup.style.display = "block";
+  } else {
+    selectedRobux = 0;
+    robux.value = "";
+    btnTopup.style.display = customInput.value ? "block" : "none";
+  }
 
-        if(confirmBox.style.display === "block") updateConfirm();
-      };
+  // 🔑 INI KUNCI UTAMA
+  updateConfirm();
+};
+
 
       paketList.appendChild(div);
     });
@@ -609,25 +612,55 @@ footer {
     }
 
     /* ===== KONFIRMASI ===== */
-    function updateConfirm(){
-      const val = selectedRobux > 0 ? selectedRobux : parseAngka(customInput.value);
-      if(!val || val <=0) return;
+   function updateConfirm() {
+  const box = document.getElementById('confirmBox');
 
-      cfPaket.innerText = `Paket: ${val} Robux`;
-      cfHarga.innerText = `Harga: Rp ${(val*RATE).toLocaleString()}`;
-      cfBefore.innerText = `Before Tax: ${Math.floor(val*0.7)} Robux`;
-      cfAfter.innerText = `After Tax: ${Math.ceil(val/0.7)} Robux`;
-    }
+  const val = selectedRobux > 0
+    ? selectedRobux
+    : parseAngka(customInput.value);
 
-   function showConfirm(){
+  // JIKA TIDAK VALID → TUTUP KONFIRMASI
+  if (!val || val <= 0) {
+    resetConfirm();
+    return;
+  }
+
+  cfPaket.innerText  = `Paket: ${val} Robux`;
+  cfHarga.innerText  = `Harga: Rp ${(val * RATE).toLocaleString()}`;
+  cfBefore.innerText = `Before Tax: ${Math.floor(val * 0.7)} Robux`;
+  cfAfter.innerText  = `After Tax: ${Math.ceil(val / 0.7)} Robux`;
+
+  box.style.display = 'block';
+}
+function resetConfirm() {
+  const box = document.getElementById('confirmBox');
+
+  box.style.display = 'none';
+
+  cfPaket.innerText  = '-';
+  cfHarga.innerText  = '-';
+  cfBefore.innerText = '-';
+  cfAfter.innerText  = '-';
+}
+
+ function showConfirm(){
+  const val = selectedRobux > 0
+    ? selectedRobux
+    : parseAngka(customInput.value);
+
+  if (!val || val <= 0) {
+    resetConfirm();
+    return;
+  }
+
   updateConfirm();
-  confirmBox.style.display = "block";
 
   setTimeout(() => {
     const y = confirmBox.getBoundingClientRect().top + window.pageYOffset - 90;
     window.scrollTo({ top: y, behavior: "smooth" });
   }, 50);
 }
+
 
 
     /* ===== WA ===== */
