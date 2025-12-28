@@ -1,546 +1,585 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KaisarStore - Top Up Robux</title>
+  <!DOCTYPE html>
+  <html lang="id">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KaisarStore - Top Up Robux</title>
 
-<style>
-  
-:root{
-  --p:#7c6cff;
-  --bg:#070617;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Segoe UI,system-ui;
-  background:radial-gradient(circle at top,#1b1760,#05040d);
-  color:white;
-}
-
-/* NAVBAR */
-.navbar{
-  position:sticky;
-  top:0;
-  z-index:999;
-  background:rgba(8,7,20,.9);
-  backdrop-filter:blur(10px);
-  padding:14px 22px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-.logo{font-weight:900;color:var(--p)}
-.menu a{
-  color:#ddd;
-  margin:0 10px;
-  text-decoration:none;
-}
-.menu a:hover{color:white}
-.nav-btn{
-  background:var(--p);
-  padding:10px 16px;
-  border-radius:12px;
-  color:white;
-  cursor:pointer;
-}
-
-/* CONTAINER */
-.container{
-  max-width:1100px;
-  margin:auto;
-  padding:40px 20px;
-}
-
-/* CARD */
-.card{
-  background:linear-gradient(145deg,#0f0d25,#17143a);
-  border-radius:20px;
-  padding:24px;
-}
-
-/* PAKET */
-.paket-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-  gap:18px;
-}
-.paket{
-  position:relative;
-  background:linear-gradient(145deg,#0f0d25,#1a1740);
-  border-radius:18px;
-  padding:20px;
-  text-align:center;
-  cursor:pointer;
-  transition:.25s;
-}
-.paket:hover{transform:translateY(-6px)}
-.paket.active{
-  box-shadow:0 0 0 2px rgba(124,108,255,.8),
-             0 0 30px rgba(124,108,255,.4);
-}
-.paket .robux{font-size:26px;font-weight:800}
-.paket .harga{color:#c7b9ff;margin-top:6px}
-
-/* CHECK ANIMATION */
-.check{
-  position:absolute;
-  top:12px;
-  right:12px;
-  width:26px;
-  height:26px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#8b5cf6,#6d28d9);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:white;
-  font-size:14px;
-  transform:scale(0);
-  transition:.25s ease;
-}
-.paket.active .check{transform:scale(1)}
-
-/* BUTTON */
-.btn{
-  margin-top:20px;
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:14px;
-  background:var(--p);
-  color:white;
-  font-weight:600;
-  cursor:pointer;
-  display:none;
-}
-.btn.alt{background:#2a2755;display:block}
-
-/* INPUT */
-input{
-  width:100%;
-  padding:14px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.1);
-  background:#090822;
-  color:white;
-  margin-top:10px;
-}
-
-/* RESULT */
-.result{
-  margin-top:14px;
-  padding:14px;
-  border-radius:14px;
-  background:rgba(124,108,255,.08);
-  border:1px dashed rgba(124,108,255,.6);
-  text-align:center;
-}
-
-/* GRID */
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:22px;
-}
-@media(max-width:900px){
-  .grid{grid-template-columns:1fr}
-}
-
-/* CONFIRM */
-.confirm{
-  display:none;
-  background:linear-gradient(145deg,#120f2f,#1a1750);
-  padding:20px;
-  border-radius:18px;
-  margin-bottom:30px;
-}
-
-/* FOOTER */
-footer{
-  margin-top:80px;
-  background:linear-gradient(180deg,#070617,#04030d);
-  border-top:1px solid rgba(255,255,255,.08);
-}
-.footer-wrap{
-  max-width:1100px;
-  margin:auto;
-  padding:40px 20px;
-  display:grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  align-items:flex-start;
-  gap:30px;
-}
-
-
-.footer-title{font-weight:700;margin-bottom:10px}
-.footer a{
-  display:block;
-  color:#bbb;
-  text-decoration:none;
-  margin-bottom:6px;
-}
-.footer a:hover{color:white}
-.payments{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-}
-.payments div{
-  background:#0c0b25;
-  border-radius:12px;
-  padding:10px;
-  text-align:center;
-  font-size:13px;
-  border:1px solid rgba(255,255,255,.08);
-}
-.copy{
-  text-align:center;
-  padding:14px;
-  font-size:13px;
-  color:#888;
-  border-top:1px solid rgba(255,255,255,.06);
-}
-@media(max-width:900px){
-  .footer-wrap{grid-template-columns:1fr}
-}
-.logo-wrap{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:900;
-  color:var(--p);
-}
-
-.logo-wrap img{
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  object-fit:cover;
-  box-shadow:0 0 12px rgba(124,108,255,.6);
-}
-select{
-  width:100%;
-  padding:14px;
-  margin-top:10px;
-  border-radius:14px;
-  background:#090822;
-  color:white;
-  border:1px solid rgba(255,255,255,.1);
-}
-.footer-brand{
-  display:flex;
-  gap:14px;
-  align-items:flex-start;
-}
-
-.footer-brand img{
-  width:56px;
-  height:56px;
-  border-radius:50%;
-  object-fit:cover;
-  box-shadow:0 0 16px rgba(124,108,255,.6);
-  border:2px solid rgba(124,108,255,.8);
-}
-.footer-center{
-  text-align:center;
-}
-
-.footer-right{
-  text-align:right;
-}
-.emoji{
-  font-size:34px;
-  margin-bottom:6px;
-  filter: drop-shadow(0 0 8px rgba(124,108,255,.6));
-}
-
-.rate-note{
-  margin-top:14px;
-  padding:12px;
-  border-radius:14px;
-  background:rgba(124,108,255,.08);
-  border:1px dashed rgba(124,108,255,.4);
-  font-size:13px;
-  color:#ddd;
-  text-align:center;   /* 👈 INI KUNCINYA */
-}
-.paket:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 0 20px rgba(124,108,255,.5);
-}
-
-
-
-
-</style>
-</head>
-
-<body>
-
-<!-- NAVBAR -->
-<div class="navbar">
- <div class="logo-wrap">
-  <img src="kucing.jpg" alt="KaisarStore Logo">
-  <span>KaisarStore</span>
-</div>
-
-  <div class="menu">
-    <a href="#">Beranda</a>
-    <a href="#paket">Paket</a>
-    <a href="#tools">Kalkulator</a>
-    <a href="https://wa.me/6285182456497">Hubungi</a>
-  </div>
-  <div class="nav-btn" onclick="showConfirm()">Top Up</div>
-</div>
-
-<div class="container">
-
-<!-- KONFIRMASI -->
-<div id="confirmBox" class="confirm">
-  <h3>🧾 Konfirmasi Pesanan</h3>
-  <p id="cfPaket">-</p>
-  <p id="cfHarga">-</p>
-  <p id="cfBefore">-</p>
-  <p id="cfAfter">-</p>
-  <button class="btn" style="display:block" onclick="toWA()">Lanjut ke WhatsApp</button>
-</div>
-
-<!-- PAKET -->
-<section id="paket" class="card">
-<h2>💎 Pilih Paket Robux</h2>
-<div id="paketList" class="paket-grid"></div>
-<div class="card" style="margin-top:20px">
-  <h3>✨ Paket Custom</h3>
-  <input id="customRobux" type="number" placeholder="Masukkan jumlah Robux">
-  <div id="customHarga" class="result">Harga: -</div>
-  <button class="btn" id="btnCustomTopup" style="display:none" onclick="customTopup()">Top Up Custom</button>
-</div>
-
-<div class="rate-note" id="rateNote"></div>
-<div style="margin-top:24px">
-  <input id="passId" placeholder="Masukkan Pass ID / Gamepass ID">
-
-  <select id="payment">
-    <option value="">Pilih Metode Pembayaran</option>
-    <option>Bank Transfer</option>
-    <option>QRIS</option>
-    <option>E-Wallet (OVO / DANA / GoPay)</option>
-  </select>
-</div>
-
-
-<button id="btnTopup" class="btn" onclick="showConfirm()">Top Up Sekarang</button>
-
-</section>
-
-<!-- TOOLS -->
-<section id="tools" style="margin-top:40px">
-<div class="grid">
-
-<div class="card">
-<h3>🎮 Kalkulator Robux</h3>
-<input id="robux" type="number" placeholder="Masukkan Robux">
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
-<button class="btn alt" onclick="calcRobux('before')">Before Tax</button>
-<button class="btn alt" onclick="calcRobux('after')">After Tax</button>
-</div>
-<div id="resRobux" class="result">—</div>
-</div>
-
-<div class="card">
-<h3>💰 Hitung dari Harga</h3>
-<input id="harga" type="number" placeholder="Contoh: 10500" oninput="calcHarga()">
-<div id="resHarga" class="result">—</div>
-</div>
-
-</div>
-</section>
-
-</div>
-
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="footer-wrap">
-
-    <div>
-    <div class="footer-brand">
-  <img src="kucing.jpg" alt="KaisarStore Cat">
-  <div>
-    <div class="footer-title">KaisarStore</div>
-    <p style="color:#aaa;font-size:14px">
-      Layanan top-up game terpercaya dengan dukungan premium 24 jam. <br>
-      Proses aman, cepat, dan dapat diandalkan.
-    </p>
-  </div>
-</div>
-<div class="footer-title">Hubungi Kami</div>
-
-<a href="https://wa.me/6285182456497">💬 Chat WhatsApp</a>
-
-<a href="" target="_blank">
-📢 Saluran WhatsApp KaisarStore
-</a>
-
-<a href="#paket">💎 Paket Robux</a>
-
-    </div>
-
-    <div>
-      <div class="footer-title">Pembayaran</div>
-      <div class="payments">
-        <div>OVO</div>
-        <div>GoPay</div>
-        <div>DANA</div>
-        <div>QRIS</div>
-        <div>Bank</div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="copy">
-    © 2025 KaisarStore • All Rights Reserved
-  </div>
-</footer>
-
-<script>
-  // ===== HELPERS =====
-  function parseAngka(val){
-    return Number(String(val).replace(/\./g,'').replace(/,/g,''));
+  <style>
+    
+  :root{
+    --p:#7c6cff;
+    --bg:#070617;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Segoe UI,system-ui;
+    background:radial-gradient(circle at top,#1b1760,#05040d);
+    color:white;
   }
 
-  const RATE = 105;
-  const WA = "6285182456497";
+  /* NAVBAR */
+  .navbar{
+    position:sticky;
+    top:0;
+    z-index:999;
+    background:rgba(8,7,20,.9);
+    backdrop-filter:blur(10px);
+    padding:14px 22px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .logo{font-weight:900;color:var(--p)}
+  .menu a{
+    color:#ddd;
+    margin:0 10px;
+    text-decoration:none;
+  }
+  .menu a:hover{color:white}
+  .nav-btn{
+    background:var(--p);
+    padding:10px 16px;
+    border-radius:12px;
+    color:white;
+    cursor:pointer;
+  }
 
-  // tampilkan rate di halaman
-  document.getElementById("rateNote").innerHTML = `
-    💱 Rate: <b>Rp ${RATE} / Robux</b><br>
-    <span>⚠️ Harga dapat berubah sewaktu-waktu</span>
-  `;
+  /* CONTAINER */
+  .container{
+    max-width:1100px;
+    margin:auto;
+    padding:40px 20px;
+  }
 
-  let selectedRobux = 0;
+  /* CARD */
+  .card{
+    background:linear-gradient(145deg,#0f0d25,#17143a);
+    border-radius:20px;
+    padding:24px;
+  }
 
-  const paketData = [100,200,300,400,500,600,700,800,900];
-  const paketList = document.getElementById("paketList");
-  const btnTopup = document.getElementById("btnTopup");
-  const customInput = document.getElementById("customRobux");
-  const customHarga = document.getElementById("customHarga"); // <== buat nampilin harga custom
+  /* PAKET */
+  .paket-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+    gap:18px;
+  }
+  .paket{
+    position:relative;
+    background:linear-gradient(145deg,#0f0d25,#1a1740);
+    border-radius:18px;
+    padding:20px;
+    text-align:center;
+    cursor:pointer;
+    transition:.25s;
+  }
+  .paket:hover{transform:translateY(-6px)}
+  .paket.active{
+    box-shadow:0 0 0 2px rgba(124,108,255,.8),
+              0 0 30px rgba(124,108,255,.4);
+  }
+  .paket .robux{font-size:26px;font-weight:800}
+  .paket .harga{color:#c7b9ff;margin-top:6px}
 
-  /* ===== RENDER PAKET STANDAR ===== */
-  paketData.forEach(r => {
-    const div = document.createElement("div");
-    div.className = "paket";
+  /* CHECK ANIMATION */
+  .check{
+    position:absolute;
+    top:12px;
+    right:12px;
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#8b5cf6,#6d28d9);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-size:14px;
+    transform:scale(0);
+    transition:.25s ease;
+  }
+  .paket.active .check{transform:scale(1)}
 
-    div.innerHTML = `
-      <div class="check">✓</div>
-      <div class="emoji">💎</div>
-      <div class="robux">${r}</div>
-      <div class="harga">Rp ${(r * RATE).toLocaleString()}</div>
+  /* BUTTON */
+  .btn{
+    margin-top:20px;
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:14px;
+    background:var(--p);
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+    display:none;
+  }
+  .btn.alt{background:#2a2755;display:block}
+
+  /* INPUT */
+  input{
+    width:100%;
+    padding:14px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.1);
+    background:#090822;
+    color:white;
+    margin-top:10px;
+  }
+
+  /* RESULT */
+  .result{
+    margin-top:14px;
+    padding:14px;
+    border-radius:14px;
+    background:rgba(124,108,255,.08);
+    border:1px dashed rgba(124,108,255,.6);
+    text-align:center;
+  }
+
+  /* GRID */
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:22px;
+  }
+  @media(max-width:900px){
+    .grid{grid-template-columns:1fr}
+  }
+
+  /* CONFIRM */
+  .confirm{
+    display:none;
+    background:linear-gradient(145deg,#120f2f,#1a1750);
+    padding:20px;
+    border-radius:18px;
+    margin-bottom:30px;
+  }
+
+  /* FOOTER */
+  footer{
+    margin-top:80px;
+    background:linear-gradient(180deg,#070617,#04030d);
+    border-top:1px solid rgba(255,255,255,.08);
+  }
+  .footer-wrap{
+    max-width:1100px;
+    margin:auto;
+    padding:40px 20px;
+    display:grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    align-items:flex-start;
+    gap:30px;
+  }
+
+
+  .footer-title{font-weight:700;margin-bottom:10px}
+  .footer a{
+    display:block;
+    color:#bbb;
+    text-decoration:none;
+    margin-bottom:6px;
+  }
+  .footer a:hover{color:white}
+  .payments{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+  }
+  .payments div{
+    background:#0c0b25;
+    border-radius:12px;
+    padding:10px;
+    text-align:center;
+    font-size:13px;
+    border:1px solid rgba(255,255,255,.08);
+  }
+  .copy{
+    text-align:center;
+    padding:14px;
+    font-size:13px;
+    color:#888;
+    border-top:1px solid rgba(255,255,255,.06);
+  }
+  @media(max-width:900px){
+    .footer-wrap{grid-template-columns:1fr}
+  }
+  .logo-wrap{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:900;
+    color:var(--p);
+  }
+
+  .logo-wrap img{
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    object-fit:cover;
+    box-shadow:0 0 12px rgba(124,108,255,.6);
+  }
+  select{
+    width:100%;
+    padding:14px;
+    margin-top:10px;
+    border-radius:14px;
+    background:#090822;
+    color:white;
+    border:1px solid rgba(255,255,255,.1);
+  }
+  .footer-brand{
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+  }
+
+  .footer-brand img{
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    object-fit:cover;
+    box-shadow:0 0 16px rgba(124,108,255,.6);
+    border:2px solid rgba(124,108,255,.8);
+  }
+  .footer-center{
+    text-align:center;
+  }
+
+  .footer-right{
+    text-align:right;
+  }
+  .emoji{
+    font-size:34px;
+    margin-bottom:6px;
+    filter: drop-shadow(0 0 8px rgba(124,108,255,.6));
+  }
+
+  .rate-note{
+    margin-top:14px;
+    padding:12px;
+    border-radius:14px;
+    background:rgba(124,108,255,.08);
+    border:1px dashed rgba(124,108,255,.4);
+    font-size:13px;
+    color:#ddd;
+    text-align:center;   /* 👈 INI KUNCINYA */
+  }
+  .paket:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 0 20px rgba(124,108,255,.5);
+  }
+
+/* ===== MOBILE FIX ===== */
+body, html {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+.container {
+  min-height: 100vh;
+  overflow-y: auto;
+  padding-bottom: 80px; /* space bawah buat tombol */
+}
+
+/* Input font lebih gede biar ga zoom di mobile */
+input, select {
+  font-size: 16px;
+}
+
+/* Rate-note tetap di atas saat scroll */
+.rate-note {
+  position: sticky;
+  top: 70px;
+  z-index: 5;
+}
+
+/* Topup button sticky di bawah */
+#btnTopup {
+  position: sticky;
+  bottom: 10px;
+  z-index: 10;
+}
+
+
+
+  </style>
+  </head>
+
+  <body>
+
+  <!-- NAVBAR -->
+  <div class="navbar">
+  <div class="logo-wrap">
+    <img src="kucing.jpg" alt="KaisarStore Logo">
+    <span>KaisarStore</span>
+  </div>
+
+    <div class="menu">
+      <a href="#">Beranda</a>
+      <a href="#paket">Paket</a>
+      <a href="#tools">Kalkulator</a>
+      <a href="https://wa.me/6285182456497">Hubungi</a>
+    </div>
+    <div class="nav-btn" onclick="showConfirm()">Top Up</div>
+  </div>
+
+  <div class="container">
+
+  <!-- KONFIRMASI -->
+  <div id="confirmBox" class="confirm">
+    <h3>🧾 Konfirmasi Pesanan</h3>
+    <p id="cfPaket">-</p>
+    <p id="cfHarga">-</p>
+    <p id="cfBefore">-</p>
+    <p id="cfAfter">-</p>
+    <button class="btn" style="display:block" onclick="toWA()">Lanjut ke WhatsApp</button>
+  </div>
+
+  <!-- PAKET -->
+  <section id="paket" class="card">
+  <h2>💎 Pilih Paket Robux</h2>
+  <div id="paketList" class="paket-grid"></div>
+  <div class="card" style="margin-top:20px">
+    <h3>✨ Paket Custom</h3>
+    <input id="customRobux" type="number" placeholder="Masukkan jumlah Robux">
+    <div id="customHarga" class="result">Harga: -</div>
+    <button class="btn" id="btnCustomTopup" style="display:none" onclick="customTopup()">Top Up Custom</button>
+  </div>
+
+  <div class="rate-note" id="rateNote"></div>
+  <div style="margin-top:24px">
+    <input id="passId" placeholder="Masukkan Pass ID / Gamepass ID">
+
+    <select id="payment">
+      <option value="">Pilih Metode Pembayaran</option>
+      <option>Bank Transfer</option>
+      <option>QRIS</option>
+      <option>E-Wallet (OVO / DANA / GoPay)</option>
+    </select>
+  </div>
+
+
+  <button id="btnTopup" class="btn" onclick="showConfirm()">Top Up Sekarang</button>
+
+  </section>
+
+  <!-- TOOLS -->
+  <section id="tools" style="margin-top:40px">
+  <div class="grid">
+
+  <div class="card">
+  <h3>🎮 Kalkulator Robux</h3>
+  <input id="robux" type="number" placeholder="Masukkan Robux">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+  <button class="btn alt" onclick="calcRobux('before')">Before Tax</button>
+  <button class="btn alt" onclick="calcRobux('after')">After Tax</button>
+  </div>
+  <div id="resRobux" class="result">—</div>
+  </div>
+
+  <div class="card">
+  <h3>💰 Hitung dari Harga</h3>
+  <input id="harga" type="number" placeholder="Contoh: 10500" oninput="calcHarga()">
+  <div id="resHarga" class="result">—</div>
+  </div>
+
+  </div>
+  </section>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-wrap">
+
+      <div>
+      <div class="footer-brand">
+    <img src="kucing.jpg" alt="KaisarStore Cat">
+    <div>
+      <div class="footer-title">KaisarStore</div>
+      <p style="color:#aaa;font-size:14px">
+        Layanan top-up game terpercaya dengan dukungan premium 24 jam. <br>
+        Proses aman, cepat, dan dapat diandalkan.
+      </p>
+    </div>
+  </div>
+  <div class="footer-title">Hubungi Kami</div>
+
+  <a href="https://wa.me/6285182456497">💬 Chat WhatsApp</a>
+
+  <a href="" target="_blank">
+  📢 Saluran WhatsApp KaisarStore
+  </a>
+
+  <a href="#paket">💎 Paket Robux</a>
+
+      </div>
+
+      <div>
+        <div class="footer-title">Pembayaran</div>
+        <div class="payments">
+          <div>OVO</div>
+          <div>GoPay</div>
+          <div>DANA</div>
+          <div>QRIS</div>
+          <div>Bank</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="copy">
+      © 2025 KaisarStore • All Rights Reserved
+    </div>
+  </footer>
+
+  <script>
+    // ===== MOBILE INPUT SCROLL FIX =====
+const inputs = document.querySelectorAll('input, select');
+inputs.forEach(inp => {
+  inp.addEventListener('focus', e => {
+    setTimeout(() => {
+      // scroll container ke atas biar input ga hilang di keyboard
+      const container = document.querySelector('.container');
+      if(container) container.scrollTop = 0;
+    }, 200); // delay supaya keyboard muncul dulu
+  });
+});
+
+    // ===== HELPERS =====
+    function parseAngka(val){
+      return Number(String(val).replace(/\./g,'').replace(/,/g,''));
+    }
+
+    const RATE = 105;
+    const WA = "6285182456497";
+
+    // tampilkan rate di halaman
+    document.getElementById("rateNote").innerHTML = `
+      💱 Rate: <b>Rp ${RATE} / Robux</b><br>
+      <span>⚠️ Harga dapat berubah sewaktu-waktu</span>
     `;
 
-    div.onclick = () => {
-      const isActive = div.classList.contains("active");
-      document.querySelectorAll(".paket").forEach(p => p.classList.remove("active"));
+    let selectedRobux = 0;
 
-      if(!isActive){
-        div.classList.add("active");
-        selectedRobux = r;
-        robux.value = r;
+    const paketData = [100,200,300,400,500,600,700,800,900];
+    const paketList = document.getElementById("paketList");
+    const btnTopup = document.getElementById("btnTopup");
+    const customInput = document.getElementById("customRobux");
+
+    /* ===== RENDER PAKET STANDAR ===== */
+    paketData.forEach(r => {
+      const div = document.createElement("div");
+      div.className = "paket";
+
+      div.innerHTML = `
+        <div class="check">✓</div>
+        <div class="emoji">💎</div>
+        <div class="robux">${r}</div>
+        <div class="harga">Rp ${(r * RATE).toLocaleString()}</div>
+      `;
+
+      div.onclick = () => {
+        const isActive = div.classList.contains("active");
+        document.querySelectorAll(".paket").forEach(p => p.classList.remove("active"));
+
+        if(!isActive){
+          div.classList.add("active");
+          selectedRobux = r;
+          robux.value = r;
+          btnTopup.style.display = "block";
+        } else {
+          selectedRobux = 0;
+          robux.value = "";
+          btnTopup.style.display = customInput.value ? "block" : "none";
+        }
+
+        if(confirmBox.style.display === "block") updateConfirm();
+      };
+
+      paketList.appendChild(div);
+    });
+
+    /* ===== KALKULATOR ROBUX ===== */
+    function calcRobux(t){
+      const r = parseAngka(robux.value);
+      if(!r){ 
+        resRobux.innerText = "—";
+        return;
+      }
+      resRobux.innerText =
+        t === 'before'
+          ? Math.floor(r * 0.7) + " Robux (Diterima)"
+          : Math.ceil(r / 0.7) + " Robux (Set Gamepass)";
+    }
+
+    /* ===== HITUNG HARGA DARI INPUT ===== */
+    function calcHarga(){
+      const h = parseAngka(harga.value);
+      if(!h){resHarga.innerText="—";return;}
+      const r = Math.floor(h / RATE);
+      resHarga.innerHTML = `${r} Robux<br>Set Gamepass: ${Math.ceil(r/0.7)}`;
+    }
+
+    /* ===== KONFIRMASI ===== */
+    function updateConfirm(){
+      const val = selectedRobux > 0 ? selectedRobux : parseAngka(customInput.value);
+      if(!val || val <=0) return;
+
+      cfPaket.innerText = `Paket: ${val} Robux`;
+      cfHarga.innerText = `Harga: Rp ${(val*RATE).toLocaleString()}`;
+      cfBefore.innerText = `Before Tax: ${Math.floor(val*0.7)} Robux`;
+      cfAfter.innerText = `After Tax: ${Math.ceil(val/0.7)} Robux`;
+    }
+
+    function showConfirm(){
+      confirmBox.style.display="block";
+      updateConfirm();
+      window.scrollTo({top:0,behavior:"smooth"});
+    }
+
+    /* ===== WA ===== */
+    function toWA(){
+      const val = selectedRobux > 0 ? selectedRobux : parseAngka(customInput.value);
+      if(!val || val <=0) return;
+
+      const pass = passId.value.trim();
+      const pay  = payment.value.trim();
+      let extra = "";
+      if(pass) extra += `\n\nPass ID / Gamepass ID:\n${pass}`;
+      if(pay)  extra += `\n\nMetode Pembayaran:\n${pay}`;
+
+      const msg = `Halo KaisarStore,
+  Saya mau top up Robux
+
+  Jumlah: ${val} Robux
+  Harga: Rp ${(val*RATE).toLocaleString()}
+  Before Tax: ${Math.floor(val*0.7)}
+  After Tax: ${Math.ceil(val/0.7)}
+  ${extra}`;
+
+      window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`);
+    }
+
+    /* ===== CUSTOM INPUT LIVE ===== */
+    customInput.addEventListener("input", () => {
+      const val = parseAngka(customInput.value);
+
+      if(val && val > 0){
         btnTopup.style.display = "block";
-      } else {
+        document.querySelectorAll(".paket").forEach(p => p.classList.remove("active"));
         selectedRobux = 0;
-        robux.value = "";
-        btnTopup.style.display = customInput.value ? "block" : "none";
+      } else {
+        btnTopup.style.display = selectedRobux ? "block" : "none";
       }
 
       if(confirmBox.style.display === "block") updateConfirm();
-    };
-
-    paketList.appendChild(div);
-  });
-
-  /* ===== KALKULATOR ROBUX ===== */
-  function calcRobux(t){
-    const r = parseAngka(robux.value);
-    if(!r){ 
-      resRobux.innerText = "—";
-      return;
-    }
-    resRobux.innerText =
-      t === 'before'
-        ? Math.floor(r * 0.7) + " Robux (Diterima)"
-        : Math.ceil(r / 0.7) + " Robux (Set Gamepass)";
-  }
-
-  /* ===== HITUNG HARGA DARI INPUT ===== */
-  function calcHarga(){
-    const h = parseAngka(harga.value);
-    if(!h){resHarga.innerText="—";return;}
-    const r = Math.floor(h / RATE);
-    resHarga.innerHTML = `${r} Robux<br>Set Gamepass: ${Math.ceil(r/0.7)}`;
-  }
-
-  /* ===== KONFIRMASI ===== */
-  function updateConfirm(){
-    const val = selectedRobux > 0 ? selectedRobux : parseAngka(customInput.value);
-    if(!val || val <=0) return;
-
-    cfPaket.innerText = `Paket: ${val} Robux`;
-    cfHarga.innerText = `Harga: Rp ${(val*RATE).toLocaleString()}`;
-    cfBefore.innerText = `Before Tax: ${Math.floor(val*0.7)} Robux`;
-    cfAfter.innerText = `After Tax: ${Math.ceil(val/0.7)} Robux`;
-  }
-
-  function showConfirm(){
-    confirmBox.style.display="block";
-    updateConfirm();
-    window.scrollTo({top:0,behavior:"smooth"});
-  }
-
-  /* ===== WA ===== */
-  function toWA(){
-    const val = selectedRobux > 0 ? selectedRobux : parseAngka(customInput.value);
-    if(!val || val <=0) return;
-
-    const pass = passId.value.trim();
-    const pay  = payment.value.trim();
-    let extra = "";
-    if(pass) extra += `\n\nPass ID / Gamepass ID:\n${pass}`;
-    if(pay)  extra += `\n\nMetode Pembayaran:\n${pay}`;
-
-    const msg = `Halo KaisarStore,
-Saya mau top up Robux
-
-Jumlah: ${val} Robux
-Harga: Rp ${(val*RATE).toLocaleString()}
-Before Tax: ${Math.floor(val*0.7)}
-After Tax: ${Math.ceil(val/0.7)}
-${extra}`;
-
-    window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`);
-  }
-
-  /* ===== CUSTOM INPUT LIVE ===== */
-  customInput.addEventListener("input", () => {
-    const val = parseAngka(customInput.value);
-
-    if(val && val > 0){
-      btnTopup.style.display = "block";
-      document.querySelectorAll(".paket").forEach(p => p.classList.remove("active"));
-      selectedRobux = 0;
-      customHarga.innerText = `Harga: Rp ${(val*RATE).toLocaleString()}`; // <-- tampilkan harga custom
-    } else {
-      btnTopup.style.display = selectedRobux ? "block" : "none";
-      customHarga.innerText = "Harga: -"; // reset kalo kosong
-    }
-
-    if(confirmBox.style.display === "block") updateConfirm();
-  });
-</script>
+    });
+  </script>
 
 
 
-</body>
-</html>
+  </body>
+  </html>
