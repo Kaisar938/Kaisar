@@ -144,9 +144,18 @@
     grid-template-columns:1fr 1fr;
     gap:22px;
   }
-  @media(max-width:900px){
-    .grid{grid-template-columns:1fr}
+  @media(max-width:600px){
+  .paket-grid{
+    grid-template-columns: repeat(2, 1fr); /* 2 paket per baris di HP */
+    gap:12px;
   }
+}
+
+@media(max-width:400px){
+  .paket-grid{
+    grid-template-columns: 1fr; /* 1 paket per baris kalau layar sangat kecil */
+  }
+}
 
   /* CONFIRM */
   .confirm{
@@ -302,6 +311,33 @@ input, select {
   z-index: 10;
 }
 
+/* Tambahin di bagian bawah style lo */
+@media(max-width:500px){
+  .paket-grid{
+    grid-template-columns: 1fr; /* Semua paket full width di HP */
+    gap: 12px;
+  }
+
+ .paket{
+  padding:16px; /* lebih kecil biar muat di HP */
+}
+.emoji{ font-size:28px; }
+.robux{ font-size:22px; }
+.harga{ font-size:14px; }
+
+
+  .emoji{
+    font-size:28px;
+  }
+
+  .robux{
+    font-size:22px;
+  }
+
+  .harga{
+    font-size:14px;
+  }
+}
 
 
   </style>
