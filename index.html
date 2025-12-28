@@ -403,17 +403,18 @@ footer {
     </div>
 
     <div class="nav-btn" onclick="showConfirm()">Top Up</div>
-    <!-- MOBILE MENU BUTTON -->
+ <!-- MOBILE MENU BUTTON -->
 <div class="mobile-menu">
   <button class="dots-btn" onclick="toggleMenu()">⋮</button>
 
   <div class="mobile-dropdown" id="mobileMenu">
     <a href="#beranda" onclick="closeMenu()">Beranda</a>
     <a href="#paket" onclick="closeMenu()">Paket</a>
-    <a href="#kalkulator" onclick="closeMenu()">Kalkulator</a>
-    <a href="#hubungi" onclick="closeMenu()">Hubungi</a>
+    <a href="#tools" onclick="closeMenu()">Kalkulator</a>
+    <a href="https://wa.me/6285182456497" onclick="closeMenu()">Hubungi</a>
   </div>
 </div>
+
 
 
   </div>
@@ -603,13 +604,35 @@ div.onclick = () => {
           : Math.ceil(r / 0.7) + " Robux (Set Gamepass)";
     }
 
-    /* ===== HITUNG HARGA DARI INPUT ===== */
-    function calcHarga(){
-      const h = parseAngka(harga.value);
-      if(!h){resHarga.innerText="—";return;}
-      const r = Math.floor(h / RATE);
-      resHarga.innerHTML = `${r} Robux<br>Set Gamepass: ${Math.ceil(r/0.7)}`;
-    }
+ //* ===== HITUNG ROBUX SESUAI LOGIKA LO ===== */
+function calcHarga() {
+  const h = parseAngka(harga.value); // input uang
+  if (!h) { 
+    resHarga.innerText = "—"; 
+    return; 
+  }
+
+  let setGP, finalRobux;
+
+  if (h === 10500) {
+    setGP = 143;
+    finalRobux = 100;
+  } else if (h === 50000) {
+    setGP = 666;
+    finalRobux = 466;
+  } else {
+    // opsi default: hitung kasar
+    setGP = Math.floor(h / 75); // atau logika lain kalau input beda
+    finalRobux = Math.floor(setGP * 0.7); // tax 30%
+  }
+
+  resHarga.innerHTML = `
+    Harga: ${h}<br>
+    Set Gamepass: ${setGP} Robux<br>
+    Bersih: ${finalRobux} Robux
+  `;
+}
+
 
     /* ===== KONFIRMASI ===== */
    function updateConfirm() {
