@@ -710,43 +710,78 @@ function resetConfirm() {
     }
 
     /* ===== CUSTOM INPUT LIVE ===== */
-  customInput.addEventListener("input", () => {
-  const val = parseAngka(customInput.value);
+ const MIN_ROBUX = 100;
+const MAX_ROBUX = 10000; // opsional, batasi maksimal
 
-  if(val && val > 0){
-    const harga = val * RATE;
-    const setGamepass = Math.ceil(val * 1.43); // +43%
+customInput.addEventListener("input", () => {
+  let val = parseAngka(customInput.value);
 
-    customHarga.innerHTML = `
-      Set Gamepass: <b>${setGamepass} Robux</b><br>
-      Harga: <b>Rp ${harga.toLocaleString()}</b>
-    `;
-
-    btnTopup.style.display = "block";
-    document.querySelectorAll(".paket").forEach(p => p.classList.remove("active"));
+  // validasi minimal
+  if (val < MIN_ROBUX) {
+    customHarga.innerText = `Minimal top-up: ${MIN_ROBUX} Robux`;
+    btnTopup.style.display = "none";
     selectedRobux = 0;
-
-  } else {
-    customHarga.innerText = "Harga: -";
-    btnTopup.style.display = selectedRobux ? "block" : "none";
+    document.querySelectorAll(".paket").forEach(p => p.classList.remove("active"));
+    if(confirmBox.style.display === "block") resetConfirm();
+    return;
   }
+
+  // validasi maksimal (opsional)
+  if (val > MAX_ROBUX) {
+    customHarga.innerText = `Maksimal top-up: ${MAX_ROBUX} Robux`;
+    btnTopup.style.display = "none";
+    if(confirmBox.style.display === "block") resetConfirm();
+    return;
+  }
+
+  // hitung harga & set gamepass aman
+  const harga = val * RATE;
+  const setGamepass = Math.ceil(val * 1.43);
+
+  customHarga.innerHTML = `
+    Set Gamepass: <b>${setGamepass} Robux</b><br>
+    Harga: <b>Rp ${harga.toLocaleString()}</b>
+  `;
+
+  // tombol aktif hanya untuk input valid
+  btnTopup.style.display = "block";
+
+  selectedRobux = 0;
+  document.querySelectorAll(".paket").forEach(p => p.classList.remove("active"));
 
   if(confirmBox.style.display === "block") updateConfirm();
 });
 
-function toggleMenu() {
-  const menu = document.getElementById('mobileMenu');
-  menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-}
+
+
 
 /* klik luar = nutup */
+// Klik di luar = nutup dropdown mobile
 document.addEventListener('click', function(e) {
   const menu = document.getElementById('mobileMenu');
   const btn = document.querySelector('.dots-btn');
+
+  // Kalau target bukan tombol dan bukan menu, tutup menu
   if (!btn.contains(e.target) && !menu.contains(e.target)) {
-    menu.style.display = 'none';
+    if(menu.classList.contains('show')) {
+      menu.classList.remove('show');
+      menu.style.display = 'none';
+    }
   }
 });
+
+// Fungsi toggle tombol
+function toggleMenu() {
+  const menu = document.getElementById('mobileMenu');
+  if(menu.classList.contains('show')) {
+    menu.classList.remove('show');
+    menu.style.display = 'none';
+  } else {
+    menu.classList.add('show');
+    menu.style.display = 'block';
+  }
+}
+
   </script>
 
 
