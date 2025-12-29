@@ -9,8 +9,12 @@
     
 /* ================= RESET & ROOT ================= */
 :root {
-  --p: #7c6cff;
-  --bg: #070617;
+  --p: #00ffff;        /* warna utama / tombol / highlight */
+  --p-hover: #00cfff;  /* hover */
+  --bg: #0a0a1f;       /* background utama */
+  --text: #fff;        /* teks utama */
+  --text-alt: #ccc;    /* teks sekunder / deskripsi */
+  --warning: #ff6b6b;  /* untuk error / warning */
 }
 
 /* RESET */
@@ -26,15 +30,15 @@ html, body {
   overflow-x: hidden;
 }
 
-/* ================= BODY ================= */
+/* BODY */
 body {
-  font-family: Segoe UI, system-ui, -apple-system, BlinkMacSystemFont;
-  background: radial-gradient(circle at top, #1b1760, #05040d);
-  color: #fff;
+  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont;
+  background: radial-gradient(circle at top, #001f3f, var(--bg));
+  color: var(--text);
   padding-top: 72px;
 }
 
-/* ================= NAVBAR ================= */
+/* NAVBAR */
 .navbar {
   position: fixed;
   top: 0;
@@ -42,7 +46,7 @@ body {
   right: 0;
   height: 72px;
   z-index: 1000;
-  background: rgba(8,7,20,.9);
+  background: rgba(0,0,32,.9);
   backdrop-filter: blur(10px);
 }
 
@@ -72,14 +76,14 @@ body {
 }
 
 .menu a {
-  color: #ddd;
+  color: var(--text-alt);
   margin: 0 6px;
   text-decoration: none;
   font-size: 14px;
 }
 
 .menu a:hover {
-  color: #fff;
+  color: var(--text);
 }
 
 .nav-btn {
@@ -90,38 +94,42 @@ body {
   cursor: pointer;
 }
 
-/* ================= CONTAINER ================= */
+.nav-btn:hover {
+  background: var(--p-hover);
+}
+
+/* CONTAINER */
 .container {
   max-width: 1100px;
   margin: auto;
   padding: 24px 16px 80px;
 }
 
-/* ================= CARD ================= */
+/* CARD */
 .card {
-  background: linear-gradient(145deg,#0f0d25,#17143a);
+  background: linear-gradient(145deg,#001a2f,#001f3f);
   border-radius: 18px;
   padding: 18px;
 }
 
-/* ================= GRID ================= */
+/* GRID */
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
 
-/* ================= PAKET GRID ================= */
+/* PAKET GRID */
 .paket-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 14px;
 }
 
-/* ================= PAKET ITEM ================= */
+/* PAKET ITEM */
 .paket {
   position: relative;
-  background: linear-gradient(145deg,#0f0d25,#1a1740);
+  background: linear-gradient(145deg,#001a2f,#00284f);
   border-radius: 16px;
   padding: 14px;
   text-align: center;
@@ -130,16 +138,16 @@ body {
 
 .paket:hover {
   transform: translateY(-3px);
-  box-shadow: 0 0 16px rgba(124,108,255,.35);
+  box-shadow: 0 0 16px rgba(0,255,255,0.35);
 }
 
 .paket.active {
   box-shadow:
-    0 0 0 2px rgba(124,108,255,.8),
-    0 0 24px rgba(124,108,255,.45);
+    0 0 0 2px rgba(0,255,255,0.8),
+    0 0 24px rgba(0,255,255,0.45);
 }
 
-/* ================= PAKET TEXT ================= */
+/* PAKET TEXT */
 .paket .emoji {
   font-size: 22px;
   margin-bottom: 4px;
@@ -153,10 +161,10 @@ body {
 .harga {
   margin-top: 4px;
   font-size: 12px;
-  color: #c7b9ff;
+  color: var(--p);
 }
 
-/* ================= CHECK ================= */
+/* CHECK */
 .check {
   position: absolute;
   top: 6px;
@@ -164,7 +172,7 @@ body {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: linear-gradient(135deg,#8b5cf6,#6d28d9);
+  background: linear-gradient(135deg,#00ffff,#00cfff);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -177,7 +185,7 @@ body {
   transform: scale(1);
 }
 
-/* ================= INPUT & BUTTON ================= */
+/* INPUT & BUTTON */
 input,
 select {
   width: 100%;
@@ -186,8 +194,8 @@ select {
   font-size: 16px;
   border-radius: 14px;
   border: 1px solid rgba(255,255,255,.12);
-  background: #090822;
-  color: #fff;
+  background: #001528;
+  color: var(--text);
 }
 
 .btn {
@@ -197,49 +205,48 @@ select {
   border-radius: 14px;
   border: none;
   background: var(--p);
-  color: #fff;
+  color: var(--text);
   font-weight: 600;
   cursor: pointer;
 }
 
-.btn.alt {
-  background: #2a2755;
+.btn:hover {
+  background: var(--p-hover);
 }
 
-/* ================= RESULT ================= */
-.result {
+.btn.alt {
+  background: #001f3f;
+}
+
+/* RESULT & RATE NOTE */
+.result,
+.rate-note {
   margin-top: 14px;
   padding: 14px;
   border-radius: 14px;
-  background: rgba(124,108,255,.08);
-  border: 1px dashed rgba(124,108,255,.5);
+  background: rgba(0,255,255,0.08);
+  border: 1px dashed rgba(0,255,255,0.5);
   text-align: center;
 }
 
-/* ================= CONFIRM ================= */
+/* CONFIRM */
 .confirm {
   display: none;
-  background: linear-gradient(145deg,#120f2f,#1a1750);
+  background: linear-gradient(145deg,#00122f,#001f3f);
   padding: 18px;
   border-radius: 18px;
   margin-bottom: 30px;
 }
 
-/* ================= RATE NOTE ================= */
-.rate-note {
-  margin-top: 16px;
-  padding: 12px;
-  border-radius: 14px;
-  background: rgba(124,108,255,.08);
-  border: 1px dashed rgba(124,108,255,.4);
-  font-size: 13px;
-  text-align: center;
+/* WARNING */
+#passWarning {
+  color: var(--warning);
 }
 
-/* ================= FOOTER ================= */
+/* FOOTER */
 footer {
   margin-top: 80px;
-  background: linear-gradient(180deg,#070617,#04030d);
+  background: linear-gradient(180deg,var(--bg),#001528);
   border-top: 1px solid rgba(255,255,255,.08);
 }
 
@@ -272,12 +279,12 @@ footer {
 .footer a {
   display: block;
   margin-bottom: 6px;
-  color: #bbb;
+  color: var(--text-alt);
   text-decoration: none;
 }
 
 .footer a:hover {
-  color: #fff;
+  color: var(--text);
 }
 
 .payments {
@@ -288,10 +295,11 @@ footer {
 
 .payments div {
   padding: 10px;
-  background: #0c0b25;
+  background: #001528;
   border-radius: 12px;
   font-size: 13px;
   text-align: center;
+  color: var(--text-alt);
 }
 
 .copy {
@@ -302,9 +310,8 @@ footer {
   border-top: 1px solid rgba(255,255,255,.06);
 }
 
-/* ================= MOBILE FIX ================= */
+/* MOBILE FIXES */
 @media (max-width: 768px) {
-
   .grid {
     grid-template-columns: 1fr;
   }
@@ -327,8 +334,8 @@ footer {
     display: none;
   }
 }
-/* ================= MOBILE DROPDOWN NAV ================= */
 
+/* MOBILE DROPDOWN NAV */
 .mobile-menu {
   display: none;
   position: relative;
@@ -337,7 +344,7 @@ footer {
 .dots-btn {
   background: none;
   border: none;
-  color: #fff;
+  color: var(--text);
   font-size: 26px;
   cursor: pointer;
   padding: 6px 10px;
@@ -347,7 +354,7 @@ footer {
   position: absolute;
   top: 48px;
   right: 0;
-  background: linear-gradient(145deg,#0f0d25,#1a1740);
+  background: linear-gradient(145deg,#001a2f,#00284f);
   border-radius: 14px;
   padding: 8px;
   width: 170px;
@@ -359,30 +366,20 @@ footer {
 .mobile-dropdown a {
   display: block;
   padding: 10px 12px;
-  color: #ddd;
+  color: var(--text-alt);
   text-decoration: none;
   font-size: 14px;
   border-radius: 10px;
 }
 
 .mobile-dropdown a:hover {
-  background: rgba(124,108,255,.15);
-  color: #fff;
+  background: rgba(0,255,255,0.15);
+  color: var(--text);
 }
 
-/* MOBILE ONLY */
-@media (max-width: 768px) {
-  .menu {
-    display: none;
-  }
-
-  .mobile-menu {
-    display: block;
-  }
-}
 .mobile-dropdown .mobile-topup {
   background: var(--p);
-  color: #fff;
+  color: var(--text);
   text-align: center;
   margin-top: 8px;
   padding: 10px 12px;
@@ -393,8 +390,30 @@ footer {
 }
 
 .mobile-dropdown .mobile-topup:hover {
-  background: #8b5cf6;
+  background: var(--p-hover);
 }
+.paket .emoji img {
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+  margin-bottom: 4px;
+}
+.btn.alt.active {
+  background: var(--p);      /* warna utama */
+  color: var(--text);        /* teks utama */
+}
+.banner-text {
+  text-align: center;
+  background: linear-gradient(90deg, #00ffff, #00cfff);
+  color: #001f3f;
+  font-weight: 700;
+  font-size: 16px;
+  padding: 12px 0;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
 
   </style>
   </head>
@@ -451,19 +470,50 @@ footer {
   </div>
 
   <!-- PAKET -->
-  <section id="paket" class="card">
-  <h2>💎 Pilih Paket Robux</h2>
+ <!-- SPANDUK TULISAN -->
+<div class="banner-text">
+  🔥 Robux Terpercaya & Aman, Proses Cepat! 🔥
+</div>
+
+<section id="paket" class="card">
+  <h2>
+    <img src="robux1.jpg" alt="Robux" style="width:28px; height:28px; object-fit:cover; vertical-align:middle; margin-right:6px;">
+    Pilih Paket Robux
+  </h2>
   <div id="paketList" class="paket-grid"></div>
   <div class="card" style="margin-top:20px">
-    <h3>✨ Paket Custom</h3>
+    <h3>
+      <img src="robux1.jpg" alt="Robux" style="width:24px; height:24px; object-fit:cover; vertical-align:middle; margin-right:4px;">
+      Paket Custom
+    </h3>
     <input id="customRobux" type="number" placeholder="Masukkan jumlah Robux">
     <div id="customHarga" class="result">Harga: -</div>
     <button class="btn" id="btnCustomTopup" style="display:none" onclick="customTopup()">Top Up Custom</button>
   </div>
+</section>
+
 
   <div class="rate-note" id="rateNote"></div>
   <div style="margin-top:24px">
-  <input id="passId" placeholder="Masukkan Pass ID / Gamepass ID">
+ <input
+  id="passId"
+  type="text"
+  inputmode="numeric"
+  placeholder="Masukkan Gamepass ID (hanya angka, bukan password)"
+  style="width:100%; padding:14px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background:#090822; color:#fff;"
+>
+
+<!-- KETERANGAN TRUST (WAJIB) -->
+<div style="font-size:12px; color:#b5b5b5; margin-top:6px; line-height:1.4">
+  🔒 Kami <b>tidak pernah</b> meminta password, OTP, atau login akun Roblox.<br>
+  Gamepass ID adalah angka publik yang aman digunakan.
+</div>
+
+<!-- WARNING ANGKA -->
+<div id="passWarning" style="color:#ff6b6b; font-size:13px; margin-top:4px; display:none;">
+  Gamepass ID harus berupa angka
+</div>
+
 <div style="margin-top: 8px; font-size: 13px; color: #ccc;">
   Cara cek Pass ID / Gamepass ID? 
   <a href="https://whatsapp.com/channel/0029VbBxOdG5Ui2Xlg1qYC0o" target="_blank" style="color: var(--p); text-decoration: underline;">
@@ -480,6 +530,16 @@ footer {
     </select>
   </div>
 
+<div class="rate-note">
+  🔒 <b>Aman & Bukan Phishing</b><br>
+  Kami <b>TIDAK PERNAH</b> meminta:
+  <ul style="text-align:left; margin:8px 0 0 16px; font-size:13px;">
+    <li>Password Roblox</li>
+    <li>Kode OTP</li>
+    <li>Login akun</li>
+  </ul>
+  Proses menggunakan <b>Gamepass resmi Roblox</b>.
+</div>
 
   <button id="btnTopup" class="btn" onclick="showConfirm()">Top Up Sekarang</button>
 
@@ -490,7 +550,7 @@ footer {
   <div class="grid">
 
   <div class="card">
-  <h3>🎮 Kalkulator Robux</h3>
+  <h3>🧮 Kalkulator Robux</h3>
   <input id="robux" type="number" placeholder="Masukkan Robux">
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
   <button class="btn alt" onclick="calcRobux('before')">Before Tax</button>
@@ -502,10 +562,11 @@ footer {
   <div class="card">
   <h3>💰 Hitung dari Harga</h3>
   <input id="harga" type="number" placeholder="Contoh: 10500" oninput="calcHarga()">
-  <div id="resHarga" class="result">—</div>
+  <div id="resHarga" class="result">
+    Masukkan harga untuk melihat berapa Robux yang didapat
   </div>
+</div>
 
-  </div>
   </section>
 
   </div>
@@ -578,55 +639,78 @@ footer {
     const paketList = document.getElementById("paketList");
     const btnTopup = document.getElementById("btnTopup");
     const customInput = document.getElementById("customRobux");
+    const passInput = document.getElementById('passId');
+const passWarning = document.getElementById('passWarning'); // nanti buat elemen <div id="passWarning">
+ 
+passInput.addEventListener('input', () => {
+  const val = passInput.value;
+  if (/^\d*$/.test(val)) { // valid jika hanya angka
+    passWarning.style.display = 'none';
+    btnTopup.disabled = false; // aktifkan tombol
+  } else {
+    passWarning.style.display = 'block';
+    btnTopup.disabled = true; // nonaktifkan tombol
+  }
+});
+
 
     /* ===== RENDER PAKET STANDAR ===== */
-    paketData.forEach(r => {
-      const div = document.createElement("div");
-      div.className = "paket";
+   /* ===== RENDER PAKET STANDAR ===== */
+paketData.forEach(r => {
+  const div = document.createElement("div");
+  div.className = "paket";
 
-      div.innerHTML = `
-        <div class="check">✓</div>
-        <div class="emoji">💎</div>
-        <div class="robux">${r}</div>
-        <div class="harga">Rp ${(r * RATE).toLocaleString()}</div>
-      `;
-div.onclick = () => {
-  const isActive = div.classList.contains("active");
+  div.innerHTML = `
+    <div class="check">✓</div>
+    <img src="robux1.jpg" alt="Robux" style="width:28px; height:28px; object-fit:cover; margin-bottom:6px;">
+    <div class="robux">${r} Robux</div>
+    <div class="harga">Rp ${(r * RATE).toLocaleString()}</div>
+  `;
 
-  document.querySelectorAll(".paket")
-    .forEach(p => p.classList.remove("active"));
+  div.onclick = () => {
+    const isActive = div.classList.contains("active");
 
-  if (!isActive) {
-    div.classList.add("active");
-    selectedRobux = r;
-    robux.value = r;
-    btnTopup.style.display = "block";
-  } else {
-    selectedRobux = 0;
-    robux.value = "";
-    btnTopup.style.display = customInput.value ? "block" : "none";
-  }
+    document.querySelectorAll(".paket")
+      .forEach(p => p.classList.remove("active"));
 
-  // 🔑 INI KUNCI UTAMA
-  updateConfirm();
-};
+    if (!isActive) {
+      div.classList.add("active");
+      selectedRobux = r;
+      robux.value = r;
+      btnTopup.style.display = "block";
+    } else {
+      selectedRobux = 0;
+      robux.value = "";
+      btnTopup.style.display = customInput.value ? "block" : "none";
+    }
 
+    updateConfirm();
+  };
 
-      paketList.appendChild(div);
-    });
+  paketList.appendChild(div);
+});
 
     /* ===== KALKULATOR ROBUX ===== */
-    function calcRobux(t){
-      const r = parseAngka(robux.value);
-      if(!r){ 
-        resRobux.innerText = "—";
-        return;
-      }
-      resRobux.innerText =
-        t === 'before'
-          ? Math.floor(r * 0.7) + " Robux (Diterima)"
-          : Math.ceil(r / 0.7) + " Robux (Set Gamepass)";
-    }
+   function calcRobux(t){
+  const r = parseAngka(robux.value);
+  if(!r){ 
+    resRobux.innerText = "—";
+    // reset semua tombol aktif
+    document.querySelectorAll(".btn.alt").forEach(b => b.classList.remove("active"));
+    return;
+  }
+
+  resRobux.innerText =
+    t === 'before'
+      ? Math.floor(r * 0.7) + " Robux (Diterima)"
+      : Math.ceil(r / 0.7) + " Robux (Set Gamepass)";
+
+  // toggle active
+  document.querySelectorAll(".btn.alt").forEach(b => b.classList.remove("active"));
+  if(t === 'before') document.querySelector(".btn.alt:nth-child(1)").classList.add("active");
+  else document.querySelector(".btn.alt:nth-child(2)").classList.add("active");
+}
+
 
  //* ===== HITUNG ROBUX SESUAI LOGIKA LO ===== */
 function calcHarga() {
