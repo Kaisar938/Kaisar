@@ -548,16 +548,18 @@ footer {
   <!-- TOOLS -->
   <section id="tools" style="margin-top:40px">
   <div class="grid">
-
-  <div class="card">
+<div class="card">
   <h3>🧮 Kalkulator Robux</h3>
   <input id="robux" type="number" placeholder="Masukkan Robux">
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
-  <button class="btn alt" onclick="calcRobux('before')">Before Tax</button>
-  <button class="btn alt" onclick="calcRobux('after')">After Tax</button>
+    <button class="btn alt" onclick="calcRobux('before')">Before Tax</button>
+    <button class="btn alt" onclick="calcRobux('after')">After Tax</button>
   </div>
   <div id="resRobux" class="result">—</div>
+  <div id="robuxNote" style="margin-top:6px; font-size:13px; color:var(--text-alt)">
+    Masukkan jumlah Robux dan pilih Before atau After Tax untuk melihat hasilnya.
   </div>
+</div>
 
   <div class="card">
   <h3>💰 Hitung dari Harga</h3>
@@ -690,12 +692,13 @@ paketData.forEach(r => {
   paketList.appendChild(div);
 });
 
-    /* ===== KALKULATOR ROBUX ===== */
-   function calcRobux(t){
+  function calcRobux(t){
   const r = parseAngka(robux.value);
+  const robuxNote = document.getElementById("robuxNote");
+
   if(!r){ 
     resRobux.innerText = "—";
-    // reset semua tombol aktif
+    robuxNote.innerText = "Masukkan jumlah Robux, lalu pilih tombol Before atau After Tax untuk melihat hasil.";
     document.querySelectorAll(".btn.alt").forEach(b => b.classList.remove("active"));
     return;
   }
@@ -707,8 +710,13 @@ paketData.forEach(r => {
 
   // toggle active
   document.querySelectorAll(".btn.alt").forEach(b => b.classList.remove("active"));
-  if(t === 'before') document.querySelector(".btn.alt:nth-child(1)").classList.add("active");
-  else document.querySelector(".btn.alt:nth-child(2)").classList.add("active");
+  if(t === 'before') {
+    document.querySelector(".btn.alt:nth-child(1)").classList.add("active");
+    robuxNote.innerText = "Kalau kamu tekan Before Tax, jumlah yang diterima akan dikurangi pajak.";
+  } else {
+    document.querySelector(".btn.alt:nth-child(2)").classList.add("active");
+    robuxNote.innerText = "Kalau kamu tekan After Tax, yang masuk akan sesuai jumlah Robux yang kamu inginkan.";
+  }
 }
 
 
