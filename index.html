@@ -380,6 +380,21 @@ footer {
     display: block;
   }
 }
+.mobile-dropdown .mobile-topup {
+  background: var(--p);
+  color: #fff;
+  text-align: center;
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.mobile-dropdown .mobile-topup:hover {
+  background: #8b5cf6;
+}
 
   </style>
   </head>
@@ -408,11 +423,13 @@ footer {
   <button class="dots-btn" onclick="toggleMenu()">⋮</button>
 
   <div class="mobile-dropdown" id="mobileMenu">
-    <a href="#beranda" onclick="closeMenu()">Beranda</a>
-    <a href="#paket" onclick="closeMenu()">Paket</a>
-    <a href="#tools" onclick="closeMenu()">Kalkulator</a>
-    <a href="https://wa.me/6285182456497" onclick="closeMenu()">Hubungi</a>
-  </div>
+  <a href="#beranda" onclick="closeMenu()">Beranda</a>
+  <a href="#paket" onclick="closeMenu()">Paket</a>
+  <a href="#tools" onclick="closeMenu()">Kalkulator</a>
+  <a href="https://wa.me/6285182456497" onclick="closeMenu()">Hubungi</a>
+  <div class="mobile-topup" onclick="showConfirm(); closeMenu();">Top Up</div>
+</div>
+
 </div>
 
 
@@ -781,6 +798,12 @@ function toggleMenu() {
     menu.style.display = 'block';
   }
 }
+function closeMenu() {
+  const menu = document.getElementById('mobileMenu');
+  menu.classList.remove('show');
+  menu.style.display = 'none';
+}
+
 
   </script>
 
