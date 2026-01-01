@@ -610,14 +610,18 @@ select {
   <div class="container">
 
   <!-- KONFIRMASI -->
-  <div id="confirmBox" class="confirm">
-    <h3>🧾 Konfirmasi Pesanan</h3>
-    <p id="cfPaket">-</p>
-    <p id="cfHarga">-</p>
-    <p id="cfBefore">-</p>
-    <p id="cfAfter">-</p>
-    <button class="btn" style="display:block" onclick="toWA()">Lanjut ke WhatsApp</button>
-  </div>
+<!-- CONFIRM BOX -->
+<div id="confirmBox" class="confirm">
+  <h3>📋 Konfirmasi Pesanan</h3>
+
+  <p id="cfPaket">Paket: -</p>
+  <p id="cfHarga">Harga: -</p>
+  <p id="cfBefore">Before Tax: -</p>
+  <p id="cfAfter">After Tax: -</p>
+
+  <button class="btn" onclick="toWA()">Lanjut ke WhatsApp</button>
+</div>
+
 
   <!-- PAKET -->
  <!-- SPANDUK TULISAN -->
@@ -789,6 +793,9 @@ select {
   </footer>
 
   <script>
+    let hargaFinal = 0;
+let promoText = "";
+
     let promoPercent = 0;
 let promoCodeActive = "";
 
@@ -822,6 +829,12 @@ const PROMO_LIST = {
     const customInput = document.getElementById("customRobux");
     const passInput = document.getElementById('passId');
 const passWarning = document.getElementById('passWarning'); // nanti buat elemen <div id="passWarning">
+  const confirmBox = document.getElementById("confirmBox");
+const cfPaket  = document.getElementById("cfPaket");
+const cfHarga  = document.getElementById("cfHarga");
+const cfBefore = document.getElementById("cfBefore");
+const cfAfter  = document.getElementById("cfAfter");
+
  
 passInput.addEventListener('input', () => {
   const val = passInput.value;
@@ -930,9 +943,7 @@ function calcHarga() {
 
 
     /* ===== KONFIRMASI ===== */
-   function updateConfirm() {
-  const box = document.getElementById('confirmBox');
-
+  function updateConfirm() {
   const val = selectedRobux > 0
     ? selectedRobux
     : parseAngka(customInput.value);
@@ -947,16 +958,20 @@ function calcHarga() {
     ? Math.floor(hargaAwal * promoPercent / 100)
     : 0;
 
-  const hargaFinal = hargaAwal - diskon;
+  hargaFinal = hargaAwal - diskon;
+
+  promoText = promoPercent > 0
+    ? `Promo: ${promoCodeActive} (${promoPercent}%)`
+    : "";
 
   cfPaket.innerText  = `Paket: ${val} Robux`;
   cfHarga.innerText  = `Harga: Rp ${hargaFinal.toLocaleString()}`;
-
   cfBefore.innerText = `Before Tax: ${Math.floor(val * 0.7)} Robux`;
   cfAfter.innerText  = `After Tax: ${Math.ceil(val / 0.7)} Robux`;
 
-  box.style.display = 'block';
+  confirmBox.style.display = "block";
 }
+
 
 function resetConfirm() {
   const box = document.getElementById('confirmBox');
@@ -975,15 +990,18 @@ function resetConfirm() {
     : parseAngka(customInput.value);
 
   if (!val || val <= 0) {
-    resetConfirm();
+    alert("Pilih paket atau isi jumlah Robux dulu");
     return;
   }
 
   updateConfirm();
 
+  // scroll aman (tidak error)
   setTimeout(() => {
-    const y = confirmBox.getBoundingClientRect().top + window.pageYOffset - 90;
-    window.scrollTo({ top: y, behavior: "smooth" });
+    confirmBox.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
   }, 50);
 }
 
@@ -1092,7 +1110,7 @@ function closeMenu() {
   menu.style.display = 'none';
 }
 /* ===== MAINTENANCE TOGGLE ===== */
-const MAINTENANCE_MODE = true; // 🔴 true = ON, false = OFF
+const MAINTENANCE_MODE = false; // 🔴 true = ON, false = OFF
 
 if (MAINTENANCE_MODE) {
   document.getElementById("maintenance").style.display = "flex";
