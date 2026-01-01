@@ -618,6 +618,8 @@ select {
   <p id="cfHarga">Harga: -</p>
   <p id="cfBefore">Before Tax: -</p>
   <p id="cfAfter">After Tax: -</p>
+  <p id="cfPass">Pass ID: -</p>
+
 
   <button class="btn" onclick="toWA()">Lanjut ke WhatsApp</button>
 </div>
@@ -834,16 +836,28 @@ const cfPaket  = document.getElementById("cfPaket");
 const cfHarga  = document.getElementById("cfHarga");
 const cfBefore = document.getElementById("cfBefore");
 const cfAfter  = document.getElementById("cfAfter");
+const cfPass = document.getElementById("cfPass");
+
 
  
 passInput.addEventListener('input', () => {
-  const val = passInput.value;
-  if (/^\d*$/.test(val)) { // valid jika hanya angka
+  const val = passInput.value.trim();
+
+  if (/^\d*$/.test(val)) { // hanya angka
     passWarning.style.display = 'none';
-    btnTopup.disabled = false; // aktifkan tombol
+    btnTopup.disabled = false;
+
+    // 🔥 REAL-TIME UPDATE KE CONFIRM BOX
+    cfPass.innerText = val
+      ? `Pass ID: ${val}`
+      : "Pass ID: -";
+
   } else {
     passWarning.style.display = 'block';
-    btnTopup.disabled = true; // nonaktifkan tombol
+    btnTopup.disabled = true;
+
+    // optional: reset kalau invalid
+    cfPass.innerText = "Pass ID: -";
   }
 });
 
@@ -968,6 +982,14 @@ function calcHarga() {
   cfHarga.innerText  = `Harga: Rp ${hargaFinal.toLocaleString()}`;
   cfBefore.innerText = `Before Tax: ${Math.floor(val * 0.7)} Robux`;
   cfAfter.innerText  = `After Tax: ${Math.ceil(val / 0.7)} Robux`;
+  cfAfter.innerText = `After Tax: ${Math.ceil(val / 0.7)} Robux`;
+
+const passVal = passInput.value.trim();
+cfPass.innerText = passVal
+  ? `Pass ID: ${passVal}`
+  : "Pass ID: -";
+
+
 
   confirmBox.style.display = "block";
 }
@@ -982,6 +1004,8 @@ function resetConfirm() {
   cfHarga.innerText  = '-';
   cfBefore.innerText = '-';
   cfAfter.innerText  = '-';
+  cfPass.innerText = "-";
+
 }
 
  function showConfirm(){
