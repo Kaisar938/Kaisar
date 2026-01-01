@@ -456,6 +456,95 @@ footer {
   margin-bottom: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
+/* SAMAKAN SEMUA INPUT */
+input,
+select {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  font-size: 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: #001528;
+  color: var(--text);
+}
+
+/* PROMO INFO */
+.promo-info {
+  margin-top: 8px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(0,255,255,0.08);
+  border: 1px dashed rgba(0,255,255,0.4);
+  font-size: 13px;
+  color: var(--p);
+}
+/* WRAPPER FORM */
+.form-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* GROUP */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* INPUT & SELECT SERAGAM */
+.input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: #090822;
+  color: #fff;
+  font-size: 15px;
+}
+
+/* TEKS KECIL */
+.hint-text {
+  font-size: 12px;
+  color: #b5b5b5;
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+.error-text {
+  color: #ff6b6b;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.help-link {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #ccc;
+}
+
+.help-link a {
+  color: var(--p);
+  text-decoration: underline;
+}
+
+/* PROMO INFO */
+.promo-info {
+  margin-top: 8px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(0,255,255,0.08);
+  border: 1px dashed rgba(0,255,255,0.4);
+  font-size: 13px;
+  color: var(--p);
+}
+
+/* TRUST NOTE */
+.rate-note ul {
+  text-align: left;
+  margin: 8px 0 0 16px;
+  font-size: 13px;
+}
 
 
   </style>
@@ -554,36 +643,52 @@ footer {
 </section>
 
 
+  <!-- FORM CONTAINER -->
+<div class="form-wrap">
+
   <div class="rate-note" id="rateNote"></div>
-  <div style="margin-top:24px">
- <input
-  id="passId"
-  type="text"
-  inputmode="numeric"
-  placeholder="Masukkan Gamepass ID (hanya angka, bukan password)"
-  style="width:100%; padding:14px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background:#090822; color:#fff;"
->
 
-<!-- KETERANGAN TRUST (WAJIB) -->
-<div style="font-size:12px; color:#b5b5b5; margin-top:6px; line-height:1.4">
-  🔒 Kami <b>tidak pernah</b> meminta password, OTP, atau login akun Roblox.<br>
-  Gamepass ID adalah angka publik yang aman digunakan.
-</div>
+  <!-- GAMEPASS ID -->
+  <div class="form-group">
+    <input
+      id="passId"
+      type="text"
+      inputmode="numeric"
+      placeholder="Masukkan Gamepass ID (hanya angka, bukan password)"
+      class="input"
+    >
 
-<!-- WARNING ANGKA -->
-<div id="passWarning" style="color:#ff6b6b; font-size:13px; margin-top:4px; display:none;">
-  Gamepass ID harus berupa angka
-</div>
+    <div class="hint-text">
+      🔒 Kami <b>tidak pernah</b> meminta password, OTP, atau login akun Roblox.<br>
+      Gamepass ID adalah angka publik yang aman digunakan.
+    </div>
 
-<div style="margin-top: 8px; font-size: 13px; color: #ccc;">
-  Cara cek Pass ID / Gamepass ID? 
-  <a href="https://whatsapp.com/channel/0029VbBxOdG5Ui2Xlg1qYC0o" target="_blank" style="color: var(--p); text-decoration: underline;">
-    Cek di Saluran WhatsApp Kami
-  </a>
-</div>
+    <div id="passWarning" class="error-text" style="display:none;">
+      Gamepass ID harus berupa angka
+    </div>
 
+    <div class="help-link">
+      Cara cek Pass ID / Gamepass ID?
+      <a href="https://whatsapp.com/channel/0029VbBxOdG5Ui2Xlg1qYC0o" target="_blank">
+        Cek di Saluran WhatsApp Kami
+      </a>
+    </div>
+  </div>
 
-    <select id="payment">
+  <!-- PROMO CODE -->
+  <div class="form-group">
+    <input
+      id="promoCode"
+      type="text"
+      placeholder="Kode Promo (Opsional)"
+      class="input"
+    >
+    <div id="promoInfo" class="promo-info" style="display:none"></div>
+  </div>
+
+  <!-- PAYMENT -->
+  <div class="form-group">
+    <select id="payment" class="input">
       <option value="">Pilih Metode Pembayaran</option>
       <option>Bank Transfer</option>
       <option>QRIS</option>
@@ -591,16 +696,20 @@ footer {
     </select>
   </div>
 
+</div>
+
+<!-- TRUST NOTE -->
 <div class="rate-note">
   🔒 <b>Aman & Bukan Phishing</b><br>
   Kami <b>TIDAK PERNAH</b> meminta:
-  <ul style="text-align:left; margin:8px 0 0 16px; font-size:13px;">
+  <ul>
     <li>Password Roblox</li>
     <li>Kode OTP</li>
     <li>Login akun</li>
   </ul>
   Proses menggunakan <b>Gamepass resmi Roblox</b>.
 </div>
+
 
   <button id="btnTopup" class="btn" onclick="showConfirm()">Top Up Sekarang</button>
 
@@ -680,7 +789,16 @@ footer {
   </footer>
 
   <script>
-  
+    let promoPercent = 0;
+let promoCodeActive = "";
+
+  /* ===== PROMO CONFIG ===== */
+const PROMO_LIST = {
+     // diskon 10%
+       // diskon 20%
+      // diskon 25%
+};
+
 
     // ===== HELPERS =====
     function parseAngka(val){
@@ -819,19 +937,27 @@ function calcHarga() {
     ? selectedRobux
     : parseAngka(customInput.value);
 
-  // JIKA TIDAK VALID → TUTUP KONFIRMASI
   if (!val || val <= 0) {
     resetConfirm();
     return;
   }
 
+  const hargaAwal = val * RATE;
+  const diskon = promoPercent > 0
+    ? Math.floor(hargaAwal * promoPercent / 100)
+    : 0;
+
+  const hargaFinal = hargaAwal - diskon;
+
   cfPaket.innerText  = `Paket: ${val} Robux`;
-  cfHarga.innerText  = `Harga: Rp ${(val * RATE).toLocaleString()}`;
+  cfHarga.innerText  = `Harga: Rp ${hargaFinal.toLocaleString()}`;
+
   cfBefore.innerText = `Before Tax: ${Math.floor(val * 0.7)} Robux`;
   cfAfter.innerText  = `After Tax: ${Math.ceil(val / 0.7)} Robux`;
 
   box.style.display = 'block';
 }
+
 function resetConfirm() {
   const box = document.getElementById('confirmBox');
 
@@ -875,13 +1001,15 @@ function resetConfirm() {
       if(pay)  extra += `\n\nMetode Pembayaran:\n${pay}`;
 
       const msg = `Halo KaisarStore,
-  Saya mau top up Robux
+Saya mau top up Robux
 
-  Jumlah: ${val} Robux
-  Harga: Rp ${(val*RATE).toLocaleString()}
-  Before Tax: ${Math.floor(val*0.7)}
-  After Tax: ${Math.ceil(val/0.7)}
-  ${extra}`;
+Jumlah: ${val} Robux
+Harga: Rp ${hargaFinal.toLocaleString()}
+Before Tax: ${Math.floor(val * 0.7)}
+After Tax: ${Math.ceil(val / 0.7)}
+${promoText}
+${extra}`;
+
 
       window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`);
     }
@@ -970,6 +1098,27 @@ if (MAINTENANCE_MODE) {
   document.getElementById("maintenance").style.display = "flex";
   document.body.style.overflow = "hidden"; // lock scroll
 }
+const promoInput = document.getElementById("promoCode");
+const promoInfo  = document.getElementById("promoInfo");
+
+promoInput.addEventListener("input", () => {
+  const code = promoInput.value.trim().toUpperCase();
+
+  if (PROMO_LIST[code]) {
+    promoPercent = PROMO_LIST[code];
+    promoCodeActive = code;
+
+    promoInfo.style.display = "block";
+    promoInfo.innerHTML = `🎉 Kode <b>${code}</b> aktif<br>Diskon <b>${promoPercent}%</b>`;
+
+  } else {
+    promoPercent = 0;
+    promoCodeActive = "";
+    promoInfo.style.display = "none";
+  }
+
+  if(confirmBox.style.display === "block") updateConfirm();
+});
 
 
   </script>
