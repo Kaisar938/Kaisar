@@ -925,6 +925,14 @@ paketData.forEach(r => {
   }
 }
 
+function customTopup() {
+  selectedRobux = parseAngka(customInput.value);
+  if(!selectedRobux || selectedRobux < 100) {
+    alert("Minimal top-up 100 Robux");
+    return;
+  }
+  showConfirm();
+}
 
  //* ===== HITUNG ROBUX SESUAI LOGIKA LO ===== */
 function calcHarga() {
@@ -936,7 +944,7 @@ function calcHarga() {
 
   let setGP, finalRobux;
 
-  if (h === 11000) {
+  if (h === 10500) {
     setGP = 143;
     finalRobux = 100;
   } else if (h === 50000) {
@@ -1134,7 +1142,7 @@ function closeMenu() {
   menu.style.display = 'none';
 }
 /* ===== MAINTENANCE TOGGLE ===== */
-const MAINTENANCE_MODE = false; // 🔴 true = ON, false = OFF
+const MAINTENANCE_MODE = true; // 🔴 true = ON, false = OFF
 
 if (MAINTENANCE_MODE) {
   document.getElementById("maintenance").style.display = "flex";
