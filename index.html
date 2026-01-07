@@ -4,8 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KaisarStore - Top Up Robux</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 
   <style>
+    /* Tombol Default (Keadaan belum dipilih) */
+.btn.alt {
+  background: #001f3f; /* Warna biru navy solid agar tidak blur */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+  backdrop-filter: none; /* Matikan blur di sini agar teks tajam */
+}
+
+.btn.alt:hover {
+  background: #002d5a;
+  border-color: var(--p);
+}
+
+/* Tombol Saat Aktif (Sudah diklik) */
+.btn.alt.active {
+  background: var(--p) !important; /* Warna cyan menyala */
+  color: #001f3f !important;      /* Teks biru gelap agar kontras tinggi */
+  font-weight: 800;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+  border-color: var(--p);
+}
     /* ===== MAINTENANCE OVERLAY ===== */
 .maintenance {
   position: fixed;
@@ -52,13 +79,17 @@
 
 /* ================= RESET & ROOT ================= */
 :root {
-  --p: #00ffff;        /* warna utama / tombol / highlight */
-  --p-hover: #00cfff;  /* hover */
-  --bg: #0a0a1f;       /* background utama */
-  --text: #fff;        /* teks utama */
-  --text-alt: #ccc;    /* teks sekunder / deskripsi */
-  --warning: #ff6b6b;  /* untuk error / warning */
+  --p: #00ffff;
+  --p-hover: #00e5e5;
+  --bg: #050510;
+  --glass: rgba(15, 20, 35, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --text: #ffffff;
+  --text-alt: #a0a0b8;
+  --warning: #ff6b6b;
+  --grad: linear-gradient(135deg, #00ffff, #0080ff);
 }
+
 
 /* RESET */
 *,
@@ -75,8 +106,11 @@ html, body {
 
 /* BODY */
 body {
-  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont;
-  background: radial-gradient(circle at top, #001f3f, var(--bg));
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(0,255,255,.06), transparent 40%),
+    radial-gradient(circle at 100% 100%, rgba(0,128,255,.06), transparent 40%);
   color: var(--text);
   padding-top: 72px;
 }
@@ -150,10 +184,14 @@ body {
 
 /* CARD */
 .card {
-  background: linear-gradient(145deg,#001a2f,#001f3f);
-  border-radius: 18px;
-  padding: 18px;
+  background: var(--glass);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  backdrop-filter: blur(14px);
 }
+
 
 /* GRID */
 .grid {
@@ -170,25 +208,29 @@ body {
 }
 
 /* PAKET ITEM */
+
 .paket {
-  position: relative;
-  background: linear-gradient(145deg,#001a2f,#00284f);
-  border-radius: 16px;
-  padding: 14px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 20px;
+  padding: 18px;
   text-align: center;
-  transition: transform .2s ease, box-shadow .2s ease;
+  border: 1px solid rgba(255,255,255,0.06);
+  cursor: pointer;
 }
 
 .paket:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 16px rgba(0,255,255,0.35);
+  transform: translateY(-6px);
+  border-color: var(--p);
+  box-shadow: 0 15px 30px rgba(0,255,255,0.2);
 }
 
 .paket.active {
-  box-shadow:
-    0 0 0 2px rgba(0,255,255,0.8),
-    0 0 24px rgba(0,255,255,0.45);
+  background: rgba(0,255,255,0.12);
+  border-color: var(--p);
+  box-shadow: 0 0 25px rgba(0,255,255,0.35);
 }
+
+
 
 /* PAKET TEXT */
 .paket .emoji {
@@ -243,23 +285,23 @@ select {
 
 .btn {
   width: 100%;
-  margin-top: 16px;
-  padding: 14px;
-  border-radius: 14px;
+  padding: 18px;
+  border-radius: 16px;
   border: none;
   background: var(--p);
-  color: var(--text);
-  font-weight: 600;
+  color: #001f3f;
+  font-weight: 800;
+  font-size: 16px;
   cursor: pointer;
+  box-shadow: 0 0 20px rgba(0,255,255,0.35);
 }
 
 .btn:hover {
-  background: var(--p-hover);
+  transform: scale(1.02);
+  filter: brightness(1.1);
 }
 
-.btn.alt {
-  background: #001f3f;
-}
+
 
 /* RESULT & RATE NOTE */
 .result,
@@ -441,10 +483,7 @@ footer {
   object-fit: cover;
   margin-bottom: 4px;
 }
-.btn.alt.active {
-  background: var(--p);      /* warna utama */
-  color: var(--text);        /* teks utama */
-}
+
 .banner-text {
   text-align: center;
   background: linear-gradient(90deg, #00ffff, #00cfff);
@@ -509,6 +548,115 @@ select {
   color: #b5b5b5;
   margin-top: 6px;
   line-height: 1.4;
+}
+/* ================= SOFT UI ENHANCEMENT ================= */
+
+/* CARD LEBIH HIDUP */
+.card,
+.confirm,
+.footer,
+.maintenance-box {
+  box-shadow:
+    0 8px 30px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.03);
+}
+
+/* PAKET LEBIH PREMIUM */
+.paket {
+  background: linear-gradient(160deg,#001c35,#002e5f);
+  box-shadow:
+    inset 0 0 0 1px rgba(0,255,255,.08),
+    0 6px 18px rgba(0,0,0,.45);
+}
+
+.paket:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow:
+    0 0 20px rgba(0,255,255,.45),
+    0 10px 28px rgba(0,0,0,.6);
+}
+
+.paket.active {
+  background: linear-gradient(160deg,#002e5f,#004b80);
+}
+
+/* INPUT LEBIH SOFT */
+input,
+select,
+.input {
+  transition: border .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--p);
+  background: #001b38;
+  box-shadow: 0 0 0 2px rgba(0,255,255,.25);
+}
+
+/* BUTTON LEBIH EMPUK */
+.btn,
+.nav-btn,
+.mobile-topup {
+  transition:
+    background .2s ease,
+    transform .15s ease,
+    box-shadow .15s ease;
+  box-shadow:
+    0 6px 16px rgba(0,0,0,.4),
+    inset 0 1px 0 rgba(255,255,255,.15);
+}
+
+.btn:hover,
+.nav-btn:hover,
+.mobile-topup:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 26px rgba(0,255,255,.35),
+    inset 0 1px 0 rgba(255,255,255,.2);
+}
+
+/* BUTTON ALT LEBIH LEMBUT */
+
+
+
+
+/* NAVBAR LEBIH ELEGAN */
+.navbar {
+  background: rgba(5,5,20,0.85);
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+
+/* DROPDOWN MOBILE LEBIH HALUS */
+.mobile-dropdown {
+  animation: dropdownFade .2s ease;
+}
+
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* RESULT / INFO BOX LEBIH CLEAN */
+.result,
+.rate-note,
+.promo-info {
+  backdrop-filter: blur(6px);
+  box-shadow: inset 0 0 0 1px rgba(0,255,255,.15);
+}
+
+/* FOOTER LEBIH DALAM */
+footer {
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
 }
 
 .error-text {
@@ -884,7 +1032,7 @@ paketData.forEach(r => {
     if (!isActive) {
       div.classList.add("active");
       selectedRobux = r;
-      robux.value = r;
+    const robux = document.getElementById("robux");
       btnTopup.style.display = "block";
     } else {
       selectedRobux = 0;
@@ -990,7 +1138,7 @@ function calcHarga() {
   cfHarga.innerText  = `Harga: Rp ${hargaFinal.toLocaleString()}`;
   cfBefore.innerText = `Before Tax: ${Math.floor(val * 0.7)} Robux`;
   cfAfter.innerText  = `After Tax: ${Math.ceil(val / 0.7)} Robux`;
-  cfAfter.innerText = `After Tax: ${Math.ceil(val / 0.7)} Robux`;
+
 
 const passVal = passInput.value.trim();
 cfPass.innerText = passVal
@@ -1044,7 +1192,7 @@ function resetConfirm() {
       const val = selectedRobux > 0 ? selectedRobux : parseAngka(customInput.value);
       if(!val || val <=0) return;
 
-      const pass = passId.value.trim();
+ const pass = passInput.value.trim();
       const pay  = payment.value.trim();
       let extra = "";
       if(pass) extra += `\n\nPass ID / Gamepass ID:\n${pass}`;
