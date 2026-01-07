@@ -814,7 +814,7 @@ const PROMO_LIST = {
       return Number(String(val).replace(/\./g,'').replace(/,/g,''));
     }
 
-    const RATE = 110;
+    const RATE = 105;
     const WA = "6285182456497";
 
     // tampilkan rate di halaman
@@ -948,8 +948,8 @@ function calcHarga() {
     setGP = 143;
     finalRobux = 100;
   } else if (h === 50000) {
-    setGP = 649;
-    finalRobux = 454;
+    setGP = 684;
+    finalRobux = 478;
   } else {
     // opsi default: hitung kasar
     setGP = Math.floor(h / 75); // atau logika lain kalau input beda
@@ -1142,7 +1142,7 @@ function closeMenu() {
   menu.style.display = 'none';
 }
 /* ===== MAINTENANCE TOGGLE ===== */
-const MAINTENANCE_MODE = true; // 🔴 true = ON, false = OFF
+const MAINTENANCE_MODE = false; // 🔴 true = ON, false = OFF
 
 if (MAINTENANCE_MODE) {
   document.getElementById("maintenance").style.display = "flex";
