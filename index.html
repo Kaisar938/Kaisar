@@ -814,7 +814,7 @@ const PROMO_LIST = {
       return Number(String(val).replace(/\./g,'').replace(/,/g,''));
     }
 
-    const RATE = 105;
+    const RATE = 113;
     const WA = "6285182456497";
 
     // tampilkan rate di halaman
@@ -944,12 +944,12 @@ function calcHarga() {
 
   let setGP, finalRobux;
 
-  if (h === 10500) {
+  if (h === 11300) {
     setGP = 143;
     finalRobux = 100;
   } else if (h === 50000) {
-    setGP = 684;
-    finalRobux = 478;
+    setGP = 625;
+    finalRobux = 437;
   } else {
     // opsi default: hitung kasar
     setGP = Math.floor(h / 75); // atau logika lain kalau input beda
