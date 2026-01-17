@@ -1084,7 +1084,9 @@ function customTopup() {
 
  //* ===== HITUNG ROBUX SESUAI LOGIKA LO ===== */
 function calcHarga() {
-  const h = parseAngka(harga.value); // input uang
+  // Pastikan h adalah angka murni
+  const h = Number(parseAngka(harga.value)); 
+
   if (!h) { 
     resHarga.innerText = "—"; 
     return; 
@@ -1092,25 +1094,25 @@ function calcHarga() {
 
   let setGP, finalRobux;
 
-  if (h === 100000) {
+  // Gunakan angka tanpa titik dan kutip
+  if (h === 10000) { 
     setGP = 143;
     finalRobux = 100;
   } else if (h === 50000) {
     setGP = 714;
     finalRobux = 499;
   } else {
-    // opsi default: hitung kasar
-    setGP = Math.floor(h / 75); // atau logika lain kalau input beda
-    finalRobux = Math.floor(setGP * 0.7); // tax 30%
+    // Logika fallback jika tidak pas 10rb atau 50rb
+    setGP = Math.floor(h / 75); 
+    finalRobux = Math.floor(setGP * 0.7); 
   }
 
   resHarga.innerHTML = `
-    Harga: ${h}<br>
+    Harga: ${h.toLocaleString('id-ID')}<br>
     Set Gamepass: ${setGP} Robux<br>
     Bersih: ${finalRobux} Robux
   `;
 }
-
 
     /* ===== KONFIRMASI ===== */
   function updateConfirm() {
