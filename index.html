@@ -98,11 +98,20 @@
   box-sizing: border-box;
 }
 
-html, body {
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+   min-height: 100vh;
 }
+
 
 /* BODY */
 body {
@@ -693,6 +702,38 @@ footer {
   margin: 8px 0 0 16px;
   font-size: 13px;
 }
+/* ===== SLIDER ===== */
+/* ===== SLIDER GESER ===== */
+.slider-wrap {
+  max-width: 1100px;
+  margin: 20px auto 30px;
+  border-radius: 18px;
+  overflow: hidden;
+  aspect-ratio: 16 / 5;
+  background: #000;
+  box-shadow: 0 10px 30px rgba(0,0,0,.45);
+}
+
+.slider-track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s ease-in-out;
+}
+
+.slide {
+  min-width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 
 
   </style>
@@ -719,7 +760,8 @@ footer {
 </div>
 
   <!-- NAVBAR -->
- <div class="navbar">
+<!-- NAVBAR -->
+<div class="navbar">
   <div class="nav-inner">
 
     <div class="logo-wrap">
@@ -735,24 +777,35 @@ footer {
     </div>
 
     <div class="nav-btn" onclick="showConfirm()">Top Up</div>
- <!-- MOBILE MENU BUTTON -->
-<div class="mobile-menu">
-  <button class="dots-btn" onclick="toggleMenu()">⋮</button>
 
-  <div class="mobile-dropdown" id="mobileMenu">
-  <a href="#beranda" onclick="closeMenu()">Beranda</a>
-  <a href="#paket" onclick="closeMenu()">Paket</a>
-  <a href="#tools" onclick="closeMenu()">Kalkulator</a>
-  <a href="https://wa.me/6285182456497" onclick="closeMenu()">Hubungi</a>
-  <div class="mobile-topup" onclick="showConfirm(); closeMenu();">Top Up</div>
-</div>
+    <!-- MOBILE MENU -->
+    <div class="mobile-menu">
+      <button class="dots-btn" onclick="toggleMenu()">⋮</button>
 
-</div>
-
-
+      <div class="mobile-dropdown" id="mobileMenu">
+        <a href="#beranda" onclick="closeMenu()">Beranda</a>
+        <a href="#paket" onclick="closeMenu()">Paket</a>
+        <a href="#tools" onclick="closeMenu()">Kalkulator</a>
+        <a href="https://wa.me/6285182456497" onclick="closeMenu()">Hubungi</a>
+        <div class="mobile-topup" onclick="showConfirm(); closeMenu();">Top Up</div>
+      </div>
+    </div>
 
   </div>
 </div>
+
+<!-- SLIDER -->
+<div class="slider-wrap">
+  <div class="slider-track" id="sliderTrack">
+    <a href="https://chat.whatsapp.com/I9q0bTop1SqGawTZPE7PiA" class="slide">
+      <img src="banner1.jpg">
+    </a>
+    <a href="https://wa.me/6285182456497" class="slide">
+      <img src="banner2.jpg">
+    </a>
+  </div>
+</div>
+
 
 
   <div class="container">
@@ -1319,8 +1372,14 @@ promoInput.addEventListener("input", () => {
 
   if(confirmBox.style.display === "block") updateConfirm();
 });
+  const track = document.getElementById("sliderTrack");
+  const slides = document.querySelectorAll(".slide");
+  let index = 0;
 
-
+  setInterval(() => {
+    index = (index + 1) % slides.length;
+    track.style.transform = `translateX(-${index * 100}%)`;
+  }, 3000);
   </script>
 
 
