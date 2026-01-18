@@ -4,41 +4,40 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KaisarStore - Top Up Robux</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-
+ 
   <style>
     /* Tombol Default (Keadaan belum dipilih) */
+/* Tombol Default */
 .btn.alt {
-  background: #001f3f; /* Warna biru navy solid agar tidak blur */
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #0d1b2a;
+  border: 1px solid rgba(255,255,255,0.15);
   color: #ffffff;
   padding: 12px;
   cursor: pointer;
-  transition: 0.3s;
-  backdrop-filter: none; /* Matikan blur di sini agar teks tajam */
+  transition: .25s;
 }
 
+/* Hover */
 .btn.alt:hover {
-  background: #002d5a;
+  background: #13253b;
   border-color: var(--p);
 }
 
-/* Tombol Saat Aktif (Sudah diklik) */
+/* Aktif (GOLD, BUKAN CYAN) */
 .btn.alt.active {
-  background: var(--p) !important; /* Warna cyan menyala */
-  color: #001f3f !important;      /* Teks biru gelap agar kontras tinggi */
+  background: linear-gradient(135deg,#f5c97a,#e0b55f);
+  color: #1a1a1a;
   font-weight: 800;
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+  box-shadow: 0 0 20px rgba(245,201,122,.45);
   border-color: var(--p);
 }
+
     /* ===== MAINTENANCE OVERLAY ===== */
 .maintenance {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: radial-gradient(circle at top, #001f3f, #000814);
+  background: radial-gradient(circle at top, #0b1d33, #050b14);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -46,48 +45,63 @@
   padding: 24px;
 }
 
+/* BOX */
 .maintenance-box {
   max-width: 420px;
-  background: linear-gradient(145deg,#001a2f,#00284f);
+  background: linear-gradient(145deg, #0f2238, #152f4d);
   border-radius: 20px;
   padding: 28px;
-  box-shadow: 0 0 40px rgba(0,255,255,0.25);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.6);
 }
 
+/* TITLE */
 .maintenance-box h1 {
   margin: 0 0 10px;
   font-size: 24px;
-  color: var(--p);
+  font-weight: 800;
+  color: var(--p); /* GOLD */
 }
 
+/* TEXT */
 .maintenance-box p {
   font-size: 14px;
   color: var(--text-alt);
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
+/* BUTTON */
 .maintenance-box .wa-btn {
   margin-top: 18px;
   display: inline-block;
-  padding: 12px 18px;
+  padding: 12px 20px;
   border-radius: 14px;
-  background: var(--p);
-  color: #001f3f;
-  font-weight: 700;
+  background: linear-gradient(145deg, #f5c97a, #e0b55f);
+  color: #1a2a3f;
+  font-weight: 800;
   text-decoration: none;
+  transition: .2s ease;
 }
+
+.maintenance-box .wa-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(245,201,122,0.45);
+}
+
 
 /* ================= RESET & ROOT ================= */
 :root {
-  --p: #00ffff;
-  --p-hover: #00e5e5;
-  --bg: #050510;
-  --glass: rgba(15, 20, 35, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --p: #f5c97a;          /* GOLD */
+  --p-hover: #e0b55f;
+
+  --bg: #05050c;         /* NAVY HITAM */
+  --glass: rgba(20, 20, 35, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.06);
+
   --text: #ffffff;
-  --text-alt: #a0a0b8;
+  --text-alt: #b3b3c7;
+
   --warning: #ff6b6b;
-  --grad: linear-gradient(135deg, #00ffff, #0080ff);
 }
 
 
@@ -115,7 +129,7 @@ body {
 
 /* BODY */
 body {
-  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   background: var(--bg);
   background-image:
     radial-gradient(circle at 0% 0%, rgba(0,255,255,.06), transparent 40%),
@@ -217,46 +231,49 @@ body {
 }
 
 /* PAKET ITEM */
-
 .paket {
-  background: rgba(255,255,255,0.03);
+  background: linear-gradient(160deg, #0d1b2a, #13253b);
   border-radius: 20px;
   padding: 18px;
   text-align: center;
   border: 1px solid rgba(255,255,255,0.06);
   cursor: pointer;
+  transition: .25s ease;
 }
 
+/* HOVER */
 .paket:hover {
-  transform: translateY(-6px);
+  transform: translateY(-4px);
   border-color: var(--p);
-  box-shadow: 0 15px 30px rgba(0,255,255,0.2);
+  box-shadow: 0 14px 30px rgba(245,201,122,0.35);
 }
 
+/* ACTIVE (DIPILIH) */
 .paket.active {
-  background: rgba(0,255,255,0.12);
+  background: linear-gradient(160deg, #1f3a52, #2b4f6b);
   border-color: var(--p);
-  box-shadow: 0 0 25px rgba(0,255,255,0.35);
+  box-shadow: 0 0 30px rgba(245,201,122,0.5);
 }
-
-
 
 /* PAKET TEXT */
 .paket .emoji {
   font-size: 22px;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .robux {
   font-size: 20px;
   font-weight: 800;
+  color: #ffffff;
 }
 
 .harga {
   margin-top: 4px;
   font-size: 12px;
-  color: var(--p);
+  font-weight: 700;
+  color: var(--p); /* GOLD */
 }
+
 
 /* CHECK */
 .check {
@@ -266,7 +283,8 @@ body {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: linear-gradient(135deg,#00ffff,#00cfff);
+  background: linear-gradient(135deg,#f5c97a,#e0b55f);
+  color: #1a1a1a;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -495,15 +513,16 @@ footer {
 
 .banner-text {
   text-align: center;
-  background: linear-gradient(90deg, #00ffff, #00cfff);
-  color: #001f3f;
-  font-weight: 700;
+  background: linear-gradient(90deg,#c62828,#ff5252);
+  color: #fff;
+  font-weight: 800;
   font-size: 16px;
   padding: 12px 0;
-  border-radius: 12px;
+  border-radius: 14px;
   margin-bottom: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
 }
+
 /* SAMAKAN SEMUA INPUT */
 input,
 select {
@@ -798,10 +817,10 @@ footer {
 <div class="slider-wrap">
   <div class="slider-track" id="sliderTrack">
     <a href="https://chat.whatsapp.com/I9q0bTop1SqGawTZPE7PiA" class="slide">
-      <img src="banner1.jpg">
+      <img src="banner1.png">
     </a>
     <a href="https://wa.me/6285182456497" class="slide">
-      <img src="banner2.jpg">
+      <img src="banner2.png">
     </a>
   </div>
 </div>
