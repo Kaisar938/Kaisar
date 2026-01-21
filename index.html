@@ -1061,26 +1061,30 @@ const cfPass = document.getElementById("cfPass");
 
  
 passInput.addEventListener('input', () => {
-  const val = passInput.value.trim();
+  let val = passInput.value.trim();
 
-  if (/^\d*$/.test(val)) { // hanya angka
+  // 🔥 UPDATE: Batasi maksimal 20 karakter
+  if (val.length > 20) {
+    val = val.slice(0, 20); // Potong jika lebih dari 20
+    passInput.value = val;  // Update tampilan input
+  }
+
+  if (/^\d*$/.test(val)) { // Validasi hanya angka
     passWarning.style.display = 'none';
-    btnTopup.disabled = false;
+    
+    // Cek apakah custom input valid atau paket dipilih sebelum enable tombol
+    const currentRobux = selectedRobux > 0 ? selectedRobux : parseAngka(customInput.value);
+    btnTopup.disabled = !(currentRobux >= 100); 
 
-    // 🔥 REAL-TIME UPDATE KE CONFIRM BOX
-    cfPass.innerText = val
-      ? `Pass ID: ${val}`
-      : "Pass ID: -";
+    // Update Confirm Box
+    cfPass.innerText = val ? `Pass ID: ${val}` : "Pass ID: -";
 
   } else {
     passWarning.style.display = 'block';
     btnTopup.disabled = true;
-
-    // optional: reset kalau invalid
     cfPass.innerText = "Pass ID: -";
   }
 });
-
 
     /* ===== RENDER PAKET STANDAR ===== */
    /* ===== RENDER PAKET STANDAR ===== */
@@ -1155,9 +1159,16 @@ function customTopup() {
 }
 
  //* ===== HITUNG ROBUX SESUAI LOGIKA LO ===== */
+/* ===== HITUNG ROBUX DARI HARGA ===== */
 function calcHarga() {
-  // Pastikan h adalah angka murni
-  const h = Number(parseAngka(harga.value)); 
+  const inputEl = document.getElementById("harga"); // Pastikan ID elemen input kamu benar
+  let h = Number(parseAngka(inputEl.value)); 
+
+  // 🔥 UPDATE: Jika lebih dari 50.000.000, reset jadi 0
+  if (h > 50000000) {
+    inputEl.value = ""; // Kosongkan input visual
+    h = 0; // Reset nilai logika
+  }
 
   if (!h) { 
     resHarga.innerText = "—"; 
@@ -1166,7 +1177,7 @@ function calcHarga() {
 
   let setGP, finalRobux;
 
-  // Gunakan angka tanpa titik dan kutip
+  // Logika Khusus
   if (h === 10000) { 
     setGP = 143;
     finalRobux = 100;
@@ -1174,7 +1185,7 @@ function calcHarga() {
     setGP = 714;
     finalRobux = 499;
   } else {
-    // Logika fallback jika tidak pas 10rb atau 50rb
+    // Rumus umum
     setGP = Math.floor(h / 75); 
     finalRobux = Math.floor(setGP * 0.7); 
   }
@@ -1287,48 +1298,51 @@ ${extra}`;
     }
 
     /* ===== CUSTOM INPUT LIVE ===== */
- const MIN_ROBUX = 100;
-const MAX_ROBUX = 10000; // opsional, batasi maksimal
+/* ===== CUSTOM INPUT LIVE ===== */
+const MIN_ROBUX = 100;
+const MAX_ROBUX = 10000; 
 
 customInput.addEventListener("input", () => {
   let val = parseAngka(customInput.value);
 
-  // validasi minimal
+  // 🔥 UPDATE: Jika lebih dari 10.000, reset input jadi kosong
+  if (val > MAX_ROBUX) {
+    customInput.value = ""; // Reset tampilan jadi kosong
+    val = 0; // Nilai dianggap 0 agar masuk ke validasi error di bawah
+  }
+
+  // Validasi minimal (akan tereksekusi juga jika tadi di-reset jadi 0)
   if (val < MIN_ROBUX) {
     customHarga.innerText = `Minimal top-up: ${MIN_ROBUX} Robux`;
     btnTopup.style.display = "none";
     selectedRobux = 0;
     document.querySelectorAll(".paket").forEach(p => p.classList.remove("active"));
+    
     if(confirmBox.style.display === "block") resetConfirm();
     return;
   }
 
-  // validasi maksimal (opsional)
-  if (val > MAX_ROBUX) {
-    customHarga.innerText = `Maksimal top-up: ${MAX_ROBUX} Robux`;
-    btnTopup.style.display = "none";
-    if(confirmBox.style.display === "block") resetConfirm();
-    return;
-  }
-
-  // hitung harga & set gamepass aman
+  // Hitung harga & set gamepass jika valid
   const harga = val * RATE;
-  const setGamepass = Math.ceil(val * 1.43);
+  const setGamepass = Math.ceil(val * 1.43); // Estimasi pajak (1 / 0.7 ≈ 1.428)
 
   customHarga.innerHTML = `
     Set Gamepass: <b>${setGamepass} Robux</b><br>
     Harga: <b>Rp ${harga.toLocaleString()}</b>
   `;
 
-  // tombol aktif hanya untuk input valid
+  // Cek Pass ID dulu sebelum nyalakan tombol
+  const passVal = passInput.value.trim();
+  const isPassValid = /^\d*$/.test(passVal); // Boleh kosong dulu, nanti dicek pas klik tombol, atau wajib isi tergantung selera
+
   btnTopup.style.display = "block";
+  btnTopup.disabled = !isPassValid; // Disable jika pass ID error
 
   selectedRobux = 0;
   document.querySelectorAll(".paket").forEach(p => p.classList.remove("active"));
 
   if(confirmBox.style.display === "block") updateConfirm();
 });
-
 
 
 
