@@ -204,7 +204,66 @@ body {
   margin: auto;
   padding: 24px 16px 80px;
 }
+/* ===== FAQ SECTION STYLES ===== */
+.faq-wrap {
+  margin-top: 20px;
+}
 
+.faq-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+}
+
+.faq-question {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 16px 0;
+  text-align: left;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+
+.faq-question:hover {
+  color: var(--p); /* Jadi warna Gold pas di-hover */
+}
+
+/* Icon panah putar */
+.faq-icon {
+  font-size: 12px;
+  transition: transform 0.3s ease;
+  color: var(--p);
+}
+
+.faq-item.active .faq-icon {
+  transform: rotate(180deg);
+}
+
+.faq-item.active .faq-question {
+  color: var(--p);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  color: var(--text-alt);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.faq-item.active .faq-answer {
+  padding-bottom: 16px;
+}
 /* CARD */
 .card {
   background: var(--glass);
@@ -966,7 +1025,45 @@ footer {
 </div>
 
   </section>
+<div class="card" style="margin-top: 30px;">
+  <h3 style="display:flex; align-items:center; justify-content:center; gap:8px;">
+    ❓ Pertanyaan Umum (FAQ)
+  </h3>
+  
+  <div class="faq-wrap">
+    
+    <div class="faq-item">
+      <button class="faq-question">
+        Metode pembayaran apa saja yang diterima?
+        <span class="faq-icon">▼</span>
+      </button>
+      <div class="faq-answer">
+        Kami menerima pembayaran melalui <b>QRIS (Otomatis)</b>, yang mendukung Dana, OVO, GoPay, ShopeePay, LinkAja, dan seluruh Mobile Banking di Indonesia.
+      </div>
+    </div>
 
+    <div class="faq-item">
+      <button class="faq-question">
+        Berapa lama proses masuknya Robux?
+        <span class="faq-icon">▼</span>
+      </button>
+      <div class="faq-answer">
+        Estimasi proses pengiriman Robux adalah <b>selama 5 hari</b> (Pending Robux) sesuai ketentuan resmi dari Roblox.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        Apakah hanya gamepass?
+        <span class="faq-icon">▼</span>
+      </button>
+      <div class="faq-answer">
+        Tidak hanya Gamepass, saat ini juga tersedia layanan <b>Gift In Game</b> dan metode <b>Take Seacc</b>.
+      </div>
+    </div>
+
+  </div>
+</div>
   </div>
 
   <!-- FOOTER -->
@@ -1413,6 +1510,33 @@ promoInput.addEventListener("input", () => {
     index = (index + 1) % slides.length;
     track.style.transform = `translateX(-${index * 100}%)`;
   }, 3000);
+  /* ===== FAQ TOGGLE SCRIPT ===== */
+const faqQuestions = document.querySelectorAll('.faq-question');
+
+faqQuestions.forEach(question => {
+  question.addEventListener('click', () => {
+    const item = question.parentElement;
+    const answer = item.querySelector('.faq-answer');
+
+    // Tutup item lain jika ingin accordion (opsional, hapus loop ini jika ingin bisa buka banyak sekaligus)
+    document.querySelectorAll('.faq-item').forEach(otherItem => {
+      if (otherItem !== item && otherItem.classList.contains('active')) {
+        otherItem.classList.remove('active');
+        otherItem.querySelector('.faq-answer').style.maxHeight = null;
+      }
+    });
+
+    // Toggle active class
+    item.classList.toggle('active');
+
+    // Atur tinggi konten
+    if (item.classList.contains('active')) {
+      answer.style.maxHeight = answer.scrollHeight + "px";
+    } else {
+      answer.style.maxHeight = null;
+    }
+  });
+});
   </script>
 
 
