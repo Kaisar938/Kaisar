@@ -1,1690 +1,1580 @@
-  <!DOCTYPE html>
-  <html lang="id">
-  <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KaisarStore - Top Up Robux</title>
- 
-  <style>
-    /* Tombol Default (Keadaan belum dipilih) */
-/* Tombol Default */
-.btn.alt {
-  background: #0d1b2a;
-  border: 1px solid rgba(255,255,255,0.15);
-  color: #ffffff;
-  padding: 12px;
-  cursor: pointer;
-  transition: .25s;
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KaisarStore — Top Up Robux</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #F7C948;
+  --gold-dark: #D4A017;
+  --gold-light: #FFF3B0;
+  --bg: #0A0A0F;
+  --surface: #111118;
+  --surface2: #18181F;
+  --border: rgba(255,255,255,0.07);
+  --border-gold: rgba(247,201,72,0.35);
+  --text: #F0F0F5;
+  --muted: #6E6E80;
+  --accent: #F7C948;
+  --green: #22C55E;
+  --red: #EF4444;
 }
 
-/* Hover */
-.btn.alt:hover {
-  background: #13253b;
-  border-color: var(--p);
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { min-height: 100vh; overflow-x: hidden; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
 }
 
-/* Aktif (GOLD, BUKAN CYAN) */
-.btn.alt.active {
-  background: linear-gradient(135deg,#f5c97a,#e0b55f);
-  color: #1a1a1a;
-  font-weight: 800;
-  box-shadow: 0 0 20px rgba(245,201,122,.45);
-  border-color: var(--p);
-}
-
-    /* ===== MAINTENANCE OVERLAY ===== */
-.maintenance {
+/* BG PATTERN */
+body::before {
+  content: '';
   position: fixed;
   inset: 0;
-  z-index: 9999;
-  background: radial-gradient(circle at top, #0b1d33, #050b14);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 24px;
+  background:
+    radial-gradient(ellipse 60% 40% at 80% 10%, rgba(247,201,72,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 10% 80%, rgba(120,80,200,0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
 }
 
-/* BOX */
-.maintenance-box {
-  max-width: 420px;
-  background: linear-gradient(145deg, #0f2238, #152f4d);
-  border-radius: 20px;
-  padding: 28px;
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 20px 45px rgba(0,0,0,0.6);
-}
-
-/* TITLE */
-.maintenance-box h1 {
-  margin: 0 0 10px;
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--p); /* GOLD */
-}
-
-/* TEXT */
-.maintenance-box p {
-  font-size: 14px;
-  color: var(--text-alt);
-  line-height: 1.6;
-}
-
-/* BUTTON */
-.maintenance-box .wa-btn {
-  margin-top: 18px;
-  display: inline-block;
-  padding: 12px 20px;
-  border-radius: 14px;
-  background: linear-gradient(145deg, #f5c97a, #e0b55f);
-  color: #1a2a3f;
-  font-weight: 800;
-  text-decoration: none;
-  transition: .2s ease;
-}
-
-.maintenance-box .wa-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(245,201,122,0.45);
-}
-
-
-/* ================= RESET & ROOT ================= */
-:root {
-  --p: #f5c97a;          /* GOLD */
-  --p-hover: #e0b55f;
-
-  --bg: #05050c;         /* NAVY HITAM */
-  --glass: rgba(20, 20, 35, 0.75);
-  --glass-border: rgba(255, 255, 255, 0.06);
-
-  --text: #ffffff;
-  --text-alt: #b3b3c7;
-
-  --warning: #ff6b6b;
-}
-
-
-/* RESET */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html {
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-   min-height: 100vh;
-}
-
-
-/* BODY */
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  background: var(--bg);
-  background-image:
-    radial-gradient(circle at 0% 0%, rgba(0,255,255,.06), transparent 40%),
-    radial-gradient(circle at 100% 100%, rgba(0,128,255,.06), transparent 40%);
-  color: var(--text);
-  padding-top: 72px;
+/* GRID TEXTURE */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* NAVBAR */
-.navbar {
+nav {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 72px;
-  z-index: 1000;
-  background: rgba(0,0,32,.9);
-  backdrop-filter: blur(10px);
-}
-
-.nav-inner {
-  max-width: 1100px;
-  height: 100%;
-  margin: auto;
-  padding: 0 16px;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0 32px;
+  height: 64px;
+  background: rgba(10,10,15,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
 }
 
-.logo-wrap {
+.nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--gold);
+  letter-spacing: -0.5px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-weight: 900;
-  color: var(--p);
+  gap: 8px;
 }
 
-.logo-wrap img {
-  width: 34px;
-  height: 34px;
+.nav-logo .dot {
+  width: 8px; height: 8px;
   border-radius: 50%;
-  object-fit: cover;
+  background: var(--gold);
+  animation: pulse 2s infinite;
 }
 
-.menu a {
-  color: var(--text-alt);
-  margin: 0 6px;
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--muted);
   text-decoration: none;
   font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
 }
 
-.menu a:hover {
-  color: var(--text);
-}
+.nav-links a:hover { color: var(--text); }
 
-.nav-btn {
-  background: var(--p);
-  padding: 9px 14px;
-  border-radius: 12px;
-  font-weight: 600;
+.nav-cta {
+  background: var(--gold);
+  color: #0A0A0F;
+  border: none;
+  padding: 9px 20px;
+  border-radius: 8px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
-.nav-btn:hover {
-  background: var(--p-hover);
-}
+.nav-cta:hover { background: #FFD700; transform: translateY(-1px); }
 
-/* CONTAINER */
-.container {
-  max-width: 1100px;
-  margin: auto;
-  padding: 24px 16px 80px;
-}
-/* ===== FAQ SECTION STYLES ===== */
-.faq-wrap {
-  margin-top: 20px;
-}
-
-.faq-item {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.faq-item:last-child {
-  border-bottom: none;
-}
-
-.faq-question {
-  width: 100%;
+/* HAMBURGER */
+.hamburger {
+  display: none;
   background: none;
   border: none;
-  padding: 16px 0;
-  text-align: left;
-  color: var(--text);
-  font-size: 15px;
-  font-weight: 600;
   cursor: pointer;
-  display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 5px;
+  padding: 4px;
+}
+.hamburger span {
+  display: block;
+  width: 22px; height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+/* MOBILE NAV DRAWER */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  top: 64px; left: 0; right: 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  z-index: 99;
+  padding: 16px 24px;
+  flex-direction: column;
+  gap: 12px;
+}
+.mobile-nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 15px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  display: block;
+}
+.mobile-nav.open { display: flex; }
+
+/* MAIN */
+main {
+  position: relative;
+  z-index: 1;
+  padding-top: 64px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 80px;
+}
+
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 60px 0 40px;
+}
+
+.hero-badge {
+  display: inline-flex;
   align-items: center;
-  transition: color 0.3s ease;
+  gap: 6px;
+  background: rgba(247,201,72,0.1);
+  border: 1px solid var(--border-gold);
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 20px;
 }
 
-.faq-question:hover {
-  color: var(--p); /* Jadi warna Gold pas di-hover */
+.hero-badge .blink {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 1.5s infinite;
 }
 
-/* Icon panah putar */
-.faq-icon {
-  font-size: 12px;
-  transition: transform 0.3s ease;
-  color: var(--p);
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(32px, 6vw, 56px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -2px;
+  color: var(--text);
+  margin-bottom: 16px;
 }
 
-.faq-item.active .faq-icon {
-  transform: rotate(180deg);
+.hero h1 span {
+  color: var(--gold);
 }
 
-.faq-item.active .faq-question {
-  color: var(--p);
-}
-
-.faq-answer {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease, padding 0.3s ease;
-  color: var(--text-alt);
-  font-size: 14px;
+.hero p {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 480px;
+  margin: 0 auto 32px;
   line-height: 1.6;
 }
 
-.faq-item.active .faq-answer {
-  padding-bottom: 16px;
-}
-/* CARD */
-.card {
-  background: var(--glass);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 24px;
-  padding: 24px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-  backdrop-filter: blur(14px);
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
 }
 
-
-/* GRID */
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-/* PAKET GRID */
-.paket-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 14px;
-}
-
-/* PAKET ITEM */
-.paket {
-  background: linear-gradient(160deg, #0d1b2a, #13253b);
-  border-radius: 20px;
-  padding: 18px;
+.stat {
   text-align: center;
-  border: 1px solid rgba(255,255,255,0.06);
-  cursor: pointer;
-  transition: .25s ease;
 }
 
-/* HOVER */
-.paket:hover {
-  transform: translateY(-4px);
-  border-color: var(--p);
-  box-shadow: 0 14px 30px rgba(245,201,122,0.35);
-}
-
-/* ACTIVE (DIPILIH) */
-.paket.active {
-  background: linear-gradient(160deg, #1f3a52, #2b4f6b);
-  border-color: var(--p);
-  box-shadow: 0 0 30px rgba(245,201,122,0.5);
-}
-
-/* PAKET TEXT */
-.paket .emoji {
+.stat-num {
+  font-family: 'Syne', sans-serif;
   font-size: 22px;
+  font-weight: 800;
+  color: var(--gold);
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* DIVIDER */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 40px 0;
+}
+
+/* SECTION TITLE */
+.section-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+
+/* STEPS */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.step-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  position: relative;
+  transition: border-color 0.2s;
+}
+
+.step-card:hover { border-color: var(--border-gold); }
+
+.step-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 36px;
+  font-weight: 800;
+  color: rgba(247,201,72,0.12);
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.step-card h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
   margin-bottom: 6px;
 }
 
-.robux {
-  font-size: 20px;
-  font-weight: 800;
-  color: #ffffff;
+.step-card p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
 }
 
-.harga {
-  margin-top: 4px;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--p); /* GOLD */
+.step-card a {
+  color: var(--gold);
+  text-decoration: none;
 }
 
+/* PAKET */
+.paket-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
 
-/* CHECK */
-.check {
+.paket {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+
+.paket::before {
+  content: '';
   position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 20px;
-  height: 20px;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.paket:hover {
+  border-color: var(--border-gold);
+  transform: translateY(-2px);
+}
+
+.paket.active {
+  background: rgba(247,201,72,0.08);
+  border-color: var(--gold);
+}
+
+.paket.active::before { opacity: 1; }
+
+.paket-icon {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.paket-rbx {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.paket-price-coret {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  margin-top: 4px;
+  text-decoration: line-through;
+}
+
+.paket-price {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gold);
+  margin-top: 2px;
+}
+
+.paket-check {
+  position: absolute;
+  top: 8px; right: 8px;
+  width: 18px; height: 18px;
+  background: var(--gold);
   border-radius: 50%;
-  background: linear-gradient(135deg,#f5c97a,#e0b55f);
-  color: #1a1a1a;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
-  transform: scale(0);
-  transition: .2s;
-}
-
-.paket.active .check {
-  transform: scale(1);
-}
-
-/* INPUT & BUTTON */
-input,
-select {
-  width: 100%;
-  padding: 14px;
-  margin-top: 10px;
-  font-size: 16px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: #001528;
-  color: var(--text);
-}
-
-.btn {
-  width: 100%;
-  padding: 18px;
-  border-radius: 16px;
-  border: none;
-  background: var(--p);
-  color: #001f3f;
+  font-size: 10px;
+  color: #0A0A0F;
   font-weight: 800;
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: 0 0 20px rgba(0,255,255,0.35);
+  transform: scale(0);
+  transition: transform 0.2s;
 }
 
-.btn:hover {
-  transform: scale(1.02);
-  filter: brightness(1.1);
-}
+.paket.active .paket-check { transform: scale(1); }
 
-
-
-/* RESULT & RATE NOTE */
-.result,
-.rate-note {
-  margin-top: 14px;
-  padding: 14px;
-  border-radius: 14px;
-  background: rgba(0,255,255,0.08);
-  border: 1px dashed rgba(0,255,255,0.5);
-  text-align: center;
-}
-
-/* CONFIRM */
-.confirm {
-  display: none;
-  background: linear-gradient(145deg,#00122f,#001f3f);
-  padding: 18px;
-  border-radius: 18px;
-  margin-bottom: 30px;
-}
-
-/* WARNING */
-#passWarning {
-  color: var(--warning);
-}
-
-/* FOOTER */
-footer {
-  margin-top: 80px;
-  background: linear-gradient(180deg,var(--bg),#001528);
-  border-top: 1px solid rgba(255,255,255,.08);
-}
-
-.footer-wrap {
-  max-width: 1100px;
-  margin: auto;
-  padding: 40px 20px;
+/* TWO COL LAYOUT */
+.two-col {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 30px;
+  gap: 16px;
+  margin-top: 20px;
 }
 
-.footer-brand {
-  display: flex;
-  gap: 14px;
+/* CARD */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
 }
 
-.footer-brand img {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.footer-title {
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
-.footer a {
-  display: block;
-  margin-bottom: 6px;
-  color: var(--text-alt);
-  text-decoration: none;
-}
-
-.footer a:hover {
-  color: var(--text);
-}
-
-.payments {
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 10px;
-}
-
-.payments div {
-  padding: 10px;
-  background: #001528;
-  border-radius: 12px;
-  font-size: 13px;
-  text-align: center;
-  color: var(--text-alt);
-}
-
-.copy {
-  text-align: center;
-  padding: 14px;
-  font-size: 13px;
-  color: #888;
-  border-top: 1px solid rgba(255,255,255,.06);
-}
-
-/* MOBILE FIXES */
-@media (max-width: 768px) {
-  .mobile-menu {
-    display: block;
-  }
-
-  .menu {
-    display: none;
-  }
-
-  .nav-btn {
-    display: none;
-  }
-
-  .grid {
-    grid-template-columns: 1fr;
-  }
-
-  .paket-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
-
-  .paket {
-    padding: 12px 8px;
-  }
-
-  .robux {
-    font-size: 16px;
-  }
-
-  .harga {
-    font-size: 11px;
-  }
-
-  .card {
-    padding: 16px;
-    border-radius: 16px;
-  }
-
-  .container {
-    padding: 16px 12px 80px;
-  }
-
-  .btn {
-    padding: 14px;
-    font-size: 15px;
-  }
-
-  input, select, .input {
-    font-size: 14px;
-    padding: 12px;
-  }
-
-  .footer-wrap {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-
-  .footer-brand {
-    justify-content: center;
-  }
-
-  .slider-wrap {
-    aspect-ratio: 16 / 7;
-    margin: 10px auto 20px;
-  }
-}
-
-/* MOBILE DROPDOWN NAV */
-.mobile-menu {
-  display: none;
-  position: relative;
-}
-
-.dots-btn {
-  background: none;
-  border: none;
-  color: var(--text);
-  font-size: 26px;
-  cursor: pointer;
-  padding: 6px 10px;
-}
-
-.mobile-dropdown {
-  position: absolute;
-  top: 48px;
-  right: 0;
-  background: linear-gradient(145deg,#001a2f,#00284f);
-  border-radius: 14px;
-  padding: 8px;
-  width: 170px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.4);
-  display: none;
-  z-index: 2000;
-}
-
-.mobile-dropdown a {
-  display: block;
-  padding: 10px 12px;
-  color: var(--text-alt);
-  text-decoration: none;
-  font-size: 14px;
-  border-radius: 10px;
-}
-
-.mobile-dropdown a:hover {
-  background: rgba(0,255,255,0.15);
-  color: var(--text);
-}
-
-.mobile-dropdown .mobile-topup {
-  background: var(--p);
-  color: var(--text);
-  text-align: center;
-  margin-top: 8px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  cursor: pointer;
+/* INPUT */
+.field-label {
+  font-size: 12px;
   font-weight: 600;
-  transition: 0.2s;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
 }
 
-.mobile-dropdown .mobile-topup:hover {
-  background: var(--p-hover);
-}
-.paket .emoji img {
-  width: 28px;
-  height: 28px;
-  object-fit: cover;
-  margin-bottom: 4px;
-}
-
-.banner-text {
-  text-align: center;
-  background: linear-gradient(90deg,#c62828,#ff5252);
-  color: #fff;
-  font-weight: 800;
-  font-size: 16px;
-  padding: 12px 0;
-  border-radius: 14px;
-  margin-bottom: 16px;
-  box-shadow: 0 6px 18px rgba(0,0,0,.35);
-}
-
-/* SAMAKAN SEMUA INPUT */
-input,
+input[type="number"],
+input[type="text"],
 select {
   width: 100%;
-  padding: 14px;
-  margin-top: 12px;
-  font-size: 16px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: #001528;
-  color: var(--text);
-}
-
-/* PROMO INFO */
-.promo-info {
-  margin-top: 8px;
-  padding: 10px 14px;
-  border-radius: 12px;
-  background: rgba(0,255,255,0.08);
-  border: 1px dashed rgba(0,255,255,0.4);
-  font-size: 13px;
-  color: var(--p);
-}
-/* WRAPPER FORM */
-.form-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* GROUP */
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-/* INPUT & SELECT SERAGAM */
-.input {
-  width: 100%;
-  padding: 14px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: #090822;
-  color: #fff;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
   font-size: 15px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+  -moz-appearance: textfield;
 }
 
-/* TEKS KECIL */
-.hint-text {
-  font-size: 12px;
-  color: #b5b5b5;
-  margin-top: 6px;
-  line-height: 1.4;
-}
-/* ================= SOFT UI ENHANCEMENT ================= */
-
-/* CARD LEBIH HIDUP */
-.card,
-.confirm,
-.footer,
-.maintenance-box {
-  box-shadow:
-    0 8px 30px rgba(0,0,0,.35),
-    inset 0 1px 0 rgba(255,255,255,.03);
-}
-
-/* PAKET LEBIH PREMIUM */
-.paket {
-  background: linear-gradient(160deg,#001c35,#002e5f);
-  box-shadow:
-    inset 0 0 0 1px rgba(0,255,255,.08),
-    0 6px 18px rgba(0,0,0,.45);
-}
-
-.paket:hover {
-  transform: translateY(-4px) scale(1.01);
-  box-shadow:
-    0 0 20px rgba(0,255,255,.45),
-    0 10px 28px rgba(0,0,0,.6);
-}
-
-.paket.active {
-  background: linear-gradient(160deg,#002e5f,#004b80);
-}
-
-/* INPUT LEBIH SOFT */
-input,
-select,
-.input {
-  transition: border .2s ease, box-shadow .2s ease, background .2s ease;
-}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button { -webkit-appearance: none; }
 
 input:focus,
 select:focus {
-  outline: none;
-  border-color: var(--p);
-  background: #001b38;
-  box-shadow: 0 0 0 2px rgba(0,255,255,.25);
+  border-color: var(--gold);
+  background: rgba(247,201,72,0.04);
 }
 
-/* BUTTON LEBIH EMPUK */
-.btn,
-.nav-btn,
-.mobile-topup {
-  transition:
-    background .2s ease,
-    transform .15s ease,
-    box-shadow .15s ease;
-  box-shadow:
-    0 6px 16px rgba(0,0,0,.4),
-    inset 0 1px 0 rgba(255,255,255,.15);
+select option { background: var(--surface); }
+
+/* HINT */
+.hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+  line-height: 1.5;
 }
 
-.btn:hover,
-.nav-btn:hover,
-.mobile-topup:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 10px 26px rgba(0,255,255,.35),
-    inset 0 1px 0 rgba(255,255,255,.2);
+/* ERROR */
+.error {
+  font-size: 12px;
+  color: var(--red);
+  margin-top: 4px;
+  display: none;
 }
 
-/* BUTTON ALT LEBIH LEMBUT */
-
-
-
-
-/* NAVBAR LEBIH ELEGAN */
-.navbar {
-  background: rgba(5,5,20,0.85);
-  backdrop-filter: blur(15px);
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+/* CALC BUTTONS */
+.calc-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
 }
 
-
-/* DROPDOWN MOBILE LEBIH HALUS */
-.mobile-dropdown {
-  animation: dropdownFade .2s ease;
-}
-
-@keyframes dropdownFade {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* RESULT / INFO BOX LEBIH CLEAN */
-.result,
-.rate-note,
-.promo-info {
-  backdrop-filter: blur(6px);
-  box-shadow: inset 0 0 0 1px rgba(0,255,255,.15);
-}
-
-/* FOOTER LEBIH DALAM */
-footer {
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
-}
-
-.error-text {
-  color: #ff6b6b;
+.calc-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 11px;
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
   font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.calc-btn:hover { border-color: var(--border-gold); }
+
+.calc-btn.active {
+  background: rgba(247,201,72,0.12);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* RESULT BOX */
+.result-box {
+  margin-top: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: var(--muted);
+  min-height: 44px;
+  display: block;
+  line-height: 1.6;
+}
+
+.result-box b { color: var(--gold); font-weight: 700; }
+
+/* CONFIRM PANEL */
+.confirm-panel {
+  display: none;
+  background: rgba(247,201,72,0.04);
+  border: 1px solid var(--border-gold);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.confirm-panel h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.confirm-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.confirm-row:last-of-type { border-bottom: none; }
+.confirm-row .clabel { color: var(--muted); }
+.confirm-row .cval { font-weight: 600; color: var(--text); }
+
+/* PRIMARY BUTTON */
+.btn-primary {
+  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 16px auto 0;
+  background: linear-gradient(135deg, #F7C948 0%, #FFD700 50%, #F7C948 100%);
+  color: #0A0A0F;
+  border: none;
+  border-radius: 100px;
+  padding: 18px 48px;
+  font-family: 'Syne', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.25s;
+  margin-top: 20px;
+  letter-spacing: 0.2px;
+  box-shadow: 0 4px 20px rgba(247,201,72,0.3), 0 1px 0 rgba(255,255,255,0.2) inset;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #FFD700 0%, #FFC200 50%, #FFD700 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(247,201,72,0.4), 0 1px 0 rgba(255,255,255,0.2) inset;
+}
+
+.btn-primary:active { transform: translateY(0); box-shadow: 0 4px 12px rgba(247,201,72,0.2); }
+
+/* TRUST */
+.trust-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.trust-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.trust-box ul {
+  margin-top: 4px;
+  margin-left: 16px;
+}
+
+/* RATE */
+.rate-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.rate-pill b { color: var(--gold); }
+
+/* FAQ */
+.faq-item {
+  border-bottom: 1px solid var(--border);
+}
+
+.faq-item:last-child { border-bottom: none; }
+
+.faq-q {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 18px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  text-align: left;
+  transition: color 0.2s;
+  gap: 12px;
+}
+
+.faq-q:hover { color: var(--gold); }
+.faq-item.open .faq-q { color: var(--gold); }
+
+.faq-arrow {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--muted);
+  transition: transform 0.3s, background 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.faq-item.open .faq-arrow {
+  transform: rotate(180deg);
+  background: rgba(247,201,72,0.12);
+  border-color: var(--border-gold);
+  color: var(--gold);
+}
+
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  transition: max-height 0.35s ease, padding 0.3s;
+}
+
+.faq-a a { color: var(--gold); text-decoration: none; }
+.faq-a ol { margin-left: 20px; margin-top: 8px; }
+.faq-a ol li { margin-bottom: 6px; }
+.faq-a b { color: var(--text); font-weight: 600; }
+.faq-item.open .faq-a { padding-bottom: 20px; }
+
+/* FOOTER */
+footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 48px 32px 0;
+}
+
+.footer-top {
+  max-width: 960px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 32px;
+  padding-bottom: 40px;
+}
+
+.footer-brand p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-top: 10px;
+  max-width: 220px;
+}
+
+.footer-col h4 {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+
+.footer-col a {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 4px 0;
+  transition: color 0.2s;
+}
+
+.footer-col a:hover { color: var(--text); }
+
+/* SOCIAL ICONS */
+.social-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   margin-top: 4px;
 }
 
-.help-link {
-  margin-top: 8px;
-  font-size: 13px;
-  color: #ccc;
-}
-
-.help-link a {
-  color: var(--p);
-  text-decoration: underline;
-}
-
-/* PROMO INFO */
-.promo-info {
-  margin-top: 8px;
-  padding: 10px 14px;
-  border-radius: 12px;
-  background: rgba(0,255,255,0.08);
-  border: 1px dashed rgba(0,255,255,0.4);
-  font-size: 13px;
-  color: var(--p);
-}
-
-/* TRUST NOTE */
-.rate-note ul {
-  text-align: left;
-  margin: 8px 0 0 16px;
-  font-size: 13px;
-}
-/* ===== SLIDER ===== */
-/* ===== SLIDER GESER ===== */
-.slider-wrap {
-  max-width: 1100px;
-  margin: 20px auto 30px;
-  border-radius: 18px;
-  overflow: hidden;
-  aspect-ratio: 16 / 5;
-  background: #000;
-  box-shadow: 0 10px 30px rgba(0,0,0,.45);
-}
-
-.slider-track {
+.social-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
   display: flex;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.6s ease-in-out;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  text-decoration: none;
+  transition: all 0.2s;
+  color: var(--muted);
 }
 
-.slide {
-  min-width: 100%;
-  height: 100%;
-  display: block;
+.social-icon:hover {
+  border-color: var(--border-gold);
+  color: var(--gold);
+  background: rgba(247,201,72,0.08);
 }
 
-.slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+/* PAYMENT SECTION */
+.footer-payment {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 0 32px;
+  border-top: 1px solid var(--border);
 }
 
+.footer-payment h4 {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 16px;
+}
 
+.payment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+}
 
-  </style>
-  </head>
+.payment-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.3px;
+  transition: border-color 0.2s;
+  min-height: 44px;
+}
 
-  <body>
-<!-- MAINTENANCE MODE -->
-<div id="maintenance" class="maintenance" style="display:none">
-  <div class="maintenance-box">
-    <h1>🚧 Maintenance</h1>
-    <p>
-      Saat ini sistem sedang dalam perbaikan.<br>
-      Kami akan kembali online secepatnya.
-    </p>
+.payment-item:hover { border-color: var(--border-gold); }
 
-    <p style="margin-top:10px;font-size:13px">
-      📌 Order tetap bisa via WhatsApp
-    </p>
+.copy {
+  max-width: 960px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
+  padding: 18px 0;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}
 
-    <a class="wa-btn" href="https://wa.me/6285182456497">
-      💬 Hubungi WhatsApp
-    </a>
+/* MAINTENANCE OVERLAY */
+#maintenance {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(10,10,15,0.97);
+  backdrop-filter: blur(20px);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+
+.maint-box {
+  max-width: 380px;
+  background: var(--surface);
+  border: 1px solid var(--border-gold);
+  border-radius: 20px;
+  padding: 36px;
+}
+
+.maint-box h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+
+.maint-box p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.maint-btn {
+  display: inline-block;
+  background: var(--gold);
+  color: #0A0A0F;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  padding: 12px 24px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.maint-btn:hover { background: #FFD700; }
+
+/* WA FLOAT */
+.wa-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 50;
+  background: #22C55E;
+  color: #fff;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 12px 20px;
+  border-radius: 100px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 20px rgba(34,197,94,0.35);
+  transition: all 0.2s;
+}
+
+.wa-float:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(34,197,94,0.45);
+}
+
+/* CUSTOM ROBUX DISPLAY */
+.custom-preview {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--muted);
+  min-height: 18px;
+}
+
+.custom-preview b { color: var(--gold); }
+
+/* MOBILE */
+@media (max-width: 700px) {
+  nav { padding: 0 16px; }
+  .nav-links { display: none; }
+  .nav-cta { display: none; }
+  .hamburger { display: flex; }
+
+  main { padding-left: 16px; padding-right: 16px; }
+
+  .hero { padding: 40px 0 28px; }
+  .hero h1 { letter-spacing: -1px; }
+
+  .steps { grid-template-columns: 1fr 1fr; }
+  .paket-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .two-col { grid-template-columns: 1fr; }
+
+  .footer-top { grid-template-columns: 1fr 1fr; gap: 24px; }
+  footer { padding: 32px 16px 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- MAINTENANCE -->
+<div id="maintenance">
+  <div class="maint-box">
+    <h2>⚙️ Maintenance</h2>
+    <p>Sistem sedang dalam perbaikan. Kami akan segera kembali online.</p>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:20px">Order tetap bisa via WhatsApp</p>
+    <a class="maint-btn" href="https://wa.me/6285182456497">💬 Hubungi WhatsApp</a>
   </div>
 </div>
 
-  <!-- NAVBAR -->
 <!-- NAVBAR -->
-<div class="navbar">
-  <div class="nav-inner">
+<nav>
+  <div class="nav-logo">
+    <div class="dot"></div>
+    KaisarStore
+  </div>
+  <ul class="nav-links">
+    <li><a href="#">Beranda</a></li>
+    <li><a href="#paket">Paket</a></li>
+    <li><a href="#kalkulator">Kalkulator</a></li>
+    <li><a href="https://wa.me/6285182456497">Hubungi</a></li>
+  </ul>
+  <button class="nav-cta" onclick="scrollConfirm()">Top Up</button>
+  <button class="hamburger" id="hambBtn" onclick="toggleMobileNav()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
 
-    <div class="logo-wrap">
-      <img src="kucing.jpg">
-      <span>KaisarStore</span>
+<div class="mobile-nav" id="mobileNav">
+  <a href="#" onclick="closeMobileNav()">Beranda</a>
+  <a href="#paket" onclick="closeMobileNav()">Paket</a>
+  <a href="#kalkulator" onclick="closeMobileNav()">Kalkulator</a>
+  <a href="https://wa.me/6285182456497" onclick="closeMobileNav()">Hubungi</a>
+</div>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">
+      <div class="blink"></div>
+      Online & Siap Melayani
     </div>
-
-    <div class="menu">
-      <a href="#">Beranda</a>
-      <a href="#paket">Paket</a>
-      <a href="#tools">Kalkulator</a>
-      <a href="https://wa.me/6285182456497">Hubungi</a>
-    </div>
-
-    <div class="nav-btn" onclick="showConfirm()">Top Up</div>
-
-    <!-- MOBILE MENU -->
-    <div class="mobile-menu">
-      <button class="dots-btn" onclick="toggleMenu()">⋮</button>
-
-      <div class="mobile-dropdown" id="mobileMenu">
-        <a href="#beranda" onclick="closeMenu()">Beranda</a>
-        <a href="#paket" onclick="closeMenu()">Paket</a>
-        <a href="#tools" onclick="closeMenu()">Kalkulator</a>
-        <a href="https://wa.me/6285182456497" onclick="closeMenu()">Hubungi</a>
-        <div class="mobile-topup" onclick="showConfirm(); closeMenu();">Top Up</div>
+    <h1>Top Up <span>Robux</span><br>Aman & Terpercaya</h1>
+    <p>Proses cepat, harga transparan. Ribuan transaksi sukses sejak 2023.</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">1.000+</div>
+        <div class="stat-label">Transaksi Sukses</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">5 Hari</div>
+        <div class="stat-label">Proses Robux</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">24 Jam</div>
+        <div class="stat-label">Support Aktif</div>
       </div>
     </div>
+  </section>
 
-  </div>
-</div>
+  <div class="divider"></div>
 
-<!-- SLIDER -->
-<div class="slider-wrap">
-  <div class="slider-track" id="sliderTrack">
-    <a href="https://chat.whatsapp.com/I9q0bTop1SqGawTZPE7PiA" class="slide">
-      <img src="banner2.png">
-    </a>
-    <a href="https://wa.me/6285182456497" class="slide">
-      <img src="banner1.png">
-    </a>
-  </div>
-</div>
+  <!-- CARA ORDER -->
+  <section>
+    <div class="section-label">Langkah-langkah</div>
+    <div class="section-title">Cara Order Robux</div>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <h3>Pilih Paket</h3>
+        <p>Pilih paket atau isi custom. Minimal 100 Robux.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <h3>Salin Place ID</h3>
+        <p>Buka game kamu di Roblox, salin Place ID dari URL atau halaman game.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <h3>Buat Gamepass</h3>
+        <p>Belum tau cara buat? <a href="https://whatsapp.com/channel/0029VbBxOdG5Ui2Xlg1qYC0o" target="_blank">Lihat panduannya.</a></p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">04</div>
+        <h3>Set Harga Gamepass</h3>
+        <p>Gunakan <a href="#kalkulator">Kalkulator</a> → tekan After Tax → set harga sesuai angka.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">05</div>
+        <h3>Isi Form & Kirim</h3>
+        <p>Isi Gamepass ID, Place ID, pilih pembayaran, klik Top Up — selesai!</p>
+      </div>
+    </div>
+  </section>
 
-
-
-  <div class="container">
-
-  <!-- KONFIRMASI -->
-<!-- CONFIRM BOX -->
-<div id="confirmBox" class="confirm">
-  <h3>📋 Konfirmasi Pesanan</h3>
-
-  <p id="cfPaket">Paket: -</p>
-  <p id="cfHarga">Harga: -</p>
-  <p id="cfBefore">Before Tax: -</p>
-  <p id="cfAfter">After Tax: -</p>
-  <p id="cfPass">Pass ID: -</p>
-
-
-  <button class="btn" onclick="toWA()">Lanjut ke WhatsApp</button>
-</div>
-
+  <div class="divider"></div>
 
   <!-- PAKET -->
- <!-- SPANDUK TULISAN -->
-<div class="banner-text">
-  🔥 Robux Terpercaya & Aman, Proses Cepat! 🔥
-</div>
+  <section id="paket">
+    <div class="section-label">Pilih Jumlah</div>
+    <div class="section-title">Paket Robux</div>
 
-<!-- CARA ORDER -->
-<div class="card" style="margin-bottom: 20px;">
-  <h3 style="margin-bottom: 16px;">📋 Cara Order Robux</h3>
-
-  <div style="display:flex; flex-direction:column; gap:14px;">
-
-    <!-- STEP 1 -->
-    <div style="display:flex; gap:14px; align-items:flex-start;">
-      <div style="min-width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#f5c97a,#e0b55f); color:#1a1a1a; font-weight:800; font-size:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">1</div>
-      <div>
-        <div style="font-weight:700; font-size:15px;">Tentukan jumlah Robux</div>
-        <div style="font-size:13px; color:#b3b3c7; margin-top:4px; line-height:1.5;">Pilih paket atau isi custom. Minimal <b style="color:#f5c97a">100 Robux</b>.<br>Contoh: mau 150 Robux → tulis 150.</div>
-      </div>
+    <div class="rate-pill">
+      💱 Rate: <b>Rp 105 / Robux</b> &nbsp;·&nbsp; Harga dapat berubah sewaktu-waktu
     </div>
 
-    <div style="text-align:center; color:#555; font-size:16px;">↓</div>
+    <div id="paketGrid" class="paket-grid"></div>
 
-    <!-- STEP 2 -->
-    <div style="display:flex; gap:14px; align-items:flex-start;">
-      <div style="min-width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#f5c97a,#e0b55f); color:#1a1a1a; font-weight:800; font-size:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">2</div>
-      <div>
-        <div style="font-weight:700; font-size:15px;">Buat Gamepass di Roblox</div>
-        <div style="font-size:13px; color:#b3b3c7; margin-top:4px; line-height:1.5;">Belum tau caranya? Cek panduan di saluran WhatsApp kami:<br>
-          <a href="https://whatsapp.com/channel/0029VbBxOdG5Ui2Xlg1qYC0o" target="_blank" style="color:#f5c97a; font-weight:700; text-decoration:none;">👉 Lihat Cara Buat Gamepass</a>
-        </div>
-      </div>
+    <!-- CUSTOM -->
+    <div class="card" style="margin-top:16px">
+      <div class="section-label">Custom</div>
+      <label class="field-label">Jumlah Robux Custom</label>
+      <input type="number" id="customInput" placeholder="Min. 100, Max. 10.000">
+      <div id="customPreview" class="custom-preview"></div>
     </div>
-
-    <div style="text-align:center; color:#555; font-size:16px;">↓</div>
-
-    <!-- STEP 3 -->
-   <!-- STEP 3 -->
-<div style="display:flex; gap:14px; align-items:flex-start;">
-  <div style="min-width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#f5c97a,#e0b55f); color:#1a1a1a; font-weight:800; font-size:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">3</div>
-  <div>
-    <div style="font-weight:700; font-size:15px;">Set harga gamepass pakai Kalkulator</div>
-    <div style="font-size:13px; color:#b3b3c7; margin-top:4px; line-height:1.5;">
-      Masukkan jumlah Robux yang kamu mau → tekan <b style="color:#f5c97a">After Tax</b> → set harga gamepass di Roblox sesuai angka yang muncul.<br>
-      <span style="color:#f5c97a;">Contoh: mau 150 Robux → ketik 150 → After Tax → set gamepass sesuai angka</span><br><br>
-      <a href="#tools" style="display:inline-block; margin-top:6px; padding:8px 16px; background:linear-gradient(135deg,#f5c97a,#e0b55f); color:#1a1a1a; font-weight:800; font-size:13px; border-radius:10px; text-decoration:none;">🧮 Buka Kalkulator</a>
-    </div>
-  </div>
-</div>
-
-    <div style="text-align:center; color:#555; font-size:16px;">↓</div>
-
-    <!-- STEP 4 -->
-    <div style="display:flex; gap:14px; align-items:flex-start;">
-      <div style="min-width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#f5c97a,#e0b55f); color:#1a1a1a; font-weight:800; font-size:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">4</div>
-      <div>
-        <div style="font-weight:700; font-size:15px;">Isi form & klik "Top Up Sekarang"</div>
-        <div style="font-size:13px; color:#b3b3c7; margin-top:4px; line-height:1.5;">Isi Gamepass ID, pilih metode bayar, lalu klik tombol <b style="color:#f5c97a">Top Up Sekarang</b>. Order otomatis masuk ke admin KaisarStore! ✅</div>
-      </div>
-    </div>
-
-  </div>
-</div>
-<!-- END CARA ORDER -->
-
-<section id="paket" class="card">
-  <h2>
-    <img src="robux1.jpg" alt="Robux" style="width:28px; height:28px; object-fit:cover; vertical-align:middle; margin-right:6px;">
-    Pilih Paket Robux
-  </h2>
-  <div id="paketList" class="paket-grid"></div>
-  <div class="card" style="margin-top:20px">
-    <h3>
-      <img src="robux1.jpg" alt="Robux" style="width:24px; height:24px; object-fit:cover; vertical-align:middle; margin-right:4px;">
-      Paket Custom
-    </h3>
-    <input id="customRobux" type="number" placeholder="Masukkan jumlah Robux">
-    <div id="customHarga" class="result">Harga: -</div>
-    <button class="btn" id="btnCustomTopup" style="display:none" onclick="customTopup()">Top Up Custom</button>
-  </div>
-</section>       
-
-  <div class="rate-note" id="rateNote"></div>
-
-  <!-- GAMEPASS ID -->
-  <div class="form-group">
-    <input
-      id="passId"
-      type="text"
-      inputmode="numeric"
-      placeholder="Masukkan Gamepass ID (hanya angka, bukan password)"
-      class="input"
-    >
-
-    <div class="hint-text">
-      🔒 Kami <b>tidak pernah</b> meminta password, OTP, atau login akun Roblox.<br>
-      Gamepass ID adalah angka publik yang aman digunakan.
-    </div>
-
-    <div id="passWarning" class="error-text" style="display:none;">
-      Gamepass ID harus berupa angka
-    </div>
-
-    <div class="help-link">
-      Cara cek Pass ID / Gamepass ID?
-      <a href="https://whatsapp.com/channel/0029VbBxOdG5Ui2Xlg1qYC0o" target="_blank">
-        Cek di Saluran WhatsApp Kami
-      </a>
-    </div>
-  </div>
-
-  <!-- PROMO CODE -->
-  <div class="form-group">
-    <input
-      id="promoCode"
-      type="text"
-      placeholder="Kode Promo (Opsional)"
-      class="input"
-    >
-    <div id="promoInfo" class="promo-info" style="display:none"></div>
-  </div>
-
-  <!-- PAYMENT -->
-  <div class="form-group">
-    <select id="payment" class="input">
-      <option value="">Pilih Metode Pembayaran</option>
-      <option>Bank Transfer</option>
-      <option>QRIS</option>
-      <option>E-Wallet (OVO / DANA / GoPay)</option>
-    </select>
-  </div>
-
-</div>
-
-<!-- TRUST NOTE -->
-<div class="rate-note">
-  🔒 <b>Aman & Bukan Phishing</b><br>
-  Kami <b>TIDAK PERNAH</b> meminta:
-  <ul>
-    <li>Password Roblox</li>
-    <li>Kode OTP</li>
-    <li>Login akun</li>
-  </ul>
-  Proses menggunakan <b>Gamepass resmi Roblox</b>.
-</div>
-
-
-  <button id="btnTopup" class="btn" onclick="showConfirm()">Top Up Sekarang</button>
-
-
-
-  <!-- TOOLS -->
-  <section id="tools" style="margin-top:40px">
-  <div class="grid">
-<div class="card">
-  <h3>🧮 Kalkulator Robux</h3>
-  <input id="robux" type="number" placeholder="Masukkan Robux">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
-    <button class="btn alt" onclick="calcRobux('before')">Before Tax</button>
-    <button class="btn alt" onclick="calcRobux('after')">After Tax</button>
-  </div>
-  <div id="resRobux" class="result">—</div>
-  <div id="robuxNote" style="margin-top:6px; font-size:13px; color:var(--text-alt)">
-    Masukkan jumlah Robux dan pilih Before atau After Tax untuk melihat hasilnya.
-  </div>
-</div>
-
-  <div class="card">
-  <h3>💰 Hitung dari Harga</h3>
-  <input id="harga" type="number" placeholder="Contoh: 10500" oninput="calcHarga()">
-  <div id="resHarga" class="result">
-    Masukkan harga untuk melihat berapa Robux yang didapat
-  </div>
-</div>
-
   </section>
-<div class="card" style="margin-top: 30px;">
-  <h3 style="display:flex; align-items:center; justify-content:center; gap:8px;">
-    ❓ Pertanyaan Umum (FAQ)
-  </h3>
-  
-  <div class="faq-wrap">
-    
-    <div class="faq-item">
-      <button class="faq-question">
-        Metode pembayaran apa saja yang diterima?
-        <span class="faq-icon">▼</span>
-      </button>
-      <div class="faq-answer">
-        Kami menerima pembayaran melalui <b>QRIS (Otomatis)</b>, yang mendukung Dana, OVO, GoPay, ShopeePay, LinkAja, dan seluruh Mobile Banking di Indonesia.
-      </div>
+
+  <div class="divider"></div>
+
+  <!-- FORM -->
+  <section>
+    <div class="section-label">Detail Pesanan</div>
+    <div class="section-title">Isi Data</div>
+
+    <!-- CONFIRM PANEL -->
+    <div class="confirm-panel" id="confirmPanel">
+      <h3>📋 Ringkasan Pesanan</h3>
+      <div class="confirm-row"><span class="clabel">Paket</span><span class="cval" id="cfPaket">—</span></div>
+      <div class="confirm-row"><span class="clabel">Harga</span><span class="cval" id="cfHarga">—</span></div>
+      <div class="confirm-row"><span class="clabel">Before Tax</span><span class="cval" id="cfBefore">—</span></div>
+      <div class="confirm-row"><span class="clabel">After Tax (Set Gamepass)</span><span class="cval" id="cfAfter">—</span></div>
+      <div class="confirm-row"><span class="clabel">Gamepass ID</span><span class="cval" id="cfPass">—</span></div>
+      <div class="confirm-row"><span class="clabel">Place ID</span><span class="cval" id="cfPlace">—</span></div>
     </div>
 
-    <div class="faq-item">
-      <button class="faq-question">
-        Berapa lama proses masuknya Robux?
-        <span class="faq-icon">▼</span>
-      </button>
-      <div class="faq-answer">
-        Estimasi proses pengiriman Robux adalah <b>selama 5 hari</b> (Pending Robux) sesuai ketentuan resmi dari Roblox.
-      </div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-question">
-        Apakah hanya gamepass?
-        <span class="faq-icon">▼</span>
-      </button>
-      <div class="faq-answer">
-        Tidak hanya Gamepass, saat ini juga tersedia layanan <b>Gift In Game</b> dan metode <b>Take Seacc</b>.
-      </div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-question">
-        Berapa Robux yang masuk jika pakai After Tax?
-        <span class="faq-icon">▼</span>
-      </button>
-      <div class="faq-answer">
-        Kalau kamu pakai metode <b>After Tax</b>, Robux yang masuk ke akun kamu akan <b>tepat sesuai</b> jumlah yang kamu minta — tanpa potongan sama sekali.<br><br>
-        Contoh: mau <b>150 Robux</b> → ketik 150 di Kalkulator → tekan <b>After Tax</b> → set harga gamepass sesuai angka yang muncul → Robux yang masuk ke akun kamu <b>pas 150 Robux</b>. ✅<br><br>
-        Ini karena harga gamepass sudah dihitung untuk menutupi pajak Roblox (30%), jadi yang kamu terima = yang kamu minta.
-      </div>
-    </div>
-<div class="faq-item">
-      <button class="faq-question">
-        Apakah pembelian hanya bisa via WhatsApp?
-        <span class="faq-icon">▼</span>
-      </button>
-      <div class="faq-answer">
-        Tidak! Kamu bisa order melalui 2 cara:<br><br>
-        💬 <b>WhatsApp</b> — <a href="https://wa.me/6285182456497" style="color:var(--p)">Klik di sini</a> — Respon lebih cepat, cocok untuk order langsung.<br><br>
-        🎮 <b>Discord</b> — <a href="https://discord.gg/WH9GXJexZs" target="_blank" style="color:var(--p)">Join Server KaisarStore</a> — Bisa order & tanya-tanya di sana juga.<br><br>
-        <b>Rekomendasi:</b> Pakai <b>WhatsApp</b> untuk respon lebih cepat. 🚀
-      </div>
-    </div>
-  </div>
-</div>
-  </div>
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="footer-wrap">
-
+    <div style="display:flex;flex-direction:column;gap:16px">
       <div>
-      <div class="footer-brand">
-    <img src="kucing.jpg" alt="KaisarStore Cat">
-    <div>
-      <div class="footer-title">KaisarStore</div>
-      <p style="color:#aaa;font-size:14px">
-        Layanan top-up game terpercaya dengan dukungan premium 24 jam. <br>
-        Proses aman, cepat, dan dapat diandalkan.
-      </p>
-    </div>
-  </div>
-  <div class="footer-title">Hubungi Kami</div>
+        <label class="field-label">Gamepass ID</label>
+        <input type="text" id="passId" inputmode="numeric" placeholder="Contoh: 123456789">
+        <div class="hint">🔒 Kami tidak pernah minta password, OTP, atau login Roblox. Gamepass ID adalah angka publik yang aman.</div>
+        <div class="error" id="passError">Gamepass ID harus berupa angka saja</div>
+        <div class="hint" style="margin-top:8px">Tidak tau cara cek Gamepass ID? <a href="https://whatsapp.com/channel/0029VbBxOdG5Ui2Xlg1qYC0o" target="_blank" style="color:var(--gold)">Cek panduan kami.</a></div>
+      </div>
 
-  <a href="https://wa.me/6285182456497">💬 Chat WhatsApp</a>
-
-  <a href="" target="_blank">
-  📢 Saluran WhatsApp KaisarStore
-  </a>
-
-  <a href="#paket">💎 Paket Robux</a>
-
+      <!-- PLACE ID FIELD (NEW) -->
+      <div>
+        <label class="field-label">Place ID</label>
+        <input type="text" id="placeId" inputmode="numeric" placeholder="Contoh: 987654321">
+        <div class="hint">🎮 Place ID adalah ID game/place tempat Gamepass kamu dibuat. Angka publik, bukan password.</div>
+        <div class="error" id="placeError">Place ID harus berupa angka saja</div>
+        <div class="hint" style="margin-top:8px">Tidak tau cara cek Place ID? <a href="https://whatsapp.com/channel/0029VbBxOdG5Ui2Xlg1qYC0o" target="_blank" style="color:var(--gold)">Cek panduan kami.</a></div>
       </div>
 
       <div>
-        <div class="footer-title">Pembayaran</div>
-        <div class="payments">
-          <div>OVO</div>
-          <div>GoPay</div>
-          <div>DANA</div>
-          <div>QRIS</div>
-          <div>Bank</div>
+        <label class="field-label">Kode Promo <span style="color:var(--muted);font-weight:400;text-transform:none">(Opsional)</span></label>
+        <input type="text" id="promoInput" placeholder="Masukkan kode promo jika ada">
+        <div id="promoInfo" style="display:none;margin-top:6px;font-size:13px;padding:8px 12px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:8px;color:#22C55E"></div>
+      </div>
+
+      <div>
+        <label class="field-label">Metode Pembayaran</label>
+        <select id="payment">
+          <option value="">Pilih metode pembayaran</option>
+          <option>Bank Transfer</option>
+          <option>QRIS</option>
+          <option>E-Wallet (OVO / DANA / GoPay)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="trust-box">
+      <div class="trust-icon">🛡️</div>
+      <div>
+        <b style="color:var(--text);font-size:13px">Aman — Bukan Phishing</b>
+        <div style="margin-top:2px">Kami tidak pernah meminta: password Roblox, kode OTP, atau login akun. Proses via Gamepass resmi Roblox.</div>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="btnTopup" onclick="showConfirm()">⚡ Top Up Sekarang</button>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- KALKULATOR -->
+  <section id="kalkulator">
+    <div class="section-label">Tools</div>
+    <div class="section-title">Kalkulator Robux</div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="field-label" style="margin-bottom:8px">Hitung dari Robux</div>
+        <input type="number" id="calcRobuxInput" placeholder="Masukkan Robux">
+        <div class="calc-btns">
+          <button class="calc-btn" id="btnBefore" onclick="calcRobux('before')">Before Tax</button>
+          <button class="calc-btn" id="btnAfter" onclick="calcRobux('after')">After Tax</button>
         </div>
+        <div class="result-box" id="resRobux">Masukkan jumlah Robux, pilih Before atau After Tax.</div>
+        <div style="margin-top:8px;font-size:12px;color:var(--muted)" id="robuxNote">After Tax: Robux yang diterima tepat sesuai yang kamu inginkan.</div>
       </div>
 
+      <div class="card">
+        <div class="field-label" style="margin-bottom:8px">Hitung dari Harga (Rp)</div>
+        <input type="number" id="calcHargaInput" placeholder="Contoh: 10500" oninput="calcHarga()">
+        <div class="result-box" id="resHarga" style="margin-top:12px">Masukkan harga untuk melihat Robux yang didapat.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- FAQ -->
+  <section>
+    <div class="section-label">Pertanyaan</div>
+    <div class="section-title">FAQ</div>
+
+    <div class="card">
+      <div id="faqList"></div>
     </div>
 
-    <div class="copy">
-      © 2025 KaisarStore • All Rights Reserved
+    <div style="margin-top:16px;text-align:left">
+      <button id="faqToggleBtn" onclick="toggleFaqAll()" style="
+        background:#22C55E;
+        color:#fff;
+        border:none;
+        border-radius:100px;
+        padding:10px 20px;
+        font-family:'Syne',sans-serif;
+        font-size:14px;
+        font-weight:700;
+        cursor:pointer;
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+        transition:all 0.2s;
+      " onmouseover="this.style.background='#16A34A'" onmouseout="this.style.background='#22C55E'">
+        Tampilkan Lebih Banyak <span id="faqToggleIcon" style="font-size:11px">▼</span>
+      </button>
     </div>
-  </footer>
+  </section>
+</main>
 
-  <script>
-    let hargaFinal = 0;
-let promoText = "";
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="nav-logo"><div class="dot"></div>KaisarStore</div>
+      <p>KaisarStore adalah tempat Top Up Roblox Robux terpercaya dengan proses cepat dan aman. Setiap pembelian dilindungi garansi.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Bantuan</h4>
+      <a href="https://wa.me/6285182456497">WhatsApp</a>
+      <a href="https://discord.gg/WH9GXJexZs" target="_blank">Discord</a>
+      <a href="https://whatsapp.com/channel/0029VbBxOdG5Ui2Xlg1qYC0o" target="_blank">Saluran WA</a>
+    </div>
+    <div class="footer-col">
+      <h4>Beli</h4>
+      <a href="#paket">Robux</a>
+      <a href="#kalkulator">Kalkulator</a>
+    </div>
+    <div class="footer-col">
+      <h4>Tentang Kami</h4>
+      <a href="#">Pusat Bantuan</a>
+      <a href="#">Kebijakan Privasi</a>
+      <a href="#">Syarat & Ketentuan</a>
+    </div>
+    <div class="footer-col">
+      <h4>Ikuti Kami</h4>
+      <div class="social-icons">
+        <a class="social-icon" href="https://wa.me/6285182456497" title="WhatsApp" style="padding:0;overflow:hidden;border-radius:8px">
+          <img src="whatsapplogo.webp" style="width:36px;height:36px;object-fit:cover;display:block;">
+        </a>
+        <a class="social-icon" href="https://discord.gg/WH9GXJexZs" target="_blank" title="Discord" style="padding:0;overflow:hidden;border-radius:8px">
+          <img src="discord.png" style="width:36px;height:36px;object-fit:cover;display:block;">
+        </a>
+        <a class="social-icon" href="#" target="_blank" title="TikTok" style="padding:0;overflow:hidden;border-radius:8px">
+          <img src="tiktoklogo.png" style="width:36px;height:36px;object-fit:cover;display:block;">
+        </a>
+      </div>
+    </div>
+  </div>
 
-    let promoPercent = 0;
+  <div class="footer-payment">
+    <h4>Pembayaran</h4>
+    <div class="payment-grid">
+      <div class="payment-item">DANA</div>
+      <div class="payment-item">GoPay</div>
+      <div class="payment-item">OVO</div>
+      <div class="payment-item">ShopeePay</div>
+      <div class="payment-item">LinkAja</div>
+      <div class="payment-item">QRIS</div>
+      <div class="payment-item">BCA</div>
+      <div class="payment-item">Mandiri</div>
+      <div class="payment-item">BRI</div>
+      <div class="payment-item">BNI</div>
+      <div class="payment-item">CIMB</div>
+      <div class="payment-item">BSI</div>
+      <div class="payment-item">Permata</div>
+      <div class="payment-item">Alfamart</div>
+      <div class="payment-item">Indomaret</div>
+    </div>
+  </div>
+
+  <div class="copy">© 2025 KaisarStore — All Rights Reserved</div>
+</footer>
+
+<!-- WA FLOAT -->
+<a href="https://wa.me/6285182456497?text=Halo%20KaisarStore%2C%20saya%20butuh%20bantuan" target="_blank" class="wa-float">
+  💬 Bantuan
+</a>
+
+<script>
+const RATE = 105;
+const RATE_CORET = 112; // harga asli dicoret
+const WA_NUM = "6285182456497";
+const MAINTENANCE_MODE = false;
+const PROMO_LIST = {};
+
+let selectedRobux = 0;
+let promoPercent = 0;
 let promoCodeActive = "";
+let hargaFinal = 0;
 
-  /* ===== PROMO CONFIG ===== */
-const PROMO_LIST = {
-     // diskon 10%
-       // diskon 20%
-      // diskon 25%
-};
-
-
-    // ===== HELPERS =====
-    function parseAngka(val){
-      return Number(String(val).replace(/\./g,'').replace(/,/g,''));
-    }
-
-    const RATE = 105;
-    const WA = "6285182456497";
-
-    // tampilkan rate di halaman
-    document.getElementById("rateNote").innerHTML = `
-      💱 Rate: <b>Rp ${RATE} / Robux</b><br>
-      <span>⚠️ Harga dapat berubah sewaktu-waktu</span>
-    `;
-
-    let selectedRobux = 0;
-
-    const paketData = [100,200,300,400,500,600,700,800,900];
-    const paketList = document.getElementById("paketList");
-    const btnTopup = document.getElementById("btnTopup");
-    const customInput = document.getElementById("customRobux");
-    const passInput = document.getElementById('passId');
-const passWarning = document.getElementById('passWarning'); // nanti buat elemen <div id="passWarning">
-  const confirmBox = document.getElementById("confirmBox");
-const cfPaket  = document.getElementById("cfPaket");
-const cfHarga  = document.getElementById("cfHarga");
-const cfBefore = document.getElementById("cfBefore");
-const cfAfter  = document.getElementById("cfAfter");
-const cfPass = document.getElementById("cfPass");
-
-
- 
-passInput.addEventListener('input', () => {
-  let val = passInput.value.trim();
-
-  // 🔥 UPDATE: Batasi maksimal 20 karakter
-  if (val.length > 20) {
-    val = val.slice(0, 20); // Potong jika lebih dari 20
-    passInput.value = val;  // Update tampilan input
-  }
-
-  if (/^\d*$/.test(val)) { // Validasi hanya angka
-    passWarning.style.display = 'none';
-    
-    // Cek apakah custom input valid atau paket dipilih sebelum enable tombol
-    const currentRobux = selectedRobux > 0 ? selectedRobux : parseAngka(customInput.value);
-    btnTopup.disabled = !(currentRobux >= 100); 
-
-    // Update Confirm Box
-    cfPass.innerText = val ? `Pass ID: ${val}` : "Pass ID: -";
-
-  } else {
-    passWarning.style.display = 'block';
-    btnTopup.disabled = true;
-    cfPass.innerText = "Pass ID: -";
-  }
-});
-
-    /* ===== RENDER PAKET STANDAR ===== */
-   /* ===== RENDER PAKET STANDAR ===== */
-paketData.forEach(r => {
-  const div = document.createElement("div");
-  div.className = "paket";
-
-  div.innerHTML = `
-    <div class="check">✓</div>
-    <img src="robux1.jpg" alt="Robux" style="width:28px; height:28px; object-fit:cover; margin-bottom:6px;">
-    <div class="robux">${r} Robux</div>
-    <div class="harga">Rp ${(r * RATE).toLocaleString()}</div>
-  `;
-
-  div.onclick = () => {
-    const isActive = div.classList.contains("active");
-
-    document.querySelectorAll(".paket")
-      .forEach(p => p.classList.remove("active"));
-
-    if (!isActive) {
-      div.classList.add("active");
-      selectedRobux = r;
-    const robux = document.getElementById("robux");
-      btnTopup.style.display = "block";
-    } else {
-      selectedRobux = 0;
-      robux.value = "";
-      btnTopup.style.display = customInput.value ? "block" : "none";
-    }
-
-    updateConfirm();
-  };
-
-  paketList.appendChild(div);
-});
-
-  function calcRobux(t){
-  const r = parseAngka(robux.value);
-  const robuxNote = document.getElementById("robuxNote");
-
-  if(!r){ 
-    resRobux.innerText = "—";
-    robuxNote.innerText = "Masukkan jumlah Robux, lalu pilih tombol Before atau After Tax untuk melihat hasil.";
-    document.querySelectorAll(".btn.alt").forEach(b => b.classList.remove("active"));
-    return;
-  }
-
-  resRobux.innerText =
-    t === 'before'
-      ? Math.floor(r * 0.7) + " Robux (Diterima)"
-      : Math.ceil(r / 0.7) + " Robux (Set Gamepass)";
-
-  // toggle active
-  document.querySelectorAll(".btn.alt").forEach(b => b.classList.remove("active"));
-  if(t === 'before') {
-    document.querySelector(".btn.alt:nth-child(1)").classList.add("active");
-    robuxNote.innerText = "Kalau kamu tekan Before Tax, jumlah yang diterima akan dikurangi pajak.";
-  } else {
-    document.querySelector(".btn.alt:nth-child(2)").classList.add("active");
-    robuxNote.innerText = "Kalau kamu tekan After Tax, yang masuk akan sesuai jumlah Robux yang kamu inginkan.";
-  }
-}
-
-function customTopup() {
-  selectedRobux = parseAngka(customInput.value);
-  if(!selectedRobux || selectedRobux < 100) {
-    alert("Minimal top-up 100 Robux");
-    return;
-  }
-  showConfirm();
-}
-
- //* ===== HITUNG ROBUX SESUAI LOGIKA LO ===== */
-/* ===== HITUNG ROBUX DARI HARGA ===== */
-function calcHarga() {
-  const inputEl = document.getElementById("harga"); // Pastikan ID elemen input kamu benar
-  let h = Number(parseAngka(inputEl.value)); 
-
-  // 🔥 UPDATE: Jika lebih dari 50.000.000, reset jadi 0
-  if (h > 50000000) {
-    inputEl.value = ""; // Kosongkan input visual
-    h = 0; // Reset nilai logika
-  }
-
-  if (!h) { 
-    resHarga.innerText = "—"; 
-    return; 
-  }
-
-  let setGP, finalRobux;
-
-  // Logika Khusus
-  if (h === 10500) { 
-    setGP = 143;
-    finalRobux = 100;
-  } else if (h === 50000) {
-    setGP = 675;
-    finalRobux = 472;
-  } else {
-    // Rumus umum
-    setGP = Math.floor(h / 75); 
-    finalRobux = Math.floor(setGP * 0.7); 
-  }
-
-  resHarga.innerHTML = `
-    Harga: ${h.toLocaleString('id-ID')}<br>
-    Set Gamepass: ${setGP} Robux<br>
-    Bersih: ${finalRobux} Robux
-  `;
-}
-
-    /* ===== KONFIRMASI ===== */
-  function updateConfirm() {
-  const val = selectedRobux > 0
-    ? selectedRobux
-    : parseAngka(customInput.value);
-
-  if (!val || val <= 0) {
-    resetConfirm();
-    return;
-  }
-
-  const hargaAwal = val * RATE;
-  const diskon = promoPercent > 0
-    ? Math.floor(hargaAwal * promoPercent / 100)
-    : 0;
-
-  hargaFinal = hargaAwal - diskon;
-
-  promoText = promoPercent > 0
-    ? `Promo: ${promoCodeActive} (${promoPercent}%)`
-    : "";
-
-  cfPaket.innerText  = `Paket: ${val} Robux`;
-  cfHarga.innerText  = `Harga: Rp ${hargaFinal.toLocaleString()}`;
-  cfBefore.innerText = `Before Tax: ${Math.floor(val * 0.7)} Robux`;
-  cfAfter.innerText  = `After Tax: ${Math.ceil(val / 0.7)} Robux`;
-
-
-const passVal = passInput.value.trim();
-cfPass.innerText = passVal
-  ? `Pass ID: ${passVal}`
-  : "Pass ID: -";
-
-
-
-  confirmBox.style.display = "block";
-}
-
-
-function resetConfirm() {
-  const box = document.getElementById('confirmBox');
-
-  box.style.display = 'none';
-
-  cfPaket.innerText  = '-';
-  cfHarga.innerText  = '-';
-  cfBefore.innerText = '-';
-  cfAfter.innerText  = '-';
-  cfPass.innerText = "-";
-
-}
-
- function showConfirm(){
-  const val = selectedRobux > 0
-    ? selectedRobux
-    : parseAngka(customInput.value);
-
-  if (!val || val <= 0) {
-    alert("Pilih paket atau isi jumlah Robux dulu");
-    return;
-  }
-
-  updateConfirm();
-
-  // scroll aman (tidak error)
-  setTimeout(() => {
-    confirmBox.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-  }, 50);
-}
-
-
-
-    /* ===== WA ===== */
-    function toWA(){
-      const val = selectedRobux > 0 ? selectedRobux : parseAngka(customInput.value);
-      if(!val || val <=0) return;
-
- const pass = passInput.value.trim();
-      const pay  = payment.value.trim();
-      let extra = "";
-      if(pass) extra += `\n\nPass ID / Gamepass ID:\n${pass}`;
-      if(pay)  extra += `\n\nMetode Pembayaran:\n${pay}`;
-
-      const msg = `Halo KaisarStore,
-Saya mau top up Robux
-
-Jumlah: ${val} Robux
-Harga: Rp ${hargaFinal.toLocaleString()}
-Before Tax: ${Math.floor(val * 0.7)}
-After Tax: ${Math.ceil(val / 0.7)}
-${promoText}
-${extra}`;
-
-
-      window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`);
-    }
-
-    /* ===== CUSTOM INPUT LIVE ===== */
-/* ===== CUSTOM INPUT LIVE ===== */
-const MIN_ROBUX = 100;
-const MAX_ROBUX = 10000; 
-
-customInput.addEventListener("input", () => {
-  let val = parseAngka(customInput.value);
-
-  // 🔥 UPDATE: Jika lebih dari 10.000, reset input jadi kosong
-  if (val > MAX_ROBUX) {
-    customInput.value = ""; // Reset tampilan jadi kosong
-    val = 0; // Nilai dianggap 0 agar masuk ke validasi error di bawah
-  }
-
-  // Validasi minimal (akan tereksekusi juga jika tadi di-reset jadi 0)
-  if (val < MIN_ROBUX) {
-    customHarga.innerText = `Minimal top-up: ${MIN_ROBUX} Robux`;
-    btnTopup.style.display = "none";
-    selectedRobux = 0;
-    document.querySelectorAll(".paket").forEach(p => p.classList.remove("active"));
-    
-    if(confirmBox.style.display === "block") resetConfirm();
-    return;
-  }
-
-  // Hitung harga & set gamepass jika valid
-  const harga = val * RATE;
-  const setGamepass = Math.ceil(val * 1.43); // Estimasi pajak (1 / 0.7 ≈ 1.428)
-
-  customHarga.innerHTML = `
-    Set Gamepass: <b>${setGamepass} Robux</b><br>
-    Harga: <b>Rp ${harga.toLocaleString()}</b>
-  `;
-
-  // Cek Pass ID dulu sebelum nyalakan tombol
-  const passVal = passInput.value.trim();
-  const isPassValid = /^\d*$/.test(passVal); // Boleh kosong dulu, nanti dicek pas klik tombol, atau wajib isi tergantung selera
-
-  btnTopup.style.display = "block";
-  btnTopup.disabled = !isPassValid; // Disable jika pass ID error
-
-  selectedRobux = 0;
-  document.querySelectorAll(".paket").forEach(p => p.classList.remove("active"));
-
-  if(confirmBox.style.display === "block") updateConfirm();
-});
-
-
-
-/* klik luar = nutup */
-// Klik di luar = nutup dropdown mobile
-document.addEventListener('click', function(e) {
-  const menu = document.getElementById('mobileMenu');
-  const btn = document.querySelector('.dots-btn');
-
-  // Kalau target bukan tombol dan bukan menu, tutup menu
-  if (!btn.contains(e.target) && !menu.contains(e.target)) {
-    if(menu.classList.contains('show')) {
-      menu.classList.remove('show');
-      menu.style.display = 'none';
-    }
-  }
-});
-
-// Fungsi toggle tombol
-function toggleMenu() {
-  const menu = document.getElementById('mobileMenu');
-  if(menu.classList.contains('show')) {
-    menu.classList.remove('show');
-    menu.style.display = 'none';
-  } else {
-    menu.classList.add('show');
-    menu.style.display = 'block';
-  }
-}
-function closeMenu() {
-  const menu = document.getElementById('mobileMenu');
-  menu.classList.remove('show');
-  menu.style.display = 'none';
-}
-/* ===== MAINTENANCE TOGGLE ===== */
-const MAINTENANCE_MODE = false; // 🔴 true = ON, false = OFF
+const PAKET_DATA = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 
 if (MAINTENANCE_MODE) {
   document.getElementById("maintenance").style.display = "flex";
-  document.body.style.overflow = "hidden"; // lock scroll
+  document.body.style.overflow = "hidden";
 }
-const promoInput = document.getElementById("promoCode");
-const promoInfo  = document.getElementById("promoInfo");
 
-promoInput.addEventListener("input", () => {
-  const code = promoInput.value.trim().toUpperCase();
+/* RENDER PAKET */
+const paketGrid = document.getElementById("paketGrid");
+PAKET_DATA.forEach(r => {
+  const div = document.createElement("div");
+  div.className = "paket";
+  div.innerHTML = `
+    <div class="paket-check">✓</div>
+    <div class="paket-icon"><img src="robuxlogo.png" style="width:28px;height:28px;object-fit:contain;filter:invert(1);"></div>
+    <div class="paket-rbx">${r}</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:2px">Robux</div>
+    <div class="paket-price-coret">Rp ${(r * RATE_CORET).toLocaleString('id-ID')}</div>
+    <div class="paket-price">Rp ${(r * RATE).toLocaleString('id-ID')}</div>
+  `;
+  div.addEventListener("click", () => {
+    const wasActive = div.classList.contains("active");
+    document.querySelectorAll(".paket").forEach(p => p.classList.remove("active"));
+    if (!wasActive) {
+      div.classList.add("active");
+      selectedRobux = r;
+      document.getElementById("customInput").value = "";
+      document.getElementById("customPreview").innerHTML = "";
+    } else {
+      selectedRobux = 0;
+    }
+    updateConfirm();
+  });
+  paketGrid.appendChild(div);
+});
 
+/* CUSTOM INPUT */
+document.getElementById("customInput").addEventListener("input", function () {
+  let val = parseInt(this.value);
+  document.querySelectorAll(".paket").forEach(p => p.classList.remove("active"));
+  selectedRobux = 0;
+
+  if (val > 10000) { this.value = ""; document.getElementById("customPreview").innerHTML = ""; return; }
+  if (!val || val < 100) {
+    document.getElementById("customPreview").innerHTML = val ? '<span style="color:var(--red);font-size:12px">Minimal 100 Robux</span>' : "";
+    updateConfirmClear();
+    return;
+  }
+  const harga = val * RATE;
+  const setGP = Math.ceil(val / 0.7);
+  document.getElementById("customPreview").innerHTML = `Set Gamepass: <b>${setGP} Robux</b> &nbsp;·&nbsp; Harga: <b>Rp ${harga.toLocaleString('id-ID')}</b>`;
+  selectedRobux = 0; // custom handled separately
+  updateConfirmFromCustom(val);
+});
+
+/* PASS ID */
+document.getElementById("passId").addEventListener("input", function () {
+  const val = this.value.trim();
+  if (val.length > 20) this.value = val.slice(0, 20);
+  const isNum = /^\d*$/.test(this.value);
+  document.getElementById("passError").style.display = isNum ? "none" : "block";
+  updateConfirmPass();
+});
+
+/* PLACE ID (NEW) */
+document.getElementById("placeId").addEventListener("input", function () {
+  const val = this.value.trim();
+  if (val.length > 20) this.value = val.slice(0, 20);
+  const isNum = /^\d*$/.test(this.value);
+  document.getElementById("placeError").style.display = isNum ? "none" : "block";
+  updateConfirmPlace();
+});
+
+/* PROMO */
+document.getElementById("promoInput").addEventListener("input", function () {
+  const code = this.value.trim().toUpperCase();
+  const info = document.getElementById("promoInfo");
   if (PROMO_LIST[code]) {
     promoPercent = PROMO_LIST[code];
     promoCodeActive = code;
-
-    promoInfo.style.display = "block";
-    promoInfo.innerHTML = `🎉 Kode <b>${code}</b> aktif<br>Diskon <b>${promoPercent}%</b>`;
-
+    info.style.display = "block";
+    info.innerHTML = `🎉 Kode <b>${code}</b> aktif — diskon <b>${promoPercent}%</b>`;
   } else {
-    promoPercent = 0;
-    promoCodeActive = "";
-    promoInfo.style.display = "none";
+    promoPercent = 0; promoCodeActive = "";
+    info.style.display = "none";
   }
-
-  if(confirmBox.style.display === "block") updateConfirm();
+  refreshConfirm();
 });
-  const track = document.getElementById("sliderTrack");
-  const slides = document.querySelectorAll(".slide");
-  let index = 0;
 
-  setInterval(() => {
-    index = (index + 1) % slides.length;
-    track.style.transform = `translateX(-${index * 100}%)`;
-  }, 3000);
-  /* ===== FAQ TOGGLE SCRIPT ===== */
-const faqQuestions = document.querySelectorAll('.faq-question');
+/* KALKULATOR */
+function calcRobux(type) {
+  const r = parseInt(document.getElementById("calcRobuxInput").value);
+  const resEl = document.getElementById("resRobux");
+  const noteEl = document.getElementById("robuxNote");
+  document.querySelectorAll(".calc-btn").forEach(b => b.classList.remove("active"));
+  if (!r) { resEl.innerHTML = "Masukkan jumlah Robux."; return; }
+  if (type === "before") {
+    document.getElementById("btnBefore").classList.add("active");
+    resEl.innerHTML = `<b>${Math.floor(r * 0.7)} Robux</b> yang diterima`;
+    noteEl.textContent = "Robux yang masuk akan dipotong pajak 30% oleh Roblox.";
+  } else {
+    document.getElementById("btnAfter").classList.add("active");
+    resEl.innerHTML = `Set Gamepass: <b>${Math.ceil(r / 0.7)} Robux</b>`;
+    noteEl.textContent = "Set harga gamepass ke angka ini agar kamu terima tepat " + r + " Robux.";
+  }
+}
 
-faqQuestions.forEach(question => {
-  question.addEventListener('click', () => {
-    const item = question.parentElement;
-    const answer = item.querySelector('.faq-answer');
+function calcHarga() {
+  let h = parseInt(document.getElementById("calcHargaInput").value);
+  const resEl = document.getElementById("resHarga");
+  if (h > 50000000) { document.getElementById("calcHargaInput").value = ""; resEl.innerHTML = "—"; return; }
+  if (!h) { resEl.innerHTML = "Masukkan harga untuk melihat Robux yang didapat."; return; }
+  let setGP, finalRobux;
+  if (h === 10500) { setGP = 143; finalRobux = 100; }
+  else if (h === 50000) { setGP = 675; finalRobux = 472; }
+  else { setGP = Math.floor(h / 75); finalRobux = Math.floor(setGP * 0.7); }
+  resEl.innerHTML = `Set Gamepass: <b>${setGP} Robux</b><br>Bersih diterima: <b>${finalRobux} Robux</b>`;
+}
 
-    // Tutup item lain jika ingin accordion (opsional, hapus loop ini jika ingin bisa buka banyak sekaligus)
-    document.querySelectorAll('.faq-item').forEach(otherItem => {
-      if (otherItem !== item && otherItem.classList.contains('active')) {
-        otherItem.classList.remove('active');
-        otherItem.querySelector('.faq-answer').style.maxHeight = null;
-      }
+/* CONFIRM */
+function getCurrentRobux() {
+  if (selectedRobux > 0) return selectedRobux;
+  const cv = parseInt(document.getElementById("customInput").value);
+  return (cv && cv >= 100) ? cv : 0;
+}
+
+function updateConfirm() {
+  const val = getCurrentRobux();
+  if (!val) { updateConfirmClear(); return; }
+  buildConfirm(val);
+}
+
+function updateConfirmFromCustom(val) {
+  buildConfirm(val);
+}
+
+function buildConfirm(val) {
+  const hargaAwal = val * RATE;
+  const diskon = promoPercent > 0 ? Math.floor(hargaAwal * promoPercent / 100) : 0;
+  hargaFinal = hargaAwal - diskon;
+
+  document.getElementById("cfPaket").textContent = val + " Robux";
+  document.getElementById("cfHarga").textContent = "Rp " + hargaFinal.toLocaleString('id-ID') + (diskon ? ` (hemat Rp ${diskon.toLocaleString('id-ID')})` : "");
+  document.getElementById("cfBefore").textContent = Math.floor(val * 0.7) + " Robux";
+  document.getElementById("cfAfter").textContent = Math.ceil(val / 0.7) + " Robux";
+  updateConfirmPass();
+  updateConfirmPlace();
+  document.getElementById("confirmPanel").style.display = "block";
+}
+
+function updateConfirmPass() {
+  const pass = document.getElementById("passId").value.trim();
+  document.getElementById("cfPass").textContent = pass || "—";
+}
+
+/* UPDATE PLACE IN CONFIRM (NEW) */
+function updateConfirmPlace() {
+  const place = document.getElementById("placeId").value.trim();
+  document.getElementById("cfPlace").textContent = place || "—";
+}
+
+function updateConfirmClear() {
+  document.getElementById("confirmPanel").style.display = "none";
+}
+
+function refreshConfirm() {
+  const val = getCurrentRobux();
+  if (val) buildConfirm(val);
+}
+
+function showConfirm() {
+  const val = getCurrentRobux();
+  if (!val) { alert("Pilih paket atau isi jumlah Robux dulu."); return; }
+  buildConfirm(val);
+  setTimeout(() => {
+    document.getElementById("confirmPanel").scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 50);
+  sendToWA(val);
+}
+
+function scrollConfirm() {
+  document.getElementById("paket").scrollIntoView({ behavior: "smooth" });
+}
+
+function sendToWA(val) {
+  const pass = document.getElementById("passId").value.trim();
+  const place = document.getElementById("placeId").value.trim();
+  const pay = document.getElementById("payment").value.trim();
+  let extra = "";
+  if (pass) extra += `\n\nGamepass ID:\n${pass}`;
+  if (place) extra += `\n\nPlace ID:\n${place}`;
+  if (pay) extra += `\n\nMetode Pembayaran:\n${pay}`;
+  const promoLine = promoPercent > 0 ? `\nPromo: ${promoCodeActive} (${promoPercent}%)` : "";
+  const msg = `Halo KaisarStore,\nSaya mau top up Robux\n\nJumlah: ${val} Robux\nHarga: Rp ${hargaFinal.toLocaleString('id-ID')}${promoLine}\nBefore Tax: ${Math.floor(val * 0.7)} Robux\nAfter Tax: ${Math.ceil(val / 0.7)} Robux${extra}`;
+  window.open(`https://wa.me/${WA_NUM}?text=${encodeURIComponent(msg)}`);
+}
+
+/* MOBILE NAV */
+function toggleMobileNav() {
+  document.getElementById("mobileNav").classList.toggle("open");
+}
+
+function closeMobileNav() {
+  document.getElementById("mobileNav").classList.remove("open");
+}
+
+document.addEventListener("click", e => {
+  const nav = document.getElementById("mobileNav");
+  const btn = document.getElementById("hambBtn");
+  if (!nav.contains(e.target) && !btn.contains(e.target)) {
+    nav.classList.remove("open");
+  }
+});
+
+/* FAQ */
+const FAQS_VISIBLE_DEFAULT = 2;
+let faqExpanded = false;
+
+const faqs = [
+  {
+    q: "Deskripsi Produk Top Up Roblox Robux",
+    a: `Cari tempat Top Up Roblox Robux (RBX) terpercaya dan termurah? Di sini kamu bisa top up Roblox Robux (RBX) dengan berbagai pilihan jumlah, mulai dari <b>100 Robux</b>. Garansi pembelian 100% aman, harga terjangkau, dan bonus garansi robux pasti masuk ke akun kamu.`
+  },
+  {
+    q: "Apa itu Robux?",
+    a: `Robux adalah mata uang virtual resmi di game Roblox yang digunakan untuk membeli berbagai item, aksesories, gamepass, skin, atau fitur premium. Dengan Robux, kamu bisa memaksimalkan pengalaman bermain, membeli item, serta mendukung kreator game favoritmu di Roblox.`
+  },
+  {
+    q: "Bagaimana cara top up Robux?",
+    a: `<ol>
+      <li>Masukkan Username: Ketik username Roblox yang ingin diisi Robux. Username dapat ditemukan di profil atau pengaturan akun.</li>
+      <li>Pilih Jumlah Robux: Pilih paket atau masukkan jumlah secara manual. Kamu juga bisa mengetik nominal rupiah.</li>
+      <li>Lanjutkan Pesanan: Cek kembali data pesanan dan klik Lanjutkan Pembelian.</li>
+      <li>Buat Gamepass dan atur sesuai instruksi dari website. Pastikan place tidak private ataupun diarsipkan. <b>Catatan: Untuk pesanan kedua dengan nominal berbeda, buat gamepass baru.</b></li>
+      <li>Isi Gamepass ID dan Place ID yang sudah dibuat. Keduanya adalah angka publik, bukan password.</li>
+      <li>Pilih Pembayaran: Pilih metode pembayaran, lalu klik Top Up Sekarang. Setelah pembayaran diterima, robux akan pending.</li>
+      <li>Robux akan masuk dalam waktu 5 hari atau 120 jam sejak pending, karena ketentuan robux hasil penjualan dari gamepass.</li>
+    </ol>`
+  },
+  {
+    q: "Kenapa Top Up Roblox Robux di KaisarStore?",
+    a: `KaisarStore memahami keinginan dari Robloxian dan menyediakan jenis robux khusus untuk dikirim. Kamu diberi harga terjangkau, proses cepat, kamu cukup tunggu update setelah membayar. Selain itu, robux khusus memberi garansi Robux 100% masuk & akun 100% aman agar tidak ada kekhawatiran dalam membeli. Customer support KaisarStore juga selalu siap membantu kamu!`
+  },
+  {
+    q: "Berapa harga Robux?",
+    a: `Harga robux saat ini <b>Rp 105 / Robux</b>. Paket tersedia mulai dari <b>100 Robux</b>. Harga dapat berubah sewaktu-waktu tergantung rate terbaru.`
+  },
+  {
+    q: "Apakah Robux yang Dibeli Akan Terpotong Pajak?",
+    a: `Tergantung metode yang dipilih:<br><br>
+    • <b>Before Tax</b>: Robux yang masuk akan dipotong 30% pajak oleh Roblox.<br>
+    • <b>After Tax</b>: Tidak ada potongan pajak. Robux akan diterima utuh sesuai nominal yang dibeli. KaisarStore menjamin jumlah Robux yang masuk selalu tepat sesuai pesanan.`
+  },
+  {
+    q: "Apakah pembelian hanya bisa via WhatsApp?",
+    a: `Tidak! Kamu bisa order melalui 2 cara:<br><br>
+    <img src="whatsapplogo.webp" style="width:18px;height:18px;object-fit:cover;border-radius:4px;vertical-align:middle;margin-right:6px;"><b>WhatsApp</b> — <a href="https://wa.me/6285182456497">Klik di sini</a> — Respon lebih cepat, cocok untuk order langsung.<br><br>
+    <img src="discord.png" style="width:18px;height:18px;object-fit:cover;border-radius:4px;vertical-align:middle;margin-right:6px;"><b>Discord</b> — <a href="https://discord.gg/WH9GXJexZs" target="_blank">Join Server KaisarStore</a> — Bisa order & tanya-tanya di sana juga.<br><br>
+    <b>Rekomendasi:</b> Pakai WhatsApp untuk respon lebih cepat. 🚀`
+  },
+];
+
+const faqList = document.getElementById("faqList");
+const faqItems = [];
+
+faqs.forEach((f, idx) => {
+  const item = document.createElement("div");
+  item.className = "faq-item";
+  if (idx >= FAQS_VISIBLE_DEFAULT) item.style.display = "none";
+  item.innerHTML = `
+    <button class="faq-q">
+      <span>${f.q}</span>
+      <span class="faq-arrow">▼</span>
+    </button>
+    <div class="faq-a">${f.a}</div>
+  `;
+  item.querySelector(".faq-q").addEventListener("click", () => {
+    const isOpen = item.classList.contains("open");
+    document.querySelectorAll(".faq-item.open").forEach(el => {
+      el.classList.remove("open");
+      el.querySelector(".faq-a").style.maxHeight = null;
     });
-
-    // Toggle active class
-    item.classList.toggle('active');
-
-    // Atur tinggi konten
-    if (item.classList.contains('active')) {
-      answer.style.maxHeight = answer.scrollHeight + "px";
-    } else {
-      answer.style.maxHeight = null;
+    if (!isOpen) {
+      item.classList.add("open");
+      item.querySelector(".faq-a").style.maxHeight = item.querySelector(".faq-a").scrollHeight + "px";
     }
   });
+  faqList.appendChild(item);
+  faqItems.push(item);
 });
-  </script>
 
-<!-- TOMBOL BANTUAN POJOK KANAN BAWAH -->
-<a href="https://wa.me/6285182456497?text=Halo%20KaisarStore%2C%20saya%20butuh%20bantuan" 
-   target="_blank"
-   style="
-     position: fixed;
-     bottom: 20px;
-     right: 20px;
-     z-index: 9999;
-     background: linear-gradient(135deg,#25D366,#1da851);     color: #fff;
-     font-weight: 800;
-     font-size: 14px;
-     padding: 12px 18px;
-     border-radius: 50px;
-     text-decoration: none;
-     box-shadow: 0 6px 20px rgba(37,211,102,0.45);
-     display: flex;
-     align-items: center;
-     gap: 8px;
-     transition: .2s ease;
-   "
-   onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 28px rgba(37,211,102,0.6)'"
-   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(37,211,102,0.45)'"
->
-  💬 Butuh Bantuan?
-</a>
+function toggleFaqAll() {
+  faqExpanded = !faqExpanded;
+  const btn = document.getElementById("faqToggleBtn");
 
-  </body>
-  </html>
+  faqItems.forEach((item, idx) => {
+    if (idx >= FAQS_VISIBLE_DEFAULT) {
+      item.style.display = faqExpanded ? "block" : "none";
+      if (!faqExpanded && item.classList.contains("open")) {
+        item.classList.remove("open");
+        item.querySelector(".faq-a").style.maxHeight = null;
+      }
+    }
+  });
+
+  btn.innerHTML = faqExpanded
+    ? `Tampilkan Lebih Sedikit <span id="faqToggleIcon" style="font-size:11px">▲</span>`
+    : `Tampilkan Lebih Banyak <span id="faqToggleIcon" style="font-size:11px">▼</span>`;
+}
+</script>
+</body>
+</html>
