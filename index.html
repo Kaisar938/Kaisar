@@ -721,6 +721,17 @@ footer {
   border-radius: 6px;
   height: 16px;
 }
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+#marqueeTrack:hover { animation-play-state: paused; }
+.testi-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 18px 20px; min-width: 220px; max-width: 220px; flex-shrink: 0; transition: border-color 0.2s; }
+.testi-card:hover { border-color: var(--border-gold); }
+.testi-user { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; color: var(--gold); margin-bottom: 4px; }
+.testi-paket { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+.testi-text { font-size: 13px; color: var(--text); line-height: 1.6; }
+.testi-stars { color: var(--gold); font-size: 12px; margin-top: 10px; }
 @keyframes shimmer {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
@@ -784,6 +795,16 @@ footer {
       <div class="stat"><div class="stat-num">1.000+</div><div class="stat-label">Transaksi Sukses</div></div>
       <div class="stat"><div class="stat-num">5 Hari</div><div class="stat-label">Proses Robux</div></div>
       <div class="stat"><div class="stat-num">24 Jam</div><div class="stat-label">Support Aktif</div></div>
+    </div>
+  </section>
+
+    <div class="divider"></div>
+
+  <section>
+    <div class="section-label">Pelanggan Kami</div>
+    <div class="section-title">Testimoni</div>
+    <div style="overflow:hidden;position:relative;">
+      <div id="marqueeTrack" style="display:flex;gap:16px;width:max-content;animation:marquee 30s linear infinite;"></div>
     </div>
   </section>
 
@@ -1244,7 +1265,24 @@ function toggleFaqAll() {
     ? `Tampilkan Lebih Sedikit <span style="font-size:11px">▲</span>`
     : `Tampilkan Lebih Banyak <span style="font-size:11px">▼</span>`;
 }
-
+// ─── TESTIMONI ───────────────────────────────────────────────
+const TESTIMONI = [
+  { user: "xXDarkSlayerXx", paket: "500 Robux", text: "Cepet banget prosesnya, gak nyampe 5 menit udah masuk!", stars: 5 },
+  { user: "NightWolf_ID", paket: "1000 Robux", text: "Udah langganan di sini, harganya paling murah se-Indonesia.", stars: 5 },
+  { user: "SkyCraft99", paket: "200 Robux", text: "Awalnya ragu, tapi ternyata aman dan terpercaya. Recommended!", stars: 5 },
+  { user: "LunaGamer_", paket: "300 Robux", text: "Pelayanannya ramah, fast respon, Robux langsung masuk.", stars: 5 },
+  { user: "BlazeFire22", paket: "100 Robux", text: "Pertama kali top up di sini, prosesnya gampang banget!", stars: 5 },
+  { user: "ShadowKing_X", paket: "700 Robux", text: "Harga bersaing, proses cepat. Gak bakal pindah ke toko lain.", stars: 5 },
+  { user: "CrystalMage", paket: "400 Robux", text: "Seller terpercaya! Udah beberapa kali order selalu aman.", stars: 5 },
+  { user: "VortexPlay_", paket: "1000 Robux", text: "Mantap! Robuxnya masuk sesuai yang dipesan. Gas terus!", stars: 5 },
+];
+const track = document.getElementById("marqueeTrack");
+[...TESTIMONI, ...TESTIMONI].forEach(t => {
+  const card = document.createElement("div");
+  card.className = "testi-card";
+  card.innerHTML = `<div class="testi-user">@${t.user}</div><div class="testi-paket">Top Up ${t.paket}</div><div class="testi-text">"${t.text}"</div><div class="testi-stars">${"★".repeat(t.stars)}</div>`;
+  track.appendChild(card);
+});
 // ─── INIT ────────────────────────────────────────────────────
 loadHarga();
 setInterval(loadHarga, 30_000);
