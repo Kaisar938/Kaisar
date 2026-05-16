@@ -1226,8 +1226,9 @@ async function buildConfirm(val) {
   }
 
   document.getElementById("cfPaket").textContent  = val + " Robux";
-  document.getElementById("cfHarga").innerHTML    = `Rp ${hargaFinal.toLocaleString('id-ID')}` +
-    (diskon ? ` <span style="color:var(--green);font-size:12px">(hemat Rp ${diskon.toLocaleString('id-ID')}${diskonInfo})</span>` : "");
+  document.getElementById("cfHarga").innerHTML =
+  `Rp ${hargaFinal.toLocaleString('id-ID')}` +
+  (diskon ? `<br><span style="color:var(--green);font-size:11px">hemat Rp ${diskon.toLocaleString('id-ID')} · ${sumberDiskon === 'promo' ? promoCodeActive+' -'+promoPercent+'%' : '≥'+tierMinRobux+' Robux -'+tierPercent+'%'}</span>` : "");
   document.getElementById("cfBefore").textContent = Math.floor(val * 0.7) + " Robux";
   document.getElementById("cfAfter").textContent  = Math.ceil(val / 0.7) + " Robux";
   updateConfirmPass();
