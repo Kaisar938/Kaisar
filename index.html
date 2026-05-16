@@ -1012,6 +1012,8 @@ let selectedRobux = 0;
 let promoPercent  = 0;
 let promoCodeActive = "";
 let hargaFinal    = 0;
+let tierPercent   = 0;
+let tierMinRobux  = 0;
 
 // ─── FETCH CONFIG DARI GITHUB ────────────────────────────────
 async function loadHarga() {
@@ -1184,18 +1186,55 @@ function updateConfirm() {
   buildConfirm(val);
 }
 function updateConfirmFromCustom(val) { buildConfirm(val); }
-function buildConfirm(val) {
+async function buildConfirm(val) {
+  // Cek tier otomatis
+  try {
+    const resTier = await fetch("https://kaisar-bot.vercel.app/api/bot", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-source": "check-tier" },
+      body: JSON.stringify({ robux: val })
+    });
+    const dataTier = await resTier.json();
+    if (dataTier.valid) {
+      tierPercent  = dataTier.persen;
+      tierMinRobux = dataTier.minRobux;
+    } else {
+      tierPercent  = 0;
+      tierMinRobux = 0;
+    }
+  } catch(e) {
+    tierPercent  = 0;
+    tierMinRobux = 0;
+  }
+
+  // Pakai diskon yang lebih besar (tier vs promo)
+  const diskonAktif = Math.max(tierPercent, promoPercent);
+  const sumberDiskon = diskonAktif === 0 ? null
+    : tierPercent >= promoPercent ? "tier"
+    : "promo";
+
   const hargaAwal = val * RATE;
-  const diskon    = promoPercent > 0 ? Math.floor(hargaAwal * promoPercent / 100) : 0;
+  const diskon    = diskonAktif > 0 ? Math.floor(hargaAwal * diskonAktif / 100) : 0;
   hargaFinal = hargaAwal - diskon;
+
+  // Info diskon
+  let diskonInfo = "";
+  if (sumberDiskon === "tier") {
+    diskonInfo = ` 🏷️ (tier ≥${tierMinRobux} Robux: -${tierPercent}%)`;
+  } else if (sumberDiskon === "promo") {
+    diskonInfo = ` 🎉 (promo ${promoCodeActive}: -${promoPercent}%)`;
+  }
+
   document.getElementById("cfPaket").textContent  = val + " Robux";
-  document.getElementById("cfHarga").textContent  = "Rp " + hargaFinal.toLocaleString('id-ID') + (diskon ? ` (hemat Rp ${diskon.toLocaleString('id-ID')})` : "");
+  document.getElementById("cfHarga").innerHTML    = `Rp ${hargaFinal.toLocaleString('id-ID')}` +
+    (diskon ? ` <span style="color:var(--green);font-size:12px">(hemat Rp ${diskon.toLocaleString('id-ID')}${diskonInfo})</span>` : "");
   document.getElementById("cfBefore").textContent = Math.floor(val * 0.7) + " Robux";
   document.getElementById("cfAfter").textContent  = Math.ceil(val / 0.7) + " Robux";
   updateConfirmPass();
   updateConfirmPlace();
   document.getElementById("confirmPanel").style.display = "block";
 }
+
 function updateConfirmPass()  { document.getElementById("cfPass").textContent  = document.getElementById("passId").value.trim()  || "—"; }
 function updateConfirmPlace() { document.getElementById("cfPlace").textContent = document.getElementById("placeId").value.trim() || "—"; }
 function updateConfirmClear() { document.getElementById("confirmPanel").style.display = "none"; }
@@ -1222,7 +1261,15 @@ async function sendToWA(val) {
     await fetch("https://kaisar-bot.vercel.app/api/bot", {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-source": "website-order" },
-      body: JSON.stringify({ robux: val, harga: hargaFinal, passId: pass, placeId: place, payment: pay, promo: promoCodeActive || null })
+      body: JSON.stringify({
+        robux: val,
+        harga: hargaFinal,
+        passId: pass,
+        placeId: place,
+        payment: pay,
+        promo: promoPercent > 0 && promoPercent >= tierPercent ? promoCodeActive : null,
+        tierDiskon: tierPercent > 0 && tierPercent > promoPercent ? tierPercent : null
+      })
     });
   } catch(e) {}
 
@@ -1231,8 +1278,13 @@ async function sendToWA(val) {
   if (pass)  extra += `\n\nGamepass ID:\n${pass}`;
   if (place) extra += `\n\nPlace ID:\n${place}`;
   if (pay)   extra += `\n\nMetode Pembayaran:\n${pay}`;
-  const promoLine = promoPercent > 0 ? `\nPromo: ${promoCodeActive} (${promoPercent}%)` : "";
-  const msg = `Halo KaisarStore,\nSaya mau top up Robux\n\nJumlah: ${val} Robux\nHarga: Rp ${hargaFinal.toLocaleString('id-ID')}${promoLine}\nBefore Tax: ${Math.floor(val*0.7)} Robux\nAfter Tax: ${Math.ceil(val/0.7)} Robux${extra}`;
+  const diskonAktif = Math.max(tierPercent, promoPercent);
+  const diskonLine = diskonAktif > 0
+    ? (tierPercent >= promoPercent
+        ? `\nDiskon Tier: ${tierPercent}% (beli ≥${tierMinRobux} Robux)`
+        : `\nPromo: ${promoCodeActive} (${promoPercent}%)`)
+    : "";
+  const msg = `Halo KaisarStore,\nSaya mau top up Robux\n\nJumlah: ${val} Robux\nHarga: Rp ${hargaFinal.toLocaleString('id-ID')}${diskonLine}\nBefore Tax: ${Math.floor(val*0.7)} Robux\nAfter Tax: ${Math.ceil(val/0.7)} Robux${extra}`;
   window.open(`https://wa.me/${WA_NUM}?text=${encodeURIComponent(msg)}`);
 }
 
