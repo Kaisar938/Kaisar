@@ -1162,11 +1162,22 @@ function scrollConfirm() {
   document.getElementById("paket").scrollIntoView({ behavior: "smooth" });
 }
 
-function sendToWA(val) {
+async function sendToWA(val) {
   const pass  = document.getElementById("passId").value.trim();
   const place = document.getElementById("placeId").value.trim();
   const pay   = document.getElementById("payment").value.trim();
-  let extra   = "";
+
+  // Kirim notif ke Telegram (silent)
+  try {
+    await fetch("https://kaisar-bot.vercel.app/api/bot", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-source": "website-order" },
+      body: JSON.stringify({ robux: val, harga: hargaFinal, passId: pass, placeId: place, payment: pay, promo: promoCodeActive || null })
+    });
+  } catch(e) {}
+
+  // Buka WhatsApp
+  let extra = "";
   if (pass)  extra += `\n\nGamepass ID:\n${pass}`;
   if (place) extra += `\n\nPlace ID:\n${place}`;
   if (pay)   extra += `\n\nMetode Pembayaran:\n${pay}`;
