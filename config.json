@@ -2,12 +2,5 @@
   "rate": 115,
   "rate_coret": 122,
   "maintenance": false,
-  "promos": {
-    "NEWKIKIR": {
-      "persen": 10,
-      "maxUsage": 0,
-      "usedCount": 0,
-      "expiredAt": 1778981681265
-    }
-  }
+  "promos": {}
 }
