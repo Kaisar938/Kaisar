@@ -1240,12 +1240,12 @@ function updateConfirmPlace() { document.getElementById("cfPlace").textContent =
 function updateConfirmClear() { document.getElementById("confirmPanel").style.display = "none"; }
 function refreshConfirm()     { const val = getCurrentRobux(); if (val) buildConfirm(val); }
 
-function showConfirm() {
+async function showConfirm() {
   const val = getCurrentRobux();
   if (!val) { alert("Pilih paket atau isi jumlah Robux dulu."); return; }
-  buildConfirm(val);
+  await buildConfirm(val);  // tunggu sampai selesai dulu
   setTimeout(() => document.getElementById("confirmPanel").scrollIntoView({ behavior: "smooth", block: "start" }), 50);
-  sendToWA(val);
+  sendToWA(val);  // baru kirim WA, hargaFinal udah benar
 }
 function scrollConfirm() {
   document.getElementById("paket").scrollIntoView({ behavior: "smooth" });
@@ -1280,11 +1280,11 @@ async function sendToWA(val) {
   if (pay)   extra += `\n\nMetode Pembayaran:\n${pay}`;
   const diskonAktif = Math.max(tierPercent, promoPercent);
   const diskonLine = diskonAktif > 0
-    ? (tierPercent >= promoPercent
-        ? `\nDiskon Tier: ${tierPercent}% (beli ≥${tierMinRobux} Robux)`
-        : `\nPromo: ${promoCodeActive} (${promoPercent}%)`)
-    : "";
-  const msg = `Halo KaisarStore,\nSaya mau top up Robux\n\nJumlah: ${val} Robux\nHarga: Rp ${hargaFinal.toLocaleString('id-ID')}${diskonLine}\nBefore Tax: ${Math.floor(val*0.7)} Robux\nAfter Tax: ${Math.ceil(val/0.7)} Robux${extra}`;
+  ? (tierPercent >= promoPercent
+      ? `\nDiskon Tier: ${tierPercent}% (beli ≥${tierMinRobux} Robux)`
+      : `\nKode Promo: ${promoCodeActive} (-${promoPercent}%)`)
+  : "";
+const msg = `Halo KaisarStore,\nSaya mau top up Robux\n\nJumlah: ${val} Robux\nHarga: Rp ${hargaFinal.toLocaleString('id-ID')}${diskonLine}\nBefore Tax: ${Math.floor(val*0.7)} Robux\nAfter Tax: ${Math.ceil(val/0.7)} Robux${extra}`;
   window.open(`https://wa.me/${WA_NUM}?text=${encodeURIComponent(msg)}`);
 }
 
