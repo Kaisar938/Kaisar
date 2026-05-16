@@ -21,7 +21,6 @@
   --green: #22C55E;
   --red: #EF4444;
 }
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { min-height: 100vh; overflow-x: hidden; }
 body {
@@ -488,7 +487,6 @@ select option { background: var(--surface); }
   align-items: flex-start;
 }
 .trust-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
-.trust-box ul { margin-top: 4px; margin-left: 16px; }
 .rate-pill {
   display: inline-flex;
   align-items: center;
@@ -716,8 +714,6 @@ footer {
 .wa-float:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(34,197,94,0.45); }
 .custom-preview { margin-top: 12px; font-size: 13px; color: var(--muted); min-height: 18px; }
 .custom-preview b { color: var(--gold); }
-
-/* LOADING SKELETON */
 .skeleton {
   background: linear-gradient(90deg, var(--surface) 25%, var(--surface2) 50%, var(--surface) 75%);
   background-size: 200% 100%;
@@ -729,7 +725,6 @@ footer {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
-
 @media (max-width: 700px) {
   nav { padding: 0 16px; }
   .nav-links { display: none; }
@@ -811,14 +806,10 @@ footer {
   <section id="paket">
     <div class="section-label">Pilih Jumlah</div>
     <div class="section-title">Paket Robux</div>
-
-    <!-- Rate pill: diupdate otomatis dari API -->
     <div class="rate-pill">
       💱 Rate: <b id="ratePill">memuat...</b> &nbsp;·&nbsp; Harga dapat berubah sewaktu-waktu
     </div>
-
     <div id="paketGrid" class="paket-grid"></div>
-
     <div class="card" style="margin-top:16px">
       <div class="section-label">Custom</div>
       <label class="field-label">Jumlah Robux Custom</label>
@@ -975,56 +966,59 @@ footer {
 
 <script>
 // ============================================================
-// CONFIG — URL API server lokal kamu
-// Saat deploy ke VPS, ganti jadi: http://IP_VPS_KAMU:3000/harga
+// ⚠️  GANTI DUA BARIS INI sesuai GitHub kamu
 // ============================================================
-const API_URL = "https://kaisar-production.up.railway.app/harga";
-const WA_NUM  = "6285182456497";
+const GH_USER = "kaisar938";  // ← username GitHub lo
+const GH_REPO = "Kaisar";        // ← nama repo website lo
+// ============================================================
+
+const CONFIG_URL = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/main/config.json`;
+const WA_NUM     = "6285182456497";
 const PAKET_DATA = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
-const PROMO_LIST = {};
 
-// State
-let RATE = 105;        // akan diupdate dari API
-let RATE_CORET = 112;  // akan diupdate dari API
+let RATE         = 105;
+let RATE_CORET   = 112;
+let PROMO_LIST   = {};
 let selectedRobux = 0;
-let promoPercent = 0;
+let promoPercent  = 0;
 let promoCodeActive = "";
-let hargaFinal = 0;
+let hargaFinal    = 0;
 
-// ─── FETCH HARGA DARI SERVER ─────────────────────────────────
+// ─── FETCH CONFIG DARI GITHUB ────────────────────────────────
 async function loadHarga() {
   try {
-    const res = await fetch(API_URL);
+    const res = await fetch(CONFIG_URL + "?t=" + Date.now());
     if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
 
-    RATE = data.rate || 105;
+    RATE       = data.rate       || 105;
     RATE_CORET = data.rate_coret || 112;
+    PROMO_LIST = data.promos     || {};
 
-    // Update rate pill
     document.getElementById("ratePill").textContent = `Rp ${RATE} / Robux`;
+    const faqRate = document.getElementById("faqRate");
+    if (faqRate) faqRate.textContent = `Rp ${RATE} / Robux`;
 
-    // Cek maintenance
     if (data.maintenance) {
       document.getElementById("maintenance").style.display = "flex";
       document.body.style.overflow = "hidden";
+    } else {
+      document.getElementById("maintenance").style.display = "none";
+      document.body.style.overflow = "";
     }
 
-    // Render ulang paket dengan harga baru
     renderPaket();
-
   } catch (e) {
-    console.warn("Tidak bisa konek ke server, pakai harga default.", e.message);
-    document.getElementById("ratePill").textContent = `Rp ${RATE} / Robux (offline)`;
+    console.warn("Gagal fetch config, pakai harga default.", e.message);
+    document.getElementById("ratePill").textContent = `Rp ${RATE} / Robux`;
     renderPaket();
   }
 }
 
 // ─── RENDER PAKET ────────────────────────────────────────────
 function renderPaket() {
-  const paketGrid = document.getElementById("paketGrid");
-  paketGrid.innerHTML = "";
-
+  const grid = document.getElementById("paketGrid");
+  grid.innerHTML = "";
   PAKET_DATA.forEach(r => {
     const div = document.createElement("div");
     div.className = "paket";
@@ -1049,11 +1043,11 @@ function renderPaket() {
       }
       updateConfirm();
     });
-    paketGrid.appendChild(div);
+    grid.appendChild(div);
   });
 }
 
-// ─── CUSTOM INPUT ─────────────────────────────────────────────
+// ─── CUSTOM INPUT ────────────────────────────────────────────
 document.getElementById("customInput").addEventListener("input", function () {
   let val = parseInt(this.value);
   document.querySelectorAll(".paket").forEach(p => p.classList.remove("active"));
@@ -1064,44 +1058,46 @@ document.getElementById("customInput").addEventListener("input", function () {
     updateConfirmClear();
     return;
   }
-  const harga = val * RATE;
-  const setGP = Math.ceil(val / 0.7);
-  document.getElementById("customPreview").innerHTML = `Set Gamepass: <b>${setGP} Robux</b> &nbsp;·&nbsp; Harga: <b>Rp ${harga.toLocaleString('id-ID')}</b>`;
+  const harga  = val * RATE;
+  const setGP  = Math.ceil(val / 0.7);
+  document.getElementById("customPreview").innerHTML =
+    `Set Gamepass: <b>${setGP} Robux</b> &nbsp;·&nbsp; Harga: <b>Rp ${harga.toLocaleString('id-ID')}</b>`;
   updateConfirmFromCustom(val);
 });
 
-// ─── PASS ID & PLACE ID ───────────────────────────────────────
+// ─── VALIDASI INPUT ──────────────────────────────────────────
 document.getElementById("passId").addEventListener("input", function () {
   if (this.value.length > 20) this.value = this.value.slice(0, 20);
   document.getElementById("passError").style.display = /^\d*$/.test(this.value) ? "none" : "block";
   updateConfirmPass();
 });
-
 document.getElementById("placeId").addEventListener("input", function () {
   if (this.value.length > 20) this.value = this.value.slice(0, 20);
   document.getElementById("placeError").style.display = /^\d*$/.test(this.value) ? "none" : "block";
   updateConfirmPlace();
 });
 
-// ─── PROMO ────────────────────────────────────────────────────
+// ─── PROMO ───────────────────────────────────────────────────
 document.getElementById("promoInput").addEventListener("input", function () {
   const code = this.value.trim().toUpperCase();
   const info = document.getElementById("promoInfo");
   if (PROMO_LIST[code]) {
-    promoPercent = PROMO_LIST[code]; promoCodeActive = code;
+    promoPercent = PROMO_LIST[code];
+    promoCodeActive = code;
     info.style.display = "block";
     info.innerHTML = `🎉 Kode <b>${code}</b> aktif — diskon <b>${promoPercent}%</b>`;
   } else {
-    promoPercent = 0; promoCodeActive = "";
+    promoPercent = 0;
+    promoCodeActive = "";
     info.style.display = "none";
   }
   refreshConfirm();
 });
 
-// ─── KALKULATOR ───────────────────────────────────────────────
+// ─── KALKULATOR ──────────────────────────────────────────────
 function calcRobux(type) {
   const r = parseInt(document.getElementById("calcRobuxInput").value);
-  const resEl = document.getElementById("resRobux");
+  const resEl  = document.getElementById("resRobux");
   const noteEl = document.getElementById("robuxNote");
   document.querySelectorAll(".calc-btn").forEach(b => b.classList.remove("active"));
   if (!r) { resEl.innerHTML = "Masukkan jumlah Robux."; return; }
@@ -1112,7 +1108,7 @@ function calcRobux(type) {
   } else {
     document.getElementById("btnAfter").classList.add("active");
     resEl.innerHTML = `Set Gamepass: <b>${Math.ceil(r / 0.7)} Robux</b>`;
-    noteEl.textContent = "Set harga gamepass ke angka ini agar kamu terima tepat " + r + " Robux.";
+    noteEl.textContent = `Set harga gamepass ke angka ini agar kamu terima tepat ${r} Robux.`;
   }
 }
 
@@ -1121,54 +1117,39 @@ function calcHarga() {
   const resEl = document.getElementById("resHarga");
   if (h > 50000000) { document.getElementById("calcHargaInput").value = ""; resEl.innerHTML = "—"; return; }
   if (!h) { resEl.innerHTML = "Masukkan harga untuk melihat Robux yang didapat."; return; }
-  let setGP, finalRobux;
-  if (h === 10500) { setGP = 143; finalRobux = 100; }
-  else if (h === 50000) { setGP = 675; finalRobux = 472; }
-  else { setGP = Math.floor(h / 75); finalRobux = Math.floor(setGP * 0.7); }
+  let setGP = Math.floor(h / 75);
+  let finalRobux = Math.floor(setGP * 0.7);
   resEl.innerHTML = `Set Gamepass: <b>${setGP} Robux</b><br>Bersih diterima: <b>${finalRobux} Robux</b>`;
 }
 
-// ─── CONFIRM ──────────────────────────────────────────────────
+// ─── CONFIRM PANEL ───────────────────────────────────────────
 function getCurrentRobux() {
   if (selectedRobux > 0) return selectedRobux;
   const cv = parseInt(document.getElementById("customInput").value);
   return (cv && cv >= 100) ? cv : 0;
 }
-
 function updateConfirm() {
   const val = getCurrentRobux();
   if (!val) { updateConfirmClear(); return; }
   buildConfirm(val);
 }
-
 function updateConfirmFromCustom(val) { buildConfirm(val); }
-
 function buildConfirm(val) {
   const hargaAwal = val * RATE;
-  const diskon = promoPercent > 0 ? Math.floor(hargaAwal * promoPercent / 100) : 0;
+  const diskon    = promoPercent > 0 ? Math.floor(hargaAwal * promoPercent / 100) : 0;
   hargaFinal = hargaAwal - diskon;
-  document.getElementById("cfPaket").textContent = val + " Robux";
-  document.getElementById("cfHarga").textContent = "Rp " + hargaFinal.toLocaleString('id-ID') + (diskon ? ` (hemat Rp ${diskon.toLocaleString('id-ID')})` : "");
+  document.getElementById("cfPaket").textContent  = val + " Robux";
+  document.getElementById("cfHarga").textContent  = "Rp " + hargaFinal.toLocaleString('id-ID') + (diskon ? ` (hemat Rp ${diskon.toLocaleString('id-ID')})` : "");
   document.getElementById("cfBefore").textContent = Math.floor(val * 0.7) + " Robux";
-  document.getElementById("cfAfter").textContent = Math.ceil(val / 0.7) + " Robux";
+  document.getElementById("cfAfter").textContent  = Math.ceil(val / 0.7) + " Robux";
   updateConfirmPass();
   updateConfirmPlace();
   document.getElementById("confirmPanel").style.display = "block";
 }
-
-function updateConfirmPass() {
-  document.getElementById("cfPass").textContent = document.getElementById("passId").value.trim() || "—";
-}
-function updateConfirmPlace() {
-  document.getElementById("cfPlace").textContent = document.getElementById("placeId").value.trim() || "—";
-}
-function updateConfirmClear() {
-  document.getElementById("confirmPanel").style.display = "none";
-}
-function refreshConfirm() {
-  const val = getCurrentRobux();
-  if (val) buildConfirm(val);
-}
+function updateConfirmPass()  { document.getElementById("cfPass").textContent  = document.getElementById("passId").value.trim()  || "—"; }
+function updateConfirmPlace() { document.getElementById("cfPlace").textContent = document.getElementById("placeId").value.trim() || "—"; }
+function updateConfirmClear() { document.getElementById("confirmPanel").style.display = "none"; }
+function refreshConfirm()     { const val = getCurrentRobux(); if (val) buildConfirm(val); }
 
 function showConfirm() {
   const val = getCurrentRobux();
@@ -1177,46 +1158,45 @@ function showConfirm() {
   setTimeout(() => document.getElementById("confirmPanel").scrollIntoView({ behavior: "smooth", block: "start" }), 50);
   sendToWA(val);
 }
-
 function scrollConfirm() {
   document.getElementById("paket").scrollIntoView({ behavior: "smooth" });
 }
 
 function sendToWA(val) {
-  const pass = document.getElementById("passId").value.trim();
+  const pass  = document.getElementById("passId").value.trim();
   const place = document.getElementById("placeId").value.trim();
-  const pay = document.getElementById("payment").value.trim();
-  let extra = "";
-  if (pass) extra += `\n\nGamepass ID:\n${pass}`;
+  const pay   = document.getElementById("payment").value.trim();
+  let extra   = "";
+  if (pass)  extra += `\n\nGamepass ID:\n${pass}`;
   if (place) extra += `\n\nPlace ID:\n${place}`;
-  if (pay) extra += `\n\nMetode Pembayaran:\n${pay}`;
+  if (pay)   extra += `\n\nMetode Pembayaran:\n${pay}`;
   const promoLine = promoPercent > 0 ? `\nPromo: ${promoCodeActive} (${promoPercent}%)` : "";
-  const msg = `Halo KaisarStore,\nSaya mau top up Robux\n\nJumlah: ${val} Robux\nHarga: Rp ${hargaFinal.toLocaleString('id-ID')}${promoLine}\nBefore Tax: ${Math.floor(val * 0.7)} Robux\nAfter Tax: ${Math.ceil(val / 0.7)} Robux${extra}`;
+  const msg = `Halo KaisarStore,\nSaya mau top up Robux\n\nJumlah: ${val} Robux\nHarga: Rp ${hargaFinal.toLocaleString('id-ID')}${promoLine}\nBefore Tax: ${Math.floor(val*0.7)} Robux\nAfter Tax: ${Math.ceil(val/0.7)} Robux${extra}`;
   window.open(`https://wa.me/${WA_NUM}?text=${encodeURIComponent(msg)}`);
 }
 
-// ─── MOBILE NAV ───────────────────────────────────────────────
+// ─── MOBILE NAV ──────────────────────────────────────────────
 function toggleMobileNav() { document.getElementById("mobileNav").classList.toggle("open"); }
-function closeMobileNav() { document.getElementById("mobileNav").classList.remove("open"); }
+function closeMobileNav()  { document.getElementById("mobileNav").classList.remove("open"); }
 document.addEventListener("click", e => {
   const nav = document.getElementById("mobileNav");
   const btn = document.getElementById("hambBtn");
   if (!nav.contains(e.target) && !btn.contains(e.target)) nav.classList.remove("open");
 });
 
-// ─── FAQ ──────────────────────────────────────────────────────
+// ─── FAQ ─────────────────────────────────────────────────────
 const FAQS_VISIBLE_DEFAULT = 2;
 let faqExpanded = false;
 const faqs = [
-  { q: "Deskripsi Produk Top Up Roblox Robux", a: `Cari tempat Top Up Roblox Robux (RBX) terpercaya dan termurah? Di sini kamu bisa top up Roblox Robux (RBX) dengan berbagai pilihan jumlah, mulai dari <b>100 Robux</b>. Garansi pembelian 100% aman, harga terjangkau, dan bonus garansi robux pasti masuk ke akun kamu.` },
-  { q: "Apa itu Robux?", a: `Robux adalah mata uang virtual resmi di game Roblox yang digunakan untuk membeli berbagai item, aksesories, gamepass, skin, atau fitur premium.` },
-  { q: "Bagaimana cara top up Robux?", a: `<ol><li>Masukkan Username Roblox yang ingin diisi Robux.</li><li>Pilih jumlah Robux atau masukkan custom.</li><li>Buat Gamepass dan atur sesuai instruksi website.</li><li>Isi Gamepass ID dan Place ID.</li><li>Pilih metode pembayaran dan klik Top Up.</li><li>Robux akan masuk dalam 5 hari setelah pending.</li></ol>` },
-  { q: "Kenapa Top Up Roblox Robux di KaisarStore?", a: `KaisarStore menyediakan jenis robux khusus dengan harga terjangkau, proses cepat, dan garansi Robux 100% masuk & akun 100% aman. Customer support selalu siap membantu!` },
-  { q: "Berapa harga Robux?", a: `Harga robux saat ini <b id="faqRate">Rp 105 / Robux</b>. Paket tersedia mulai dari <b>100 Robux</b>. Harga dapat berubah sewaktu-waktu.` },
-  { q: "Apakah Robux yang Dibeli Akan Terpotong Pajak?", a: `• <b>Before Tax</b>: Robux dipotong 30% pajak oleh Roblox.<br>• <b>After Tax</b>: Tidak ada potongan pajak — Robux diterima utuh sesuai nominal.` },
-  { q: "Apakah pembelian hanya bisa via WhatsApp?", a: `Tidak! Bisa via <b>WhatsApp</b> (<a href="https://wa.me/6285182456497">klik di sini</a>) atau <b>Discord</b> (<a href="https://discord.gg/WH9GXJexZs" target="_blank">join server</a>). Rekomendasi: WhatsApp untuk respon lebih cepat. 🚀` },
+  { q: "Deskripsi Produk Top Up Roblox Robux", a: `Cari tempat Top Up Roblox Robux terpercaya dan termurah? Di sini kamu bisa top up mulai dari <b>100 Robux</b>. Garansi 100% aman.` },
+  { q: "Apa itu Robux?", a: `Robux adalah mata uang virtual resmi di game Roblox untuk membeli item, aksesori, gamepass, dan fitur premium.` },
+  { q: "Bagaimana cara top up Robux?", a: `<ol><li>Pilih jumlah Robux.</li><li>Buat Gamepass dan atur sesuai instruksi.</li><li>Isi Gamepass ID dan Place ID.</li><li>Pilih metode pembayaran dan klik Top Up.</li><li>Robux masuk dalam 5 hari setelah pending.</li></ol>` },
+  { q: "Kenapa Top Up di KaisarStore?", a: `Harga terjangkau, proses cepat, garansi Robux 100% masuk & akun 100% aman. Support selalu siap membantu!` },
+  { q: "Berapa harga Robux?", a: `Harga saat ini <b id="faqRate">Rp 105 / Robux</b>. Paket mulai dari <b>100 Robux</b>. Harga dapat berubah sewaktu-waktu.` },
+  { q: "Apakah Robux terpotong pajak?", a: `<b>Before Tax</b>: dipotong 30% oleh Roblox.<br><b>After Tax</b>: tidak ada potongan — Robux diterima utuh.` },
+  { q: "Bisa order selain WhatsApp?", a: `Bisa via <b>WhatsApp</b> atau <b>Discord</b> (<a href="https://discord.gg/WH9GXJexZs" target="_blank">join server</a>). WhatsApp lebih cepat responnya. 🚀` },
 ];
-const faqList = document.getElementById("faqList");
+const faqList  = document.getElementById("faqList");
 const faqItems = [];
 faqs.forEach((f, idx) => {
   const item = document.createElement("div");
@@ -1240,7 +1220,6 @@ faqs.forEach((f, idx) => {
 
 function toggleFaqAll() {
   faqExpanded = !faqExpanded;
-  const btn = document.getElementById("faqToggleBtn");
   faqItems.forEach((item, idx) => {
     if (idx >= FAQS_VISIBLE_DEFAULT) {
       item.style.display = faqExpanded ? "block" : "none";
@@ -1250,17 +1229,14 @@ function toggleFaqAll() {
       }
     }
   });
-  btn.innerHTML = faqExpanded
+  document.getElementById("faqToggleBtn").innerHTML = faqExpanded
     ? `Tampilkan Lebih Sedikit <span style="font-size:11px">▲</span>`
     : `Tampilkan Lebih Banyak <span style="font-size:11px">▼</span>`;
 }
 
-// ─── INIT ─────────────────────────────────────────────────────
-// Load harga dari server saat halaman dibuka
+// ─── INIT ────────────────────────────────────────────────────
 loadHarga();
-
-// Refresh harga setiap 30 detik (auto sync)
-setInterval(loadHarga, 30000);
+setInterval(loadHarga, 30_000);
 </script>
 </body>
 </html>
