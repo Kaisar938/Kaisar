@@ -1107,18 +1107,39 @@ document.getElementById("placeId").addEventListener("input", function () {
 });
 
 // ─── PROMO ───────────────────────────────────────────────────
-document.getElementById("promoInput").addEventListener("input", function () {
+document.getElementById("promoInput").addEventListener("input", async function () {
   const code = this.value.trim().toUpperCase();
   const info = document.getElementById("promoInfo");
-  if (PROMO_LIST[code]) {
-    promoPercent = PROMO_LIST[code];
-    promoCodeActive = code;
-    info.style.display = "block";
-    info.innerHTML = `🎉 Kode <b>${code}</b> aktif — diskon <b>${promoPercent}%</b>`;
-  } else {
+  if (!code) { info.style.display = "none"; promoPercent = 0; promoCodeActive = ""; refreshConfirm(); return; }
+
+  try {
+    const res = await fetch("https://kaisar-bot.vercel.app/api/bot", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-source": "check-promo" },
+      body: JSON.stringify({ code })
+    });
+    const data = await res.json();
+    if (data.valid) {
+      promoPercent = data.persen;
+      promoCodeActive = code;
+      info.style.display = "block";
+      info.style.color = "#22C55E";
+      info.style.background = "rgba(34,197,94,0.08)";
+      info.style.border = "1px solid rgba(34,197,94,0.2)";
+      info.innerHTML = `🎉 Kode <b>${code}</b> aktif — diskon <b>${data.persen}%</b>`;
+    } else {
+      promoPercent = 0;
+      promoCodeActive = "";
+      info.style.display = "block";
+      info.style.color = "#EF4444";
+      info.style.background = "rgba(239,68,68,0.08)";
+      info.style.border = "1px solid rgba(239,68,68,0.2)";
+      info.innerHTML = `❌ ${data.reason}`;
+    }
+  } catch(e) {
+    info.style.display = "none";
     promoPercent = 0;
     promoCodeActive = "";
-    info.style.display = "none";
   }
   refreshConfirm();
 });
