@@ -467,12 +467,17 @@ select option { background: var(--surface); }
   background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 60%);
   pointer-events: none;
 }
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
   background: linear-gradient(135deg, #FFD700 0%, #FFC200 50%, #FFD700 100%);
   transform: translateY(-2px);
   box-shadow: 0 12px 32px rgba(247,201,72,0.4), 0 1px 0 rgba(255,255,255,0.2) inset;
 }
-.btn-primary:active { transform: translateY(0); box-shadow: 0 4px 12px rgba(247,201,72,0.2); }
+.btn-primary:active:not(:disabled) { transform: translateY(0); box-shadow: 0 4px 12px rgba(247,201,72,0.2); }
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
 .trust-box {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -798,7 +803,7 @@ footer {
     </div>
   </section>
 
-    <div class="divider"></div>
+  <div class="divider"></div>
 
   <section>
     <div class="section-label">Pelanggan Kami</div>
@@ -809,7 +814,8 @@ footer {
   </section>
 
   <div class="divider"></div>
-<section>
+
+  <section>
     <div class="section-label">Langkah-langkah</div>
     <div class="section-title">Cara Order Robux</div>
     <div class="steps">
@@ -857,6 +863,11 @@ footer {
       <h3>📋 Ringkasan Pesanan</h3>
       <div class="confirm-row"><span class="clabel">Paket</span><span class="cval" id="cfPaket">—</span></div>
       <div class="confirm-row"><span class="clabel">Harga</span><span class="cval" id="cfHarga">—</span></div>
+      <!-- FIX #4: baris diskon ditambahkan -->
+      <div class="confirm-row" id="cfDiskonRow" style="display:none">
+        <span class="clabel">Diskon</span>
+        <span class="cval" id="cfDiskon" style="color:var(--green)">—</span>
+      </div>
       <div class="confirm-row"><span class="clabel">Before Tax</span><span class="cval" id="cfBefore">—</span></div>
       <div class="confirm-row"><span class="clabel">After Tax (Set Gamepass)</span><span class="cval" id="cfAfter">—</span></div>
       <div class="confirm-row"><span class="clabel">Gamepass ID</span><span class="cval" id="cfPass">—</span></div>
@@ -865,14 +876,14 @@ footer {
 
     <div style="display:flex;flex-direction:column;gap:16px">
       <div>
-        <label class="field-label">Gamepass ID</label>
+        <label class="field-label">Gamepass ID <span style="color:var(--red)">*</span></label>
         <input type="text" id="passId" inputmode="numeric" placeholder="Contoh: 123456789">
         <div class="hint">🔒 Kami tidak pernah minta password, OTP, atau login Roblox.</div>
         <div class="error" id="passError">Gamepass ID harus berupa angka saja</div>
         <div class="hint" style="margin-top:8px">Tidak tau cara cek Gamepass ID? <a href="https://whatsapp.com/channel/0029VbBxOdG5Ui2Xlg1qYC0o" target="_blank" style="color:var(--gold)">Cek panduan kami.</a></div>
       </div>
       <div>
-        <label class="field-label">Place ID</label>
+        <label class="field-label">Place ID <span style="color:var(--red)">*</span></label>
         <input type="text" id="placeId" inputmode="numeric" placeholder="Contoh: 987654321">
         <div class="hint">🎮 Place ID adalah ID game/place tempat Gamepass kamu dibuat.</div>
         <div class="error" id="placeError">Place ID harus berupa angka saja</div>
@@ -884,7 +895,7 @@ footer {
         <div id="promoInfo" style="display:none;margin-top:6px;font-size:13px;padding:8px 12px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:8px;color:#22C55E"></div>
       </div>
       <div>
-        <label class="field-label">Metode Pembayaran</label>
+        <label class="field-label">Metode Pembayaran <span style="color:var(--red)">*</span></label>
         <select id="payment">
           <option value="">Pilih metode pembayaran</option>
           <option>Bank Transfer</option>
@@ -994,13 +1005,8 @@ footer {
 <a href="https://wa.me/6285182456497?text=Halo%20KaisarStore%2C%20saya%20butuh%20bantuan" target="_blank" class="wa-float">💬 Bantuan</a>
 
 <script>
-// ============================================================
-// ⚠️  GANTI DUA BARIS INI sesuai GitHub kamu
-// ============================================================
-const GH_USER = "kaisar938";  // ← username GitHub lo
-const GH_REPO = "Kaisar";        // ← nama repo website lo
-// ============================================================
-
+const GH_USER = "kaisar938";
+const GH_REPO = "Kaisar";
 const CONFIG_URL = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/main/config.json`;
 const WA_NUM     = "6285182456497";
 const PAKET_DATA = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
@@ -1014,6 +1020,15 @@ let promoCodeActive = "";
 let hargaFinal    = 0;
 let tierPercent   = 0;
 let tierMinRobux  = 0;
+
+// ─── FIX #2 & #3: DEBOUNCE HELPER ───────────────────────────
+function debounce(fn, delay) {
+  let timer;
+  return function(...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
 
 // ─── FETCH CONFIG DARI GITHUB ────────────────────────────────
 async function loadHarga() {
@@ -1041,7 +1056,10 @@ async function loadHarga() {
     renderPaket();
   } catch (e) {
     console.warn("Gagal fetch config, pakai harga default.", e.message);
+    // FIX #7: update pill & faqRate meskipun fetch gagal
     document.getElementById("ratePill").textContent = `Rp ${RATE} / Robux`;
+    const faqRate = document.getElementById("faqRate");
+    if (faqRate) faqRate.textContent = `Rp ${RATE} / Robux`;
     renderPaket();
   }
 }
@@ -1078,7 +1096,7 @@ function renderPaket() {
   });
 }
 
-// ─── CUSTOM INPUT ────────────────────────────────────────────
+// ─── CUSTOM INPUT (FIX #3: debounce confirm update) ──────────
 document.getElementById("customInput").addEventListener("input", function () {
   let val = parseInt(this.value);
   document.querySelectorAll(".paket").forEach(p => p.classList.remove("active"));
@@ -1093,8 +1111,13 @@ document.getElementById("customInput").addEventListener("input", function () {
   const setGP  = Math.ceil(val / 0.7);
   document.getElementById("customPreview").innerHTML =
     `Set Gamepass: <b>${setGP} Robux</b> &nbsp;·&nbsp; Harga: <b>Rp ${harga.toLocaleString('id-ID')}</b>`;
-  updateConfirmFromCustom(val);
+  debouncedUpdateConfirmFromCustom(val);
 });
+
+// FIX #5: async + debounced
+const debouncedUpdateConfirmFromCustom = debounce(async function(val) {
+  await buildConfirm(val);
+}, 400);
 
 // ─── VALIDASI INPUT ──────────────────────────────────────────
 document.getElementById("passId").addEventListener("input", function () {
@@ -1108,12 +1131,17 @@ document.getElementById("placeId").addEventListener("input", function () {
   updateConfirmPlace();
 });
 
-// ─── PROMO ───────────────────────────────────────────────────
-document.getElementById("promoInput").addEventListener("input", async function () {
-  const code = this.value.trim().toUpperCase();
+// ─── FIX #2: PROMO INPUT DEBOUNCED ───────────────────────────
+const handlePromoCheck = debounce(async function(value) {
+  const code = value.trim().toUpperCase();
   const info = document.getElementById("promoInfo");
-  if (!code) { info.style.display = "none"; promoPercent = 0; promoCodeActive = ""; refreshConfirm(); return; }
-
+  if (!code) {
+    info.style.display = "none";
+    promoPercent = 0;
+    promoCodeActive = "";
+    refreshConfirm();
+    return;
+  }
   try {
     const res = await fetch("https://kaisar-bot.vercel.app/api/bot", {
       method: "POST",
@@ -1144,6 +1172,10 @@ document.getElementById("promoInput").addEventListener("input", async function (
     promoCodeActive = "";
   }
   refreshConfirm();
+}, 500);
+
+document.getElementById("promoInput").addEventListener("input", function() {
+  handlePromoCheck(this.value);
 });
 
 // ─── KALKULATOR ──────────────────────────────────────────────
@@ -1185,7 +1217,6 @@ function updateConfirm() {
   if (!val) { updateConfirmClear(); return; }
   buildConfirm(val);
 }
-function updateConfirmFromCustom(val) { buildConfirm(val); }
 async function buildConfirm(val) {
   // Cek tier otomatis
   try {
@@ -1207,7 +1238,6 @@ async function buildConfirm(val) {
     tierMinRobux = 0;
   }
 
-  // Pakai diskon yang lebih besar (tier vs promo)
   const diskonAktif = Math.max(tierPercent, promoPercent);
   const sumberDiskon = diskonAktif === 0 ? null
     : tierPercent >= promoPercent ? "tier"
@@ -1217,18 +1247,25 @@ async function buildConfirm(val) {
   const diskon    = diskonAktif > 0 ? Math.floor(hargaAwal * diskonAktif / 100) : 0;
   hargaFinal = hargaAwal - diskon;
 
-  // Info diskon
-  let diskonInfo = "";
-  if (sumberDiskon === "tier") {
-    diskonInfo = ` 🏷️ (tier ≥${tierMinRobux} Robux: -${tierPercent}%)`;
-  } else if (sumberDiskon === "promo") {
-    diskonInfo = ` 🎉 (promo ${promoCodeActive}: -${promoPercent}%)`;
+  document.getElementById("cfPaket").textContent  = val + " Robux";
+  document.getElementById("cfHarga").textContent  = `Rp ${hargaFinal.toLocaleString('id-ID')}`;
+
+  // FIX #4: tampilkan baris diskon kalau ada
+  const diskonRow = document.getElementById("cfDiskonRow");
+  const diskonVal = document.getElementById("cfDiskon");
+  if (diskon > 0) {
+    let label = "";
+    if (sumberDiskon === "tier") {
+      label = `−Rp ${diskon.toLocaleString('id-ID')} 🏷️ Tier ≥${tierMinRobux} Robux (${tierPercent}%)`;
+    } else {
+      label = `−Rp ${diskon.toLocaleString('id-ID')} 🎉 Promo ${promoCodeActive} (${promoPercent}%)`;
+    }
+    diskonVal.textContent = label;
+    diskonRow.style.display = "flex";
+  } else {
+    diskonRow.style.display = "none";
   }
 
-  document.getElementById("cfPaket").textContent  = val + " Robux";
-  document.getElementById("cfHarga").innerHTML =
-  `Rp ${hargaFinal.toLocaleString('id-ID')}` +
-  (diskon ? `<br><span style="color:var(--green);font-size:11px">hemat Rp ${diskon.toLocaleString('id-ID')} · ${sumberDiskon === 'promo' ? promoCodeActive+' -'+promoPercent+'%' : '≥'+tierMinRobux+' Robux -'+tierPercent+'%'}</span>` : "");
   document.getElementById("cfBefore").textContent = Math.floor(val * 0.7) + " Robux";
   document.getElementById("cfAfter").textContent  = Math.ceil(val / 0.7) + " Robux";
   updateConfirmPass();
@@ -1241,13 +1278,37 @@ function updateConfirmPlace() { document.getElementById("cfPlace").textContent =
 function updateConfirmClear() { document.getElementById("confirmPanel").style.display = "none"; }
 function refreshConfirm()     { const val = getCurrentRobux(); if (val) buildConfirm(val); }
 
+// ─── FIX #6: SHOW CONFIRM + LOADING STATE + VALIDASI ────────
 async function showConfirm() {
   const val = getCurrentRobux();
   if (!val) { alert("Pilih paket atau isi jumlah Robux dulu."); return; }
-  await buildConfirm(val);  // tunggu sampai selesai dulu
-  setTimeout(() => document.getElementById("confirmPanel").scrollIntoView({ behavior: "smooth", block: "start" }), 50);
-  sendToWA(val);  // baru kirim WA, hargaFinal udah benar
+
+  // Validasi field wajib
+  const pass  = document.getElementById("passId").value.trim();
+  const place = document.getElementById("placeId").value.trim();
+  const pay   = document.getElementById("payment").value.trim();
+
+  if (!pass)  { alert("Gamepass ID wajib diisi."); document.getElementById("passId").focus(); return; }
+  if (!place) { alert("Place ID wajib diisi."); document.getElementById("placeId").focus(); return; }
+  if (!pay)   { alert("Pilih metode pembayaran dulu."); document.getElementById("payment").focus(); return; }
+  if (!/^\d+$/.test(pass))  { alert("Gamepass ID harus berupa angka saja."); document.getElementById("passId").focus(); return; }
+  if (!/^\d+$/.test(place)) { alert("Place ID harus berupa angka saja."); document.getElementById("placeId").focus(); return; }
+
+  // Loading state
+  const btn = document.getElementById("btnTopup");
+  btn.disabled = true;
+  btn.innerHTML = "⏳ Memproses...";
+
+  try {
+    await buildConfirm(val);
+    setTimeout(() => document.getElementById("confirmPanel").scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+    await sendToWA(val);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = "⚡ Top Up Sekarang";
+  }
 }
+
 function scrollConfirm() {
   document.getElementById("paket").scrollIntoView({ behavior: "smooth" });
 }
@@ -1257,7 +1318,6 @@ async function sendToWA(val) {
   const place = document.getElementById("placeId").value.trim();
   const pay   = document.getElementById("payment").value.trim();
 
-  // Kirim notif ke Telegram (silent)
   try {
     await fetch("https://kaisar-bot.vercel.app/api/bot", {
       method: "POST",
@@ -1274,18 +1334,19 @@ async function sendToWA(val) {
     });
   } catch(e) {}
 
-  // Buka WhatsApp
   let extra = "";
   if (pass)  extra += `\n\nGamepass ID:\n${pass}`;
   if (place) extra += `\n\nPlace ID:\n${place}`;
   if (pay)   extra += `\n\nMetode Pembayaran:\n${pay}`;
+
   const diskonAktif = Math.max(tierPercent, promoPercent);
   const diskonLine = diskonAktif > 0
-  ? (tierPercent >= promoPercent
-      ? `\nDiskon Tier: ${tierPercent}% (beli ≥${tierMinRobux} Robux)`
-      : `\nKode Promo: ${promoCodeActive} (-${promoPercent}%)`)
-  : "";
-const msg = `Halo KaisarStore,\nSaya mau top up Robux\n\nJumlah: ${val} Robux\nHarga: Rp ${hargaFinal.toLocaleString('id-ID')}${diskonLine}\nBefore Tax: ${Math.floor(val*0.7)} Robux\nAfter Tax: ${Math.ceil(val/0.7)} Robux${extra}`;
+    ? (tierPercent >= promoPercent
+        ? `\nDiskon Tier: ${tierPercent}% (beli ≥${tierMinRobux} Robux)`
+        : `\nKode Promo: ${promoCodeActive} (-${promoPercent}%)`)
+    : "";
+
+  const msg = `Halo KaisarStore,\nSaya mau top up Robux\n\nJumlah: ${val} Robux\nHarga: Rp ${hargaFinal.toLocaleString('id-ID')}${diskonLine}\nBefore Tax: ${Math.floor(val*0.7)} Robux\nAfter Tax: ${Math.ceil(val/0.7)} Robux${extra}`;
   window.open(`https://wa.me/${WA_NUM}?text=${encodeURIComponent(msg)}`);
 }
 
@@ -1347,6 +1408,7 @@ function toggleFaqAll() {
     ? `Tampilkan Lebih Sedikit <span style="font-size:11px">▲</span>`
     : `Tampilkan Lebih Banyak <span style="font-size:11px">▼</span>`;
 }
+
 // ─── TESTIMONI ───────────────────────────────────────────────
 const TESTIMONI = [
   { user: "xXDarkSlayerXx", paket: "500 Robux", text: "Cepet banget prosesnya, gak nyampe 5 menit udah masuk!", stars: 5 },
@@ -1365,6 +1427,7 @@ const track = document.getElementById("marqueeTrack");
   card.innerHTML = `<div class="testi-user">@${t.user}</div><div class="testi-paket">Top Up ${t.paket}</div><div class="testi-text">"${t.text}"</div><div class="testi-stars">${"★".repeat(t.stars)}</div>`;
   track.appendChild(card);
 });
+
 // ─── INIT ────────────────────────────────────────────────────
 loadHarga();
 setInterval(loadHarga, 30_000);
