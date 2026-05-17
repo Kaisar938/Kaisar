@@ -876,14 +876,14 @@ footer {
 
     <div style="display:flex;flex-direction:column;gap:16px">
       <div>
-        <label class="field-label">Gamepass ID <span style="color:var(--red)">*</span></label>
+        <label class="field-label">Gamepass ID</label>
         <input type="text" id="passId" inputmode="numeric" placeholder="Contoh: 123456789">
         <div class="hint">🔒 Kami tidak pernah minta password, OTP, atau login Roblox.</div>
         <div class="error" id="passError">Gamepass ID harus berupa angka saja</div>
         <div class="hint" style="margin-top:8px">Tidak tau cara cek Gamepass ID? <a href="https://whatsapp.com/channel/0029VbBxOdG5Ui2Xlg1qYC0o" target="_blank" style="color:var(--gold)">Cek panduan kami.</a></div>
       </div>
       <div>
-        <label class="field-label">Place ID <span style="color:var(--red)">*</span></label>
+        <label class="field-label">Place ID</label>
         <input type="text" id="placeId" inputmode="numeric" placeholder="Contoh: 987654321">
         <div class="hint">🎮 Place ID adalah ID game/place tempat Gamepass kamu dibuat.</div>
         <div class="error" id="placeError">Place ID harus berupa angka saja</div>
@@ -1122,12 +1122,10 @@ const debouncedUpdateConfirmFromCustom = debounce(async function(val) {
 // ─── VALIDASI INPUT ──────────────────────────────────────────
 document.getElementById("passId").addEventListener("input", function () {
   if (this.value.length > 20) this.value = this.value.slice(0, 20);
-  document.getElementById("passError").style.display = /^\d*$/.test(this.value) ? "none" : "block";
   updateConfirmPass();
 });
 document.getElementById("placeId").addEventListener("input", function () {
   if (this.value.length > 20) this.value = this.value.slice(0, 20);
-  document.getElementById("placeError").style.display = /^\d*$/.test(this.value) ? "none" : "block";
   updateConfirmPlace();
 });
 
@@ -1288,11 +1286,7 @@ async function showConfirm() {
   const place = document.getElementById("placeId").value.trim();
   const pay   = document.getElementById("payment").value.trim();
 
-  if (!pass)  { alert("Gamepass ID wajib diisi."); document.getElementById("passId").focus(); return; }
-  if (!place) { alert("Place ID wajib diisi."); document.getElementById("placeId").focus(); return; }
-  if (!pay)   { alert("Pilih metode pembayaran dulu."); document.getElementById("payment").focus(); return; }
-  if (!/^\d+$/.test(pass))  { alert("Gamepass ID harus berupa angka saja."); document.getElementById("passId").focus(); return; }
-  if (!/^\d+$/.test(place)) { alert("Place ID harus berupa angka saja."); document.getElementById("placeId").focus(); return; }
+  if (!pay) { alert("Pilih metode pembayaran dulu."); document.getElementById("payment").focus(); return; }
 
   // Loading state
   const btn = document.getElementById("btnTopup");
