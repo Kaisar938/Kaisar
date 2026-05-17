@@ -1199,9 +1199,10 @@ function calcHarga() {
   const resEl = document.getElementById("resHarga");
   if (h > 50000000) { document.getElementById("calcHargaInput").value = ""; resEl.innerHTML = "—"; return; }
   if (!h) { resEl.innerHTML = "Masukkan harga untuk melihat Robux yang didapat."; return; }
-  let setGP = Math.floor(h / 75);
-  let finalRobux = Math.floor(setGP * 0.7);
-  resEl.innerHTML = `Set Gamepass: <b>${setGP} Robux</b><br>Bersih diterima: <b>${finalRobux} Robux</b>`;
+  const robux     = Math.floor(h / RATE);
+  const setGP     = Math.ceil(robux / 0.7);
+  const bersih    = Math.floor(setGP * 0.7);
+  resEl.innerHTML = `Robux dibeli: <b>${robux} Robux</b><br>Set Gamepass: <b>${setGP} Robux</b><br>Bersih diterima: <b>${bersih} Robux</b>`;
 }
 
 // ─── CONFIRM PANEL ───────────────────────────────────────────
